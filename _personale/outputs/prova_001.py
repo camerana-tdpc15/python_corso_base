@@ -6,6 +6,8 @@ It isn`t in the section 'C:\some\name_of_file'
 
 '''
 
+'''
+
 print("It isn`t in the section 'C:\some\\name_of_file'")
 
 
@@ -21,4 +23,6 @@ print(pow(b, a))
 print(a // b)
 print(a % b)
 
-# help("time.asctime") 
+'''
+
+help("time.asctime")
