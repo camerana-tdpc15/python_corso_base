@@ -18,7 +18,7 @@ testo_censurato = ''
 testo_censurato = testo.upper().replace(parola_malefica1.upper(), censura).replace(parola_malefica2.upper(), censura)
 
 print(testo_censurato)
-print(testo_censurato.lo)
+
 
 
 
