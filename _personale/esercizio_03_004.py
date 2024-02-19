@@ -45,7 +45,7 @@ parole_malefiche = ["Tiramisù", "nutella"]
 
 censura = "******"
 
-testo_censurato = testo2
+testo_censurato = testo
 
 for parola_malefica in parole_malefiche:
     testo_censurato = testo_censurato.replace(parola_malefica.lower(), censura)
@@ -54,13 +54,14 @@ for parola_malefica in parole_malefiche:
 
 conta_malefiche = testo_censurato.count(censura)
 
-
-if conta_malefiche > 1:
+'''
+if conta_malefiche != 1:
     print('Censurate', conta_malefiche, 'parole')
-else:
+else      :
     print('Censurata', conta_malefiche, 'parola')
+'''
 
-
+print('Censurate', conta_malefiche, 'parole') if conta_malefiche != 1 else print('Censurata', conta_malefiche, 'parola')
 
 print(testo_censurato)
 
