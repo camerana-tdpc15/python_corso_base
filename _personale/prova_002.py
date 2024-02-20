@@ -4,3 +4,5 @@ a = b
 b = a
 
 print(b)
+
+print(b)
