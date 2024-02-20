@@ -1,3 +1,0 @@
-jupyter-nbconvert 00_prerequisiti.ipynb --to slides --TemplateExporter.extra_template_basedirs=../reveal_templates --template reveal_wide --SlidesExporter.reveal_theme=black --SlidesExporter.theme=dark
-
-jupyter-nbconvert 00_prerequisiti.ipynb --to slides --TemplateExporter.extra_template_basedirs=../reveal_templates --template reveal_wide --SlidesExporter.reveal_theme=black --SlidesExporter.theme=dark --SlidesExporter.reveal_url_prefix=./slides/assets/reveal --HTMLExporter.require_js_url=./slides/assets/require.min.js --HTMLExporter.mathjax_url=./slides/assets/MathJax/MathJax.js --HTMLExporter.jquery_url=./slides/assets/jquery.min.js
