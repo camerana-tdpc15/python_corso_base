@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Anta&display=swap');
+
+#header {
+    min-height: 200px;
+    font-family: "Anta";
+    background:url('../download\ \(3\).jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+
+
+    
+}
+
+.bg-tdpc-primery {
+    background-color: orange;
+}
