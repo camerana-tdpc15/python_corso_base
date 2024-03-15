@@ -1,0 +1,9 @@
+#header{
+    min-height: 300px;
+    font-family: 'Anta';
+    background: url('https://th.bing.com/th/id/R.4462ce098bbe6755fd562919bc83cd71?rik=DmH%2bNNeRqtR3ng&riu=http%3a%2f%2fwallup.net%2fwp-content%2fuploads%2f2016%2f01%2f287990-space-universe-stars.jpg&ehk=0YD%2f%2flVjfYuKNo6TC30g0NWDnAu9zSswFMbnGdSyI3Y%3d&risl=1&pid=ImgRaw&r=0');
+    background-position: top;
+    background-size: cover;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
