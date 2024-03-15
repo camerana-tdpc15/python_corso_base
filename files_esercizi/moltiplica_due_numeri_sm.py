@@ -94,7 +94,7 @@ if __name__ == '__main__':  # Se viene esegiuto come script
 
                 prodotto = moltiplica_due_numeri(num_a, num_b)
                 stampa_risultato(num_a, num_b, prodotto)
-            except:
-                print('I dati inseriti non sono validi.')
+            except ValueError as err:
+                print('I dati inseriti non sono validi:', err)
 else:
     pass
