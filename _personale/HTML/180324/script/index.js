@@ -1,4 +1,4 @@
-console.log;
+console.log('inizio file');
 
 
 const btnUno = document.getElementById('btnUno');
