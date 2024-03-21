@@ -1,0 +1,5 @@
+.sfumato{
+    width: auto;
+    height: 200px;
+    background-image: :linear-gradient(to top,#black 100%,#yellow 30%);
+}
