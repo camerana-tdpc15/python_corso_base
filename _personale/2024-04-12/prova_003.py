@@ -1,26 +1,36 @@
-
-nome_alunno = input("Inserisci nome e cognome dell'alunno: ")
-
-classe_alunno = input("Inserisci la classe dell'alunno: ")
-
-
 num_voti = 5
 
 def inputVoti():
     lista_generica = []
-    info = input(f"inserisci voto {num + 1}: ")
-    if info != "":
+    conta = 1
+    while len(lista_generica) < num_voti:
+        info = input(f"inserisci voto {conta}: ")
         if info.isdigit():
-            for num in range(5):
-                voto = int(input(f"inserisci voto {num + 1}: "))
-                lista_generica.append(voto)
-            return lista_generica
+            info = int(info)
+            lista_generica.append(info)
+            conta += 1
         else:
             print('ERRORE: Inserire solo valori numerici.')
-            inputVoti()
+    return lista_generica
+    
+
+test = True
+while test:
+    nome_alunno = input("Inserisci nome e cognome dell'alunno: ")
+    if nome_alunno != "":
+        test = False
     else:
-        print('ERRORE: Inserire solo valori numerici.')
-        inputVoti()
+         print('ERRORE: Inserire valori alfanumerici')
+
+test = True
+while test:
+    classe_alunno = input("Inserisci la classe dell'alunno: ")
+    if classe_alunno != "":
+        test = False
+    else:
+         print('ERRORE: Inserire valori alfanumerici')
+
+      
 
 
 voto_massimo_generico = []
@@ -68,7 +78,7 @@ print(f"Risultati per l'alunno {nome_alunno} della classe {classe_alunno}")
 
 
 def calcoloMedia(voti):
-     media = sum(voti) / 5
+     media = sum(voti) / len(voti)
      return media
 
 media_matematica = calcoloMedia(voti_matematica)
@@ -91,8 +101,6 @@ print(f"Media globale dell'alunno: {media_globale:.0f}")
 print(f"Il voto più alto dell'alunno: {massimo_generico:.0f}")
 
 print(f"Il voto più basso dell'alunno: {minimo_generico:.0f}")
-
-
 
 
 
