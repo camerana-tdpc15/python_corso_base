@@ -1,5 +1,5 @@
 from tkinter import Frame, Tk, Canvas
-from random import choice 
+from random import choice, randint
 
 class Matrix(Frame):
 	def __init__(self, master):
@@ -12,28 +12,37 @@ class Matrix(Frame):
 		self.pos = [i for i in range(-200,200,20)]
 		self.letters = []
 		self.green = 0
-		self.caracteres = [
-                      "a", "k", "u", "u", "u", "И", "Ч",
-                      "b", "l", "v", "v", "v", "Ѳ", "Р",
-                      "c", "m", "w", "w", "w", "І", "С",
-                      "d", "n", "x", "x", "x", "К", "Т",
-                      "e", "o", "y", "y", "y", "Л", "Ѵ",
-                      "f", "p", "z", "z", "z", "М", "Ф",
-                      "g", "q", "1", "1", "1", "Н", "Х",
-                      "h", "r", "2", "2", "2", "Ѯ", "Ѱ",
-                      "i", "s", "3", "3", "3", "Ѻ", "Ѿ",
-                      "j", "t", "4", "4", "4", "П", "Ц",
-                ]
+		self.caracteres = [self.generate_char() for _ in range(70)]
+		# self.caracteres = [
+        #               "a", "k", "u", "u", "u", "И", "Ч",
+        #               "b", "l", "v", "v", "v", "Ѳ", "Р",
+        #               "c", "m", "w", "w", "w", "І", "С",
+        #               "d", "n", "x", "x", "x", "К", "Т",
+        #               "e", "o", "y", "y", "y", "Л", "Ѵ",
+        #               "f", "p", "z", "z", "z", "M", "Ф",
+        #               "g", "q", "1", "1", "1", "Н", "X",
+        #               "h", "r", "2", "2", "2", "Ѯ", "Ѱ",
+        #               "i", "s", "3", "3", "3", "Ѻ", "Ѿ",
+        #               "j", "t", "4", "4", "4", "П", "Ц",
+        #         ]
 
 		self.draw()
 		self.update()
+
+	# Funzione per generare caratteri casuali UTF-8 che non siano spazi bianchi
+	# @TODO: Implementare selezione solo su font 
+	def generate_char(self): # , font):
+		while True:
+			char = chr(randint(0, 0x10FFFF))  # Genera un carattere casuale Unicode
+			if not char.isspace():  # Controlla se il carattere non è uno spazio bianco
+				return char
 
 	def draw(self):
 		for x in range(0,1600,20):
 			y = choice(self.pos)
 			for j in range(0, choice([180,220,280]),20):
 				self.obj = self.canvas.create_text(20+x, -200+y+j, text= choice(self.caracteres),
-					fill = 'green2', font= ('Arial', 14))
+					fill = 'green2', font= ('Symbol', 14))
 				self.letters.append(self.obj)
 	def update(self):
 		for letter in self.letters:
