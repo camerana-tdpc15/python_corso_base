@@ -33,8 +33,6 @@ voto_storia4 = int(input('Inserire 4° voto di Storia: '))
 voto_storia5 = int(input('Inserire 5° voto di Storia: '))
 
 
-
-
 media_matematica = (voto_matematica1 + voto_matematica2 + voto_matematica3 + voto_matematica4 + voto_matematica5) / 5
 
 media_italiano = (voto_italiano1 + voto_italiano2 + voto_italiano3 + voto_italiano4 + voto_italiano5) / 5
@@ -45,7 +43,6 @@ media_storia = (voto_storia1 + voto_storia2 + voto_storia3 + voto_storia4 + voto
 
 
 media_globale = (voto_matematica1 + voto_matematica2 + voto_matematica3 + voto_matematica4 + voto_matematica5) + (voto_italiano1 + voto_italiano2 + voto_italiano3 + voto_italiano4 + voto_italiano5) + (voto_inglese1 + voto_inglese2 + voto_inglese3 + voto_inglese4 + voto_inglese5) + (voto_storia1 + voto_storia2 + voto_storia3 + voto_storia4 + voto_storia5) / 4 
-
 
 
 print(f'Risultati per l\'alunno {nome} {cognome} della classe {classe}:')
