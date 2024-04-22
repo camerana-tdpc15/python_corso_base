@@ -1,0 +1,12 @@
+Ada: 1999
+Pippo: 1980
+Felice: 1976
+Geronima: 1999
+fabio: 2000
+piero: 2021
+luca: 2022
+jerry: 1999
+felix: 1980
+fido: 1976
+giova: 2021
+juan: 2021
