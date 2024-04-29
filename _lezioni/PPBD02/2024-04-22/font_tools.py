@@ -1,3 +1,4 @@
+import os
 import matplotlib.font_manager as font_manager
 from fontTools.ttLib import TTFont
 
@@ -10,7 +11,10 @@ EMOJI = [
 ]
 
 def _get_font_path(font_name):
+    # windows_fonts_folder = os.path.join(os.environ['WINDIR'], 'Fonts')
+    # print(windows_fonts_folder)
     fonts = font_manager.findSystemFonts(fontpaths=None, fontext='ttf')
+    # print(fonts)
     # Trova il font che corrisponde al nome richiesto
     for font in fonts:
         if font_name in font:
