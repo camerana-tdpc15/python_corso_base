@@ -41,28 +41,20 @@ def converti_file(input_path, output_path):
                 riga = f'{nome};{eta}\n'
                 outupt_file.write(riga)
 
-# Controlla se il file è stato eseguito come script o no
-if __name__ == '__main__':
 
-    args = sys.argv
+# Ottiene il percorso assoluto dello script corrente
+script_path = os.path.abspath(__file__)
 
-    if len(args) == 3:
-        input_path = args[1]
-        output_path = args[2]
+# Ottiene la directory in cui risiede lo script
+script_dir = os.path.dirname(script_path)
 
-        if check_file(input_path, output_path):
-            converti_file(input_path, output_path)
-            path_assoluto = os.path.abspath(output_path)
-            print('SUCCESSO: Il file è stato creato correttamente alla '
-                f'posizione {path_assoluto}'
-            )
+# Costruisce un percorso assoluto alla directory dello script
+input_absolute_path = os.path.join(script_dir, 'input.txt')
+output_absolute_path = os.path.join(script_dir, 'output.csv')
 
-    elif len(args) == 1:
-        print('Non hai passato i 2 parametri necessari: il file di input '
-            'e il file di output.')
-    elif len(args) == 2:
-        print('Non hai passato il secondo parametro: il file di output.')
-    else:
-        print('Hai inserito troppi parametri. Ne servono 2: '
-            'il file di input e il file di output.')
+converti_file(input_absolute_path, output_absolute_path)
+
+print('SUCCESSO: Il file è stato creato correttamente alla '
+        f'posizione {output_absolute_path}'
+)
 
