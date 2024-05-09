@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask , request
 from markupsafe import escape
 
 app = Flask(__name__)       #Flask e una classe
@@ -51,3 +51,13 @@ def show_subpath(subpath):
 
 
 app.run(debug=True)
+
+
+#___________________________________________________________-
+
+@app.route('/hello', methods=['GET', 'POST'])   #un altro path personalisato
+def hello():
+    if request.method == 'GET':
+        print (request.args.get('name'))
+      
+    return 'Ciao'
