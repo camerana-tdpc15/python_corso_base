@@ -1,0 +1,25 @@
+[
+    {
+        "id": 1,
+        "titolo": "Il vecchio e il mare",
+        "autore": {
+            "firstName": "Ernesto",
+            "lastName": "Eminguaio"
+        },
+        "cover": "copertina_libro.jpg",
+        "pages": 5623,
+        "genres": ["thriller", "adventures"]
+    },
+
+    {
+        "id": 2,
+        "titolo": "Il giovane e la montagna",
+        "autore": {
+            "firstName": "Giulio",
+            "lastName": "Montano"
+        },
+        "cover": "copertina1_libro.jpg",
+        "pages": 2000,
+        "genres": ["commedy", "demenziale"]
+    }
+]

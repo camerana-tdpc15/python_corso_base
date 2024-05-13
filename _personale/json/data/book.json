@@ -1,0 +1,11 @@
+{
+    "id": 1,
+    "titolo": "Il vecchio e il mare",
+    "autore": {
+        "firstName": "Ernesto",
+        "lastName": "Eminguaio"
+    },
+    "cover": "copertina_libro.jpg",
+    "pages": 5623,
+    "genres": ["thriller", "adventures"]
+}
