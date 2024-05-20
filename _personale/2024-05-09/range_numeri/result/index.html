@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generatore elenco numeri</title>
+    <title>Intervallo di numeri</title>
 </head>
 <body>
     <h1>Inserisci un intervallo di numeri</h1>
-    <form action="/templates" method="get">
+    <form action="/result" method="get">
         <label for="start">Inizio:</label>
         <input type="number" id="start" name="start" {% if start is defined %}value="{{ start }}" {% endif %}><br><br>
         <label for="end">Fine:</label>
