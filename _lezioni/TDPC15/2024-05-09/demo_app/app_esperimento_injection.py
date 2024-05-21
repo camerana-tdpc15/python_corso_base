@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask
 from markupsafe import escape
 
 # Creiamo l'oggetto dell'applicazione Flask usando la classe Flask
@@ -6,19 +6,15 @@ app = Flask(__name__)
 
 @app.route("/")  # Lo slash indica la root del sito
 def hello_world():
-    return  'Hello, Pippo!'
+    return  'Hello, Pippo!"'
 
 @app.route('/index')  # Un path personalizzato
 def index():
     return 'Index Page'
 
-@app.route('/hello', methods=['GET', 'POST'])  # Un altro path personalizzato
+@app.route('/hello')  # Un altro path personalizzato
 def hello():
-    if request.method == 'GET':
-        print('name:', request.args.get('name'))
-        print('surname:', request.args.get('surname'))
-    return 'Ciao!'
-
+    return 'Hello, World'
 
 # La sintassi <...> permette di leggere una stringa dall'URL
 @app.route("/saluta/<name>")  # dopo /saluta/ accetta una qualunque stringa
@@ -56,7 +52,6 @@ def show_subpath(subpath):
 @app.route('/path_no_escape/<path:subpath>')
 def show_subpath_not_escaped(subpath):
     return f'Il subpath è: {subpath}'
-
 
 
 # Avviamo il server direttamente
