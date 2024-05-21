@@ -27,8 +27,8 @@ def esercizio_range():
     #     1. se uno o entrambi i parametri non fossero presenti, è necessario
     #       avere un valore di default.
     #     2. prima di convertire in int, bisogna controllare che sia possibile.
-    start = request.args.get('start')
-    stop = request.args.get('stop')
+    start = int(request.args.get('start', default= 0))
+    stop = int(request.args.get('stop', default= 10))
 
     # Crea un range da usarsi nella generazione dell'elenco puntato.
     numeri = range(start, stop)
