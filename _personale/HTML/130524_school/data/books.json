@@ -1,0 +1,14 @@
+[
+    {   "id":1,
+        "title":"il vechio e il mare",
+        "author": {
+        "firstname":"Ernesto",
+        "lastname" : "Eminguaio"
+    },
+        "cover":"copertina libro jpg",
+        "pages":231,
+        "genres":["thriller", "adventure"]
+
+    }
+
+]
