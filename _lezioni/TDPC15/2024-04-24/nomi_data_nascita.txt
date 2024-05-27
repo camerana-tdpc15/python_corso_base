@@ -1,0 +1,10 @@
+Ada: 1999
+Pippo: 1980
+Felice: 1976
+Geronima: 1999
+Ciccio: 1980
+Luca: 1972
+Roberto: 1999
+Pluto: 1972
+Mimmo: 1976
+Totò: 1923
