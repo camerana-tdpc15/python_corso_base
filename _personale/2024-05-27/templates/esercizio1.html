@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Range numeri</title>
+</head>
+
+<body>
+<form>
+    Da:<input id="input-start" type="number" name="start" value="{{ inizio }}" required>       
+    A:<input id="input-stop" type="number" name="stop" value="{{ fine }}" required>
+    
+    <button type="submit">Genera lista</button>
+</form>
+    <ul>
+        {% for numero in numeri %}
+        <li>{{ numero }}</li>
+        {% endfor %}
+    </ul>
+
+</body>
+
+</html>

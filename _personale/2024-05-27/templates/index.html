@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indice esercizi</title>
+</head>
+<body>
+    
+</body>
+</html>
+<ul>
+
+    <!--  esercizi_list = [
+        ('Esercizio 1', '/range_numeri'),
+        ('Esercizio 2, '/potenze')
+    ] -->
+
+    {% for descrizione, path in esercizi %}
+    <li><a href="{{ path }}">{{ descrizione }}</a></li>
+
+    <!-- <li><a href="/range_numeri">Esercizio 1</a></li>    questo è quello che fa Jinjia -->
+    {% endfor %}
+</ul>
