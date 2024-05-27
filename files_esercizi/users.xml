@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dati>
+    <record>
+        <id>1</id>
+        <name>Mario Rossi</name>
+        <email>mario.rossi@example.com</email>
+    </record>
+    <record>
+        <id>2</id>
+        <name>Giulia Bianchi</name>
+        <email>giulia.bianchi@example.com</email>
+    </record>
+    <record>
+        <id>3</id>
+        <name>Enrico Neri</name>
+        <email>enrico.neri@example.com</email>
+    </record>
+    <record>
+        <id>4</id>
+        <name>Carla Verdi</name>
+        <email>carla.verdi@example.com</email>
+    </record>
+</dati>
