@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Esercizio uno</title>
+</head>
+
+<body>
+    
+    <form>
+        <label for="">DA:</label><input type="number" name="start" value="{{ inizio }}" required>
+        <label for="">A:</label><input type="number" name="stop" value="{{ fine }}" required>
+        <button type="submit">Invia</button>
+    </form>
+
+    <ul>
+        {% for num in intervallo  %}
+        <li>{{ num }}</li>
+        {%  endfor %}
+    </ul>
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html>
+
+<head>
+    <title>Esercizio uno</title>
+</head>
+
+<body>
+    <p>Inizio:{{ inizio }}</p>
+    <p>Fine:{{ fine }}</p>
+    <ul>
+        {% for num in intervallo %}
+        <li>{{ num }}</li>
+        {% endfor %}
+    </ul>
+
+</body>
+
+</html> -->

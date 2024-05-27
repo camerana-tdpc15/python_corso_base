@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+    <title>Index</title>
+    <body>
+        <ul>
+            {% for descrizione, path in esercizi %}
+                <li><a href="{{ path }}">{{ descrizione }}</a></li>
+            {% endfor %}
+        </ul>
+    </body>
+</html>

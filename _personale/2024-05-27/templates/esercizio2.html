@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>tebella potenze</title>
+</head>
+
+<body>
+    <form>
+       Numero: <input type="number" name="base_number" value="{{ submitted_number }}">
+       <button type="submit">Genera potenze</button>
+    </form>
+
+    <ul>
+        {% for numero in powers %}
+        <li>{{ powers[numero] }}</li>
+        {% endfor %}
+    </ul>
+</body>
+
+</html>
