@@ -1,8 +1,8 @@
 from datetime import date, timedelta
-from locale import locale
+import locale
 from flask import Flask, request, render_template
 
-locale.setlocale(locale.LC_ALL, 'it_IT.UTF-8')
+locale.setlocale(locale.LC_ALL, 'it_IT')
 
 app = Flask(__name__)
 
@@ -17,7 +17,7 @@ def index():
         ('Esercizio 1', '/range_numeri'),
         ('Esercizio 2', '/potenze'),
         ('Esercizio 3', '/date'),
-        ('Esercizio 4', '/concatenazione')
+        ('Esercizio 4', '/manipolazione_stringhe')
     ]
     return render_template('index.html', esercizi=esercizi_list)
 
@@ -82,18 +82,29 @@ def esercizio_date():
     oggi = date.today()
     for num in range(6):
         data = oggi + timedelta(days=2*num)
-        lista_date.append(data.strftime('%A %d/%m/%Y'))
+        lista_date.append(data.strftime('%A %d/%m/%Y').capitalize())
     print(lista_date)
 
 # dobbiamo convertire le date in una stringa
     return render_template('esercizio3.html', lista_date=lista_date)
 
-@app.route('/concatenazione')
+@app.route('/manipolazione_stringhe')
 def esercizio_concatenazione():
-    stringa1 = request.args.get('stringa1', default='0')
-    stringa2 = request.args.get('stringa2', default='0')
+    stringa1 = request.args.get('stringa1', default='-')
+    stringa2 = request.args.get('stringa2', default='-')
 
-    return render_template('esercizio4.html', stringa1=stringa1, stringa2=stringa2)
+    risultati = {
+        'stringa1': stringa1,
+        'stringa2': stringa2,
+        'concat_1_2': f'{stringa1} {stringa2}',
+        'concat_2_1': f'{stringa2} {stringa1}',
+        'iniziali': f'{stringa1[0]}. {stringa2[0]}.',
+        'stringa1_invert': stringa1[::-1],
+        'stringa2_invert': stringa2[::-1]
+    }
+    #print(risultati)
+
+    return render_template('esercizio4.html', stringa1=stringa1, stringa2=stringa2, risultati=risultati)
 
 
 
