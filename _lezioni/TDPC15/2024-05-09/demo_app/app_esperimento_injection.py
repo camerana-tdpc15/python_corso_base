@@ -4,24 +4,14 @@ from markupsafe import escape
 # Creiamo l'oggetto dell'applicazione Flask usando la classe Flask
 app = Flask(__name__)
 
-@app.route("/")  # Lo slash indica la root del sito
-def hello_world():
-    return  'Hello, Pippo!"'
-
-@app.route('/index')  # Un path personalizzato
-def index():
-    return 'Index Page'
-
-@app.route('/hello')  # Un altro path personalizzato
-def hello():
-    return 'Hello, World'
-
+# METODO SICURO
 # La sintassi <...> permette di leggere una stringa dall'URL
 @app.route("/saluta/<name>")  # dopo /saluta/ accetta una qualunque stringa
 def hello_name(name):
     return f"Hello, {escape(name)}!"  # Come buona prassi facciamo l'escape, dato
                                       # che è un dato che arriva dall'esterno
 
+# METODO NON SICURO
 # Perché se non facciamo l'escape, un utente potrebbe scrivere ad es. questo:
 # http://127.0.0.1:5000/saluta_no_escape/Pluto<h1>Titolo o altro tag
 # e ciò inietterebbe un tag HTML.
@@ -29,13 +19,9 @@ def hello_name(name):
 def hello_name_not_escaped(name):
     return f"Hello, {name}!"
 
-# La sintassi <int:...> permette di leggere un numero integer dall'URL
-@app.route('/post/<int:post_id>')
-def show_post(post_id):
-    print(type(post_id))  # Vediamo che il numero è stato converito in int direttamente
-    return f'Il post richiesto è {post_id} che è di tipo {escape(type(post_id))}'
 
-# Per leggere percorsi complessi, che contengono più "/"
+# METODO SICURO
+# Per leggere percorsi complessi, che contengono più "/", abbiamo il tipo "path"
 @app.route('/path/<path:subpath>')
 def show_subpath(subpath):
     # Ora abbiamo ciò che l'utente ha scritto dopo /path/
@@ -44,6 +30,7 @@ def show_subpath(subpath):
                                                # l'escape, dato che è un dato che
                                                # arriva dall'esterno
 
+# METODO NON SICURO
 # Questo caso è più insidioso perché un attaccante potrebbe anche iniettare
 # del codice Javascript, come ad es:
 # http://127.0.0.1:5000/path_no_escape/<script>alert("Hacked!")</script>
