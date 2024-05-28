@@ -13,42 +13,32 @@
   </head>
 
   <body>
-    <!-- <form>
-      Numero:
-      <input
-        type="number"
-        name="base_number"
-        value="{{ submitted_number }}"
-        required
-      />
-      <button type="submit">Genera potenze</button>
-    </form> -->
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">TDPC15 - Tabella potenze</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="http://127.0.0.1:5000/">Indice esercizi</a>
+            </li> 
+          </ul>
+        </div>
+      </div>
+    </nav>
 
     <form>
       <div class="container">
         <div class="mb-3 mt-3">
-          <label for="base_number" class="form-label">Inserisci numero da elevare a potenza:</label>
+          <label for="base_number" class="form-label"><h3>Inserisci numero base (intero)</h3></label>
           <input type="number" class="form-control" id="base_number" placeholder="Inserisci numero" name="base_number" value="{{ submitted_number }}" required>
         </div>
           
         <button type="submit" class="btn btn-danger">Genera potenze</button>
       </div>
       </form>
-
-    <!-- <table border="1">
-      <tr>
-        <th>Potenza</th>
-        <th>Descrizione</th>
-        <th>Risultato</th>
-      </tr>
-      {% for esponente, risultato in powers.items() %}
-      <tr>
-        <td>{{ submitted_number }} <sup>{{ esponente }}</sup></td>
-        <td>{{ submitted_number }} elevato a {{ esponente }}</td>
-        <td>{{ risultato }}</td>
-      </tr>
-      {% endfor %}
-    </table> -->
 
     <div class="container mt-3">   
         <table class="table table-bordered">

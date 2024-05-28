@@ -1,5 +1,8 @@
 from datetime import date, timedelta
+import locale
 from flask import Flask, request, render_template
+
+locale.setlocale(locale.LC_ALL, 'it_IT.UTF-8')
 
 app = Flask(__name__)
 
@@ -13,7 +16,8 @@ def index():
     esercizi_list = [
         ('Esercizio 1', '/range_numeri'),
         ('Esercizio 2', '/potenze'),
-        ('Esercizio 3', '/date')
+        ('Esercizio 3', '/date'),
+        ('Esercizio 4', '/concatenazione')
     ]
     return render_template('index.html', esercizi=esercizi_list)
 
@@ -55,7 +59,13 @@ def esercizio_range():
 # http://127.0.0.1:5000/potenze?base_number=4
 @app.route('/potenze')
 def esercizio_potenze():
-    numero = int(request.args.get('base_number', default=2)) 
+    try:                                                                        # prova a convertire in intero
+       numero = int(request.args.get('base_number', default=2))
+    except ValueError as err:
+        return f'Hai inserito un numero non convertibile in intero: {err}'
+    except Exception as err:
+        # ATTENZIONE: in questo modo potremmo rivelare all'utente delle possibili falle...
+        return f'Si è verificato un errore, riprova: {err}'
     #print('Numero ricevuto: ', numero)         #per verificare che funzioni. il messaggio si vede in consolle
     
     potenze = {}
@@ -78,8 +88,19 @@ def esercizio_date():
 # dobbiamo convertire le date in una stringa
     return render_template('esercizio3.html', lista_date=lista_date)
 
+@app.route('/concatenazione')
+def esercizio_concatenazione():
+    stringa1 = request.args.get('stringa1', default='0')
+    stringa2 = request.args.get('stringa2', default='0')
+
+    return render_template('esercizio4.html', stringa1=stringa1, stringa2=stringa2)
+
+
 
 # Avvia direttamente l'applicazione in modalità debug.
 app.run(debug=True)
+
+
+
 
 

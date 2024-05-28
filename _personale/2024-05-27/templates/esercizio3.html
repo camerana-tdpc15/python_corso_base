@@ -12,13 +12,42 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
+
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">TDPC15 - Lista date</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link" href="http://127.0.0.1:5000/">Indice esercizi</a>
+              </li> 
+            </ul>
+          </div>
+        </div>
+      </nav>
 <!-- <form>
         <button type="submit">Genera lista</button>
 </form> -->
-    <ul>
+    <!-- <ul>
         {% for data in lista_date %}
         <li>{{ data }}</li>
         {% endfor %}
-    </ul>
+    </ul> -->
+
+    <div class="container mt-3">
+        <h2>Date</h2>
+        <p>Serie di date con intervallo di due giorni</p>
+      </div>
+        
+      <div class="container mt-3">
+        <ul class="list-group list-group-flush">
+            {% for data in lista_date %}
+            <li>{{ data }}</li>
+            {% endfor %}
+        </ul>
+      </div>
 </body>
 </html>
