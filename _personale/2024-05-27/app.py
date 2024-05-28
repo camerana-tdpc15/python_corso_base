@@ -1,5 +1,5 @@
 from datetime import date, timedelta
-import locale
+from locale import locale
 from flask import Flask, request, render_template
 
 locale.setlocale(locale.LC_ALL, 'it_IT.UTF-8')
