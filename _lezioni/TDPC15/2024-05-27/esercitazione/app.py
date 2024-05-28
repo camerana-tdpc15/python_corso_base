@@ -70,15 +70,5 @@ def esercizio_date():
     return render_template('esercizio3.html', lista_date=lista_date)
 
 
-# [
-#     datetime.date(2024, 5, 27),
-#     datetime.date(2024, 5, 29),
-#     datetime.date(2024, 5, 31),
-#     datetime.date(2024, 6, 2),
-#     datetime.date(2024, 6, 4),
-#     datetime.date(2024, 6, 6)
-# ]
-
-
-# Avvia direttamente l'applicazione in modalità debug.
+# Avvia direttamente l'applicazione, in modalità debug.
 app.run(debug=True)
