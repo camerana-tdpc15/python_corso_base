@@ -14,6 +14,7 @@ def index():
         ('Esercizio 1', '/range_numeri'),
         ('Esercizio 2', '/potenze'),
         ('Esercizio 3', '/date'),
+        ('Esercizio 4', '/mannipolazione_stringhe'),
     ]
     return render_template('index.html', esercizi=esercizi_list)
 
@@ -68,6 +69,34 @@ def esercizio_date():
     print(lista_date)
 
     return render_template('esercizio3.html' , lista_date=lista_date)
+# http://127.0.0.1:5000/manipolazione_stringhe?stringa1=Rossi&stringa2=Antonio
+@app.route('/manipolazione_stringhe')
+
+# stringa1 = 'Rossi'
+# stringa2 = 'Antonio'
+
+
+def esercizio_stringhe():
+    # recupero   parametri GET che l'utente a inviato
+    str1 = request.args.get('stringa1', default='/')
+    str2 = request.args.get('stringa2', default='/')
+    
+    # Creo una struttura dati da passare al template
+    risultati = {
+        'stringa1':str1,
+        'stringa2':str2,
+        'concat_1_2':str1 + '' + str2,
+        'concat_2_1':f'{str2} {str1}',
+        'iniziali':f'{str1[0]}.{str2[0]}.',
+        'stringa1_invertita':str1[::-1]
+     }
+
+    print(risultati)
+  
+
+    
+
+    return render_template('esercizio4.html', risultati=risultati)
 
 # Avvia direttamente l'applicazione in modalità debug.
 app.run(debug=True)
