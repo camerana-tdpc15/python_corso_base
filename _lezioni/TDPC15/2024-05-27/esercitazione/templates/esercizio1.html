@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>LISTA RANGE NUMERI</title>
+    <!-- importare css bootstrap -->
+</head>
+
+<body>
+    <form>
+        Start: <input id="input-start" type="number" name="start" value="{{ inizio }}" required>
+        Stop: <input id="input-stop" type="number" name="stop" value="{{ fine }}" required>
+        <button type="submit">Genera lista</button>
+    </form>
+    <ul>
+        {% for numero in numeri %}
+        <li>{{ numero }}</li>
+        {% endfor %}
+    </ul>
+</body>
+
+</html>
