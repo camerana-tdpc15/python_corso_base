@@ -1,3 +1,5 @@
+
+from datetime import date, timedelta
 from flask import Flask, request, render_template
 
 app = Flask(__name__)
@@ -11,7 +13,10 @@ def index():
     # (testo_link, url_link)
     esercizi_list = [
         ('Esercizio 1', '/range_numeri'),
-        ('Esercizio 1 TEST', '/range_numeri?start=1&stop=10')
+        
+        ('Potenze', '/potenze?number=4'),
+
+        ('Date', '/date')
     ]
     return render_template('index.html', esercizi=esercizi_list)
 
@@ -53,6 +58,28 @@ def esercizio_potenze():
     # potenze = {... dict comprehension}
     print(potenze)
     return render_template('esercizio2.html', powers=potenze, submitted_number=numero)
+
+@app.route('/date')
+def esercizio_date():
+    lista_date = []
+    oggi = date.today()
+    for num in range(6):
+        data = oggi + timedelta(days=2*num)
+        lista_date.append(data.strftime('%A %d/%m/%Y'))
+    print(lista_date)
+
+    return render_template('esercizio3.html',lista_date = lista_date)
+
+
+
+
+
+
+
+
+
+
+
 
 # Avvia direttamente l'applicazione in modalità debug.
 app.run(debug=True)

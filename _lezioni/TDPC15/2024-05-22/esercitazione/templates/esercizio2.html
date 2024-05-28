@@ -11,6 +11,26 @@
         Numero: <input type="number" name="base_number" value="{{ submitted_number }}">
         <button type="submit">Genera potenze</button>
     </form>
+
+
+    <table class="table table-bordered mt-05" border="1">
+        <thead>
+            <tr>
+                <th>Potenza</th>
+                
+                <th>Risultato</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for esponente, risultato in powers.items() %}
+            <tr>
+              <td>{{ submitted_number }} <sup>{{ esponente }}</sup> </td>             
+                          
+              <td>{{ risultato}}</td>             
+            </tr>
+            {% endfor %}
+            </tbody>
+    </table>
 </body>
 
 </html>
