@@ -15,6 +15,7 @@ def index():
         ('Esercizio 1', '/range_numeri'),
         ('Esercizio 2', '/potenze'),
         ('Esercizio 3', '/date'),
+        ('Esercizio 4', '/manipolazione_str'),
         
     ]
     return render_template('index.html', esercizi=esercizi_list)
@@ -68,12 +69,38 @@ def esercizio_date():
     for num in range(6):
         data = oggi + timedelta(days=2*num)
         lista_date.append(data.strftime('%A %d/%m/%Y').capitalize())
-    print(lista_date)
+    # print(lista_date)
 
     return render_template('esercizio3.html', lista_date=lista_date)
 
 
 
+
+
+# http://127.0.0.1:5000/manipolazione_str?stringa1=Pippo&stringa2=Disney
+@app.route('/manipolazione_str')
+def esercizio_stringhe():
+    # recupero i parametri get che l'utente ha inviato
+    str1 =request.args.get('stringa1', default='/')
+    str2 =request.args.get('stringa2', default='/')
+
+    # if not str1 or not str2:
+    #   return 'Non puoi inserire stringthe'
+
+     # creo una strutura dati da passare al template
+    risultati = {
+        'stringa1': str1,
+        'stringa2': str2,
+        'concat_1_2': str1 + ' ' + str2,
+        'concat_2_1':str2 + ' ' + str1,
+        'iniziali':str1[0] + '.' + str2[0] +'.' ,
+        'stringa_invertita1': str1[::-1]
+    }
+
+   
+   
+
+    return render_template('esercizio4.html', risultati = risultati)
 
 
 
