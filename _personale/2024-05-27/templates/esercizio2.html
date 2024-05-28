@@ -11,11 +11,27 @@
        <button type="submit">Genera potenze</button>
     </form>
 
-    <ul>
-        {% for numero in powers %}
-        <li>{{ powers[numero] }}</li>
+    
+    <table border="1px" style="width: 50%">
+        <tr>
+            <th>Potenza</th>
+            <th>Descrizione</th>
+            <th>Risultato</th>
+        </tr>
+        <!-- per ciascuna potenza in powers.items() -->
+        {% for esponente, risultato in powers.items() %}
+        <tr style="text-align: center;">
+            <td>{{ submitted_number }} <sup>{{ esponente }}</sup></td>
+            <td>{{ submitted_number }} elevato a {{ esponente }}</td>
+            <td>{{ risultato }}</td>
+        </tr>
         {% endfor %}
-    </ul>
+        <!-- end for -->
+
+    </table>
+       
+    
+   
 </body>
 
 </html>

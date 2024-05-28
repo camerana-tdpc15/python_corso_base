@@ -1,13 +1,15 @@
+from datetime import date, timedelta
 from flask import Flask, render_template, request
+
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
     esercizi_list = [
-        ('Index', '/range_numeri'),
-        ('Esercizio 1', '/range_numeri?start=1&stop=10'),
-        ('Esercizio 2', '/potenze')
+        ('Esercizio 1', '/range_numeri'),
+        ('Esercizio 2', '/potenze'),
+        ('Esercizio 3', '/date')
     ]
     return render_template('index.html', esercizi=esercizi_list)
 
@@ -36,8 +38,19 @@ def esercizio_potenze():
     # fare con dict comprehension
 
 
-    return render_template('esercizio2.html', powers=potenze, submitted_number=numero)
+    return render_template('esercizio2_boot.html', powers=potenze, submitted_number=numero)
     
+
+@app.route('/date')
+def esercizio_date():
+    lista_date = []
+    oggi = date.today()
+    for num in range(6):
+        data = oggi + timedelta(days=2*num)
+        lista_date.append(data.strftime('%A %d/%m/%Y'))
+    print(lista_date)
+
+    return render_template('esercizio3.html', lista_date=lista_date)
 
 
 app.run(debug=True)
