@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>MANIPOLAZIONE STRINGHE</title>
+    <!-- importare css bootstrap -->
+</head>
+
+<body>
+ 
+    <form>
+    <table border="1">
+        <tr>
+            <th>Stringa 1</th>
+            <th>Stringa 2</th>
+            <th>Concat 1 e 2</th>
+            <th>Concat 2 e 1</th>
+            <th>Iniziali</th>
+            <th>Inversione stringa 1</th>
+        </tr>
+        <tr>
+            <td><input name="stringa1" type="text" value="{{ risultati['stringa1'] }}" required placeholder="Inserisci una stringa..."></td>
+            <td><input name="stringa2" type="text" value="{{ risultati['stringa2'] }}" required placeholder="Inserisci una stringa..."></td>
+            <td>{{ risultati['concat_1_2'] }}</td>
+            <td>{{ risultati['concat_2_1'] }}</td>
+            <td>{{ risultati['iniziali'] }}</td>
+            <td>{{ risultati['stringa1_invertita'] }}</td>
+        </tr>
+    </table>
+    <button type="submit">Manipola stringhe</button>
+    </form>
+</body>
+
+</html>
