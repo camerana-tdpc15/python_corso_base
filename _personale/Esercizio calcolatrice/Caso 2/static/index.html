@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calcolatrice</title>
+</head>
+<body>
+    <h1>Calcolatrice</h1>
+    <label for="number1">Numero 1:</label>
+    <input type="text" id="number1" name="number1" required>
+    <br>
+    <label for="number2">Numero 2:</label>
+    <input type="text" id="number2" name="number2" required>
+    <br>
+    <label for="operator">Operazione:</label>
+    <select id="operator" name="operator">
+        <option value="add">Addizione</option>
+        <option value="subtract">Sottrazione</option>
+        <option value="multiply">Moltiplicazione</option>
+        <option value="divide">Divisione</option>
+    </select>
+    <br><br>
+    <button onclick="calculate()">Calcola</button>
+    <h2 id="result">Risultato: </h2>
+
+    <script>
+        async function calculate() {
+            const number1 = parseFloat(document.getElementById('number1').value);
+            const number2 = parseFloat(document.getElementById('number2').value);
+            const operator = document.getElementById('operator').value;
+            
+            const response = await fetch('/calculate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ number1, number2, operator }),
+            });
+
+            const data = await response.json();
+            document.getElementById('result').innerText = `Risultato: ${data.result}`;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calcolatrice</title>
+</head>
+<body>
+    <h1>Calcolatrice</h1>
+    <form method="post">
+        <label for="number1">Numero 1:</label>
+        <input type="text" id="number1" name="number1" required>
+        <br>
+        <label for="number2">Numero 2:</label>
+        <input type="text" id="number2" name="number2" required>
+        <br>
+        <label for="operator">Operazione:</label>
+        <select id="operator" name="operator">
+            <option value="add">Addizione</option>
+            <option value="subtract">Sottrazione</option>
+            <option value="multiply">Moltiplicazione</option>
+            <option value="divide">Divisione</option>
+        </select>
+        <br><br>
+        <button type="submit">Calcola</button>
+    </form>
+    {% if result is not none %}
+    <h2>Risultato: {{ result }}</h2>
+    {% endif %}
+</body>
+</html>
