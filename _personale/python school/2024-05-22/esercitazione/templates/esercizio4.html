@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>manipolazione stringhe</title>
+   
+
+
+</head>
+
+<body>
+
+
+
+{{ risultati['stringa1'] }}
+{{ risultati['stringa2'] }}
+{{ risultati['concat_1_2'] }}
+{{ risultati['concat_2_1'] }}
+{{ risultati['iniziali'] }}
+{{ risultati['stringa1_invertita'] }}
+<form >
+<table border="1">
+    <tr>
+        <th>stringa1</th>
+        <th>stringa2</th>
+        <th>concat1 e 2</th>
+        <th>concat2 e 1</th>
+        <th>iniziali</th>
+        <th>iinvers str1</th>
+    </tr>
+    <!-- per ciascuna potenza tra le powers   (ciclo for) -->
+
+    <!-- open riga -->
+    <tr>
+        <td><input name = "stringa1" type="text" value="{{risultati['stringa1']}}" required placeholder="Inserisci una stringa..."></td>
+        <td><input name = "stringa2" type="text" value="{{risultati['stringa2']}}" required placeholder="Inserisci una stringa..."></td>
+
+        <!--<td>{{ risultati['stringa1'] }}</td>
+        <td>{{ risultati['stringa2'] }}</td>-->
+        <td>{{ risultati['concat_1_2'] }}</td>
+        <td>{{ risultati['concat_2_1'] }}</td>
+        <td>{{ risultati['iniziali'] }}</td>
+        <td>{{ risultati['stringa1_invertita'] }}</td>
+    </tr>
+    </table>
+    <button type="submit">manipola stringhe</button>
+
+    </form>
+  
+
+
+    
+
+
+        
+</body>
+
+</html>
