@@ -20,6 +20,7 @@ def home():
 
 @app.route('/number_range', methods=['GET', 'POST'])
 def number_range():
+    # Definisco i default
     numbers = []
     start = 0
     stop = 10
@@ -30,6 +31,10 @@ def number_range():
             numbers = list(range(start, stop+1))
         else:
             numbers = list(range(start, stop-1, -1))
+    # In caso invece che la chiamata sia di tipo GET
+    else:
+        # Non fare nulla
+        pass
 
     return render_template('number_range_bs.html', number_list=numbers, start=start, stop=stop)
 
@@ -71,5 +76,8 @@ def string_table():
     return render_template('string_table_bs.html', results=results)
 
 
+# Controlla se questo file Python è stato eseguito come script
 if __name__ == '__main__':
+    # Sono sicuro che l'applicazione è stata avviata come script
+    # e dunque il server va avviato.
     app.run(debug=True)
