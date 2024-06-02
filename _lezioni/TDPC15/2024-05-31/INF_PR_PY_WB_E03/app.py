@@ -25,8 +25,8 @@ def number_range():
     start = 0
     stop = 10
     if request.method == 'POST':
-        start = int(request.form.get('start') or start)
-        stop = int(request.form.get('stop') or stop)
+        start = int(request.form.get('start'))
+        stop = int(request.form.get('stop'))
         if start <= stop:
             numbers = list(range(start, stop+1))
         else:
