@@ -1,6 +1,16 @@
 <ul>
-    {% for descrizione, path in esercizi %}
-    <li><a href="{{ path }}">{{ descrizione }}</a></li>
+    
+    <option><a href="{{ path }}">{{ descrizione }}</a></option>
     {% endfor %}
 </ul>
 
+<form action="/action_page.php">
+    <label for="sel1" class="form-label">seleziona Esercizio (select one):</label>
+    <select class="form-select" id="sel1" name="sellist1">
+        {% for descrizione, path in esercizi %}
+      <option>1</option>
+      <option>2</option>
+      <option>3</option>
+      <option>4</option>
+    </select>
+</form>
