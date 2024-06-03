@@ -1,8 +1,5 @@
 from datetime import date, timedelta
-import locale
 from flask import Flask, request, render_template
-
-locale.setlocale(locale.LC_TIME, 'it_IT')
 
 app = Flask(__name__)
 
@@ -16,8 +13,7 @@ def index():
     esercizi_list = [
         ('Esercizio 1', '/range_numeri'),
         ('Esercizio 2', '/potenze'),
-        ('Esercizio 3', '/date'),
-        ('Esercizio 4', '/manipolazione_stringhe')
+        ('Esercizio 3', '/date')
     ]
     return render_template('index.html', esercizi=esercizi_list)
 
@@ -68,35 +64,11 @@ def esercizio_date():
     oggi = date.today()
     for num in range(6):
         data = oggi + timedelta(days=2*num)
-        lista_date.append(data.strftime('%A %d/%m/%Y').capitalize())
+        lista_date.append(data.strftime('%A %d/%m/%Y'))
     print(lista_date)
 
     return render_template('esercizio3.html', lista_date=lista_date)
 
-
-# http://127.0.0.1:5000/manipolazione_stringhe?stringa1=Pippo&stringa2=Disney
-@app.route('/manipolazione_stringhe')
-def esercizio_stringhe():
-    # Recupero i parametri GET che l'utente ha inviato
-    str1 = request.args.get('stringa1', default='/')
-    str2 = request.args.get('stringa2', default='/')
-
-    # if not str1 or not str2:
-    #     return 'Non puoi inserire stringhe vuote!'
-
-    # Creo una struttura dati da passare al template
-    risultati = {
-        'stringa1': str1,
-        'stringa2': str2,
-        'concat_1_2': str1 + ' ' + str2,
-        'concat_2_1': f'{str2} {str1}',
-        'iniziali': f'{str1[0]}. {str2[0]}.',
-        'stringa1_invertita': str1[::-1]
-    }
-
-    print(risultati)
-
-    return render_template('esercizio4.html', risultati=risultati)
 
 # Avvia direttamente l'applicazione, in modalità debug.
 app.run(debug=True)
