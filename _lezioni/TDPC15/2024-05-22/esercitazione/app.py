@@ -12,10 +12,8 @@ def index():
     # (testo_link, url_link)
     esercizi_list = [
         ('Esercizio 1', '/range_numeri'),
-
         ('Esercizio 2', '/potenze'),
         ('Esercizio 3', '/date')
-        ('Esercizio 1', '/range_numeri')
     ]
     return render_template('index.html', esercizi=esercizi_list)
 
@@ -73,10 +71,27 @@ def esercizio_date():
         lista_date.append(data.strftime('%A %d/%m/%Y'))
     print(lista_date)
 
-    return render_template('esercizio3.html', lista_date=lista_date)    
+    return render_template('esercizio3.html', lista_date=lista_date)
+
+# http://127.0.0.1:5000/manipolazione_stringhe?stringa1=luca&stringa2=paolo
+
+@app.route('/manipolazione_stringhe')
+def esercizio_stringhe():
+    str1 = (request.args.get('stringa1', default='/'))
+    str2 = (request.args.get('stringa2', default=''))
+
+    risultati = {
+        'stringa1': str1,
+        'stringa2': str2,
+        'concat_1_2': str1 + ' ' + str2,
+        'concat_2_1': f'{str2} {str1}',
+        'iniziali': f'{str1[0]} e {str2[0]}',
+        'stringa_invertita': str1[::-1]
+    }
+    
+    return render_template('esercizio4.html', risultati=risultati, stringa1=str1, stringa2=str2)
 
 
-   
 
 # Avvia direttamente l'applicazione in modalità debug.
 app.run(debug=True)

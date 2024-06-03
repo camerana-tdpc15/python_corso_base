@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STRINGHE</title>
+</head>
+<body>
+
+    <form style="margin-left: 20%;margin-top: 20px;">
+        stringa1: <input id="input-start" type="text" name="stringa1" value="{{ inizio }}" required>
+        stringa2: <input id="input-stop" type="text" name="stringa2" value="{{ fine }}" required>
+        <button type="submit">Genera stringhe</button>
+    </form>
+
+<div >
+    <table style="border:1px solid black;width: 350px; margin-left: 30%;margin-top: 50px;">
+        <tr>
+            <th style="border:1px solid black;text-align: center;">Chiave</th>
+            <th style="border:1px solid black;text-align: center;">Valore</th>
+        </tr>
+        
+        <tr>
+            <td style="border:1px solid black;text-align: center;">stringa1</td>
+            <td style="border:1px solid black;text-align: center;">{{ risultati['stringa1'] }}</td> 
+        <tr>   
+            <td style="border:1px solid black;text-align: center;text-align: center;">stringa2</td>
+            <td style="border:1px solid black;text-align: center;">{{ risultati['stringa2'] }}</td> 
+        </tr> 
+        <tr>    
+            <td style="border:1px solid black;text-align: center;">concat_1_2</td> 
+            <td style="border:1px solid black;text-align: center;">{{ risultati['concat_1_2'] }}</td>
+        </tr> 
+        <tr>
+            <td style="border:1px solid black;text-align: center;">concat_2_1</td>
+            <td style="border:1px solid black;text-align: center;">{{ risultati['concat_2_1'] }}</td> 
+        </tr>
+        <tr>
+            <td style="border:1px solid black;text-align: center;">iniziali</td>
+            <td style="border:1px solid black;text-align: center;">{{ risultati['iniziali'] }}</td> 
+        </tr>
+        <tr>
+            <td style="border:1px solid black;text-align: center;">stringa1_invertita</td>
+            <td style="border:1px solid black;text-align: center;">{{ risultati['stringa_invertita'] }}</td> 
+        </tr>   
+        </tr>
+    </table>
+</div>    
+</body>
+</html>
