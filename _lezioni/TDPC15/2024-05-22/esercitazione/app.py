@@ -1,4 +1,4 @@
-from datetime import date, timedelta  
+from datetime import date, timedelta 
 from flask import Flask, request, render_template
 
 app = Flask(__name__)
@@ -12,9 +12,10 @@ def index():
     # (testo_link, url_link)
     esercizi_list = [
         ('Esercizio 1', '/range_numeri'),
+
         ('Esercizio 2', '/potenze'),
         ('Esercizio 3', '/date')
-
+        ('Esercizio 1', '/range_numeri')
     ]
     return render_template('index.html', esercizi=esercizi_list)
 
@@ -22,6 +23,8 @@ def index():
 # http://127.0.0.1:5000/range_numeri
 # Oppure a un URL come questo, contenente dei parametri:
 # http://127.0.0.1:5000/potenze
+# http://127.0.0.1:5000/range_numeri
+
 @app.route('/range_numeri')
 def esercizio_range():
     try:
@@ -50,12 +53,13 @@ def esercizio_potenze():
     numero = int(request.args.get('base_number', default=2))
     # print('Numero ricevuto:', numero)
     potenze = {}
+
     for esponente in range(2, 21):
         potenze[esponente] = numero ** esponente
 
     # potenze = {... dict comprehension}
     print(potenze)
-    return render_template('esercizio2.html', powers=potenze, base_number=numero)
+    return render_template('esercizio2.html', powers=potenze, submitted_number=numero)
 
 # http://127.0.0.1:5000/date
 
@@ -72,6 +76,7 @@ def esercizio_date():
     return render_template('esercizio3.html', lista_date=lista_date)    
 
 
+   
 
 # Avvia direttamente l'applicazione in modalità debug.
 app.run(debug=True)
