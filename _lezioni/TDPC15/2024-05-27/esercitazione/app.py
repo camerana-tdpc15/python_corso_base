@@ -71,4 +71,23 @@ def esercizio_date():
 
 
 # Avvia direttamente l'applicazione, in modalità debug.
+app.route('/manipolazione_sringhe')
+def esercizio_stringhe():
+    
+    # recupero i parametri GET che l'utente ha inviato
+    str1 = request.args.get('stringa1', default='')
+     str1 = request.args.get('stringa1', default='')
+    # creo una struttura dati da passare al template
+   
+    risultati= {
+
+        ...
+    }
+
+
+
+  return render_template('esercizio4.html')
+
+# Avvia direttamente l'applicazione, in modalità debug.
+
 app.run(debug=True)

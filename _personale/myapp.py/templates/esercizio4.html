@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>LISTA DATE</title>
+    <!-- importare css bootstrap -->
+</head>
+
+<body>
+    <!-- <form>
+        <button type="submit">Genera lista</button>
+    </form> -->
+    <ul>
+        {% for data in lista_date %}
+        <li>{{ data }}</li>
+        {% endfor %}
+    </ul>
+</body>
+
+{{ risultati['stringa1'] }}
+{{ risultati['stringa2'] }}
+{{ risultati['concat_1_2'] }}
+{{ risultati['concat_2_1'] }}
+{{ risultati['iniziali'] }}
+{{ risultati['stringa1_invertita'] }}
+
+<table border="1">
+    <tr>
+        <th>Striga 1</th>
+        <th>Stringa 2</th>
+        <th>Concat 1 e 2</th>
+        <th>Concat 2 e 1</th>
+        <th>Iniziali</th>
+        <th>Inversione stringa 1</th>
+    </tr>
+    {% for esponente, risultato in powers.items() %}
+    <tr>
+        <td><input name="stringa1_invertita" type="text" value ="{{ risultati['stringa1'] }}"></td>
+        <td>{{ risultati['stringa2'] }}</td>
+        <td>{{ risultati['concat_1_2'] }}</td>
+        <td>{{ risultati['concat_2_1'] }}</td>
+        <td>{{ risultati['iniziali'] }}</td>
+        <td>{{ risultati['stringa1_invertita'] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+</html>

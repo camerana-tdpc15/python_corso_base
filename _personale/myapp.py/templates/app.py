@@ -71,4 +71,31 @@ def esercizio_date():
 
 
 # Avvia direttamente l'applicazione, in modalità debug.
+app.route('/manipolazione_sringhe')
+def esercizio_stringhe():
+    
+    # recupero i parametri GET che l'utente ha inviato
+    str1 = request.args.get('stringa1', default='/')
+    str2 = request.args.get('stringa1', default='/')
+    # creo una struttura dati da passare al template
+   
+    risultati= {
+        'stringa1': str1,
+        'stringa1': str1,
+        'concat_1_2': str1 + ' ' + str2 ,
+        'concat_2_1': str2 + ' ' + str1,
+        'iniziali': f'{str1[0]}, {str2[0]},',
+        'stringa_invertita': str1[::-1]
+
+     
+    }
+    print(risultati)
+    return render_template('esercizio4.html', risultati=risultati)
+
+
+
+    return render_template('esercizio4.html')
+
+# Avvia direttamente l'applicazione, in modalità debug.
+
 app.run(debug=True)

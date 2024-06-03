@@ -1,15 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>TABELLA POTENZE</title>
+    <!-- importare css bootstrap -->
 </head>
+
 <body>
     <form>
-    numero: <input type="number" name="base_number" value="{{ submitted_number}}">
-    <button type="submit">Genera Potenza</button>
+        Numero: <input type="number" name="base_number" value="{{ submitted_number }}">
+        <button type="submit">Genera potenze</button>
     </form>
+
 
     <table border="1">
         <tr>
@@ -17,16 +19,15 @@
             <th>Descrizione</th>
             <th>Risultato</th>
         </tr>
-       {% for esponente, risultato in powers.items() %}
-    <tr>
-         <!-- per ciascuna potenza in powers -->
-        <td>{{ submitted_number }}<sup> {{ esponente }}</sup></td>
-        <td>{{ submitted_number }} elevato a {{ esponente }}</td>
-        <td>{{ risultato }}</td>
-     </tr>
-
-       
-       {% endfor %}
+        {% for esponente, risultato in powers.items() %}
+        <tr>
+            <td>{{ submitted_number }}<sup>{{ esponente }}</sup></td>
+            <td>{{ submitted_number }} elevato a {{ esponente }}</td>
+            <td>{{ risultato }}</td>
+        </tr>
+        {% endfor %}
     </table>
+
 </body>
+
 </html>
