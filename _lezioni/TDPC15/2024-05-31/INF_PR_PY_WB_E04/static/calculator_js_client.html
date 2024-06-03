@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calcolatrice</title>
+    <meta charset="UTF-8">
+    <style>
+        .calculator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .calc-section {
+            margin: 5px;
+        }
+        .calc-operation {
+            display: flex;
+            flex-direction: column;
+        }
+        button {
+            margin: 2px;
+            width: 30px;
+            height: 30px;
+        }
+        input, .result {
+            width: 100px;
+            text-align: center;
+        }
+        input, button, .calc-section {
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+        }
+        .result {
+            border: 1px solid #000;
+            border-radius: 3px;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Calcolatrice Flask - Fetch API (AJAX)</h1>
+    <form id="calc-form" class="calculator" accept-charset="UTF-8">
+        <div class="calc-section">
+            <input type="text" id="calc-form-number1" name="number1" value="0" required onclick="this.select()">
+        </div>
+        <div class="calc-section calc-operation">
+            <button type="button" onclick="sendCalcRequest('add')">+</button>
+            <button type="button" onclick="sendCalcRequest('subtract')">–</button>
+            <button type="button" onclick="sendCalcRequest('multiply')">*</button>
+            <button type="button" onclick="sendCalcRequest('divide')">/</button>
+        </div>
+        <div class="calc-section">
+            <input type="text" id="calc-form-number2" name="number2" value="0" required onclick="this.select()">
+        </div>
+        <div class="calc-section">
+            <span>=</span>
+        </div>
+        <div class="calc-section">
+            <div class="result" id="result"></div>
+        </div>
+    </form>
+    
+    <script>
+        // Crea manualmente l'oggetto "data" da inviare con i valori del form.
+        // NOTA: fetch() non converte automaticamente oggetti in JSON.
+        //       Bisogna farlo manualmente con JSON.stringify() e poi impostare
+        //       il Content-Type a 'application/json'.
+        function sendCalcRequestLegacy(operation) {
+            let data = {
+                'number1': document.getElementById('calc-form-number1').value,
+                'number2': document.getElementById('calc-form-number2').value,
+                'operation': operation
+            };
+
+            console.log('sendCalcRequestLegacy() - data:', data);
+
+            // Invia la richiesta al server
+            fetch('/calculator_js_client', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.text())
+            .then(text => {
+                document.getElementById('result').innerText = text; // Mostra il risultato
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Crea rapidamente l'oggetto "data" da inviare tramite FormData
+        // NOTA: fetch() converte automaticamente un oggetto FormData e
+        //       imposta automativamente il corretto Content-Type.
+        function sendCalcRequest(operation) {
+            let form = document.getElementById('calc-form');
+            let data = new FormData(form);
+            data.append('operation', operation); // Aggiungi l'operazione al FormData
+
+            console.log('sendCalcRequest() - data:', data);
+
+            // Invia la richiesta al server
+            fetch('/calculator_js_client', {
+                method: 'POST',
+                body: data
+            })
+            .then(response => response.text())
+            .then(text => {
+                document.getElementById('result').innerText = text; // Mostra il risultato
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+    </script>
+
+</body>
+</html>
