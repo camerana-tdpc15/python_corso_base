@@ -6,7 +6,8 @@ app = Flask(__name__)
 # 2. definizione Funzione per calcolare il risultato
 # la funzione calcola prende 3 argomenti: number1, number2 e operation
 def _calcola(number1, number2, operation):
-    # Controlla che i parametri passati siano numeri validi cercando di convertire i number1 e 2 in float
+    # Controlla che i parametri passati siano numeri validi 
+    # cercando di convertire i number1 e 2 in float
     try:
         number1 = float(number1)
         number2 = float(number2)
