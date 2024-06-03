@@ -21,18 +21,15 @@ def index():
 # http://127.0.0.1:5000/range_numeri?start=1&stop=10
 @app.route('/range_numeri')
 def esercizio_range():
-
-    # Leggiamo gli eventuali parametri passati nell'URL (?start=...&stop=...)
-    #     ATTENZIONE - DA SVOLGERE (vedi notebook esercitazione.ipynb):
-    #     1. se uno o entrambi i parametri non fossero presenti, è necessario
-    #       avere un valore di default.
-    #     2. prima di convertire in int, bisogna controllare che sia possibile.
     try:
-        start = int(request.args.get('start', default= 0))
-        stop = int(request.args.get('stop', default= 0))
+        start = int(request.args.get('start', default=0))
+        stop = int(request.args.get('stop', default=0))
     except ValueError as err:
         return f'Hai inserito un numero non convertibile in intero: {err}'
-
+    except Exception as err:
+        # ATTENZIONE: In questo modo potremmo rivelare all'utente delle possibili falle...
+        return f'Si è verificato un errore. Riprova: {err}'
+    
     # Crea un range da usarsi nella generazione dell'elenco puntato.
     numeri = range(start, stop)
 
@@ -42,17 +39,20 @@ def esercizio_range():
     return render_template('esercizio1.html', inizio=start, fine=stop, numeri=numeri)
 
 # Questa route deve risponde a un URL come questo:
-# http://127.0.0.1:5000/range_numeri
+# http://127.0.0.1:5000/potenze
 # Oppure a un URL come questo, contenente dei parametri:
 # http://127.0.0.1:5000/potenze?number=4
 @app.route('/potenze')
 def esercizio_potenze():
     numero = int(request.args.get('base_number', default=2))
+    # print('Numero ricevuto:', numero)
     potenze = {}
-    for esponente in range(2:6):
-        potenze[idx] = numero ** esponente
-    return render_template('esercizio2.html', submitted_number = numero)
+    for esponente in range(2, 6):
+        potenze[esponente] = numero ** esponente
 
+    # potenze = {... dict comprehension}
+    print(potenze)
+    return render_template('esercizio2.html', powers=potenze, submitted_number=numero)
 
-# Avvia direttament l'applicazione in modalità debug.
+# Avvia direttamente l'applicazione in modalità debug.
 app.run(debug=True)
