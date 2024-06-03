@@ -1,6 +1,9 @@
-
 from datetime import date, timedelta
 from flask import Flask, request, render_template
+
+import locale
+
+locale.setlocale(locale.LC_TIME, 'it_IT')
 
 app = Flask(__name__)
 
@@ -16,7 +19,9 @@ def index():
         
         ('Potenze', '/potenze?number=4'),
 
-        ('Date', '/date')
+        ('Date', '/date'),
+        
+        ('Manipolazione stringhe', '/manipolazione_stringhe')
     ]
     return render_template('index.html', esercizi=esercizi_list)
 
@@ -71,13 +76,21 @@ def esercizio_date():
     return render_template('esercizio3.html',lista_date = lista_date)
 
 
+@app.route('/manipolazione_stringhe')
+def esercizio_stringhe():
+    stringa1 = request.args.get('stringa1', default='/' )
+    stringa2 = request.args.get('stringa2', default='/' )
 
+    risultati = {
+        'stringa1': stringa1,
+        'stringa2': stringa2,
+        'concat_1_2': stringa1 +' '+ stringa2,
+        'concat_2_1': f'{stringa2}  {stringa1}',
+        'iniziali': f'{stringa1[0].upper()}. {stringa2[0].upper()}.',
+        'stringa_invertita':stringa1[::-1]
+    }
 
-
-
-
-
-
+    return render_template('esercizio4.html', risultati=risultati)
 
 
 
