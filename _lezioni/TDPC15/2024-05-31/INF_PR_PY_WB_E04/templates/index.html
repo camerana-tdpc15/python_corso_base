@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home Calcolatrici</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>Benvenuto nella Home delle Calcolatrici con Flask</h1>
+    <ul>
+        {% for calculator in calculators %}
+            <li><a href="{{ calculator.url }}">{{ calculator.title }}</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

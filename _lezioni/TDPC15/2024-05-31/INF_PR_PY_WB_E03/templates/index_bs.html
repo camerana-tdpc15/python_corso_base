@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Home - Semplici Applicazioni</title>
+    {% include 'template_head.html' %}
+</head>
+<body>
+    <div class="container mt-3">
+        <h1>Semplici Applicazioni - Esercizi con Flask</h1>
+        <div class="list-group">
+            {% for descrizione, path in esercizi %}
+            <a href="{{ path }}" class="list-group-item list-group-item-action">{{ descrizione }}</a>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
