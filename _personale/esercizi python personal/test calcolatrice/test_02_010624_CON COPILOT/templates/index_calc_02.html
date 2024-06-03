@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcolatrice</title>
+</head>
+<body>
+    <h1>Calcolatrice</h1>
+    <form action="/calculate" method="post">
+        <input type="number" name="num1" placeholder="Inserisci il primo numero" required>
+        <select name="operator">
+            <option value="add">+</option>
+            <option value="subtract">-</option>
+            <option value="multiply">*</option>
+            <option value="divide">/</option>
+        </select>
+        <input type="number" name="num2" placeholder="Inserisci il secondo numero" required>
+        <button type="submit">Calcola</button>
+    </form>
+
+    {% if result %}
+        <h2>Risultato:</h2>
+        <p>Il risultato è: {{ result }}</p>
+    {% endif %}
+</body>
+</html>
