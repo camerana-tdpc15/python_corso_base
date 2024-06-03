@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calcolatrice Python</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h2>Calcolatrice</h2>
+    <form action="/calculator_template" method="post" accept-charset="UTF-8">
+        Numero 1:<br>
+        <input type="text" name="number1">
+        <br>
+        Numero 2:<br>
+        <input type="text" name="number2">
+        <br>
+        Operazione:<br>
+        <select name="operation">
+            <option value="add">Addizione</option>
+            <option value="subtract">Sottrazione</option>
+            <option value="multiply">Moltiplicazione</option>
+            <option value="divide">Divisione</option>
+        </select>
+        <br><br>
+        <input type="submit" value="Calcola">
+    </form>
+    {% if result or result == 0 %}
+    <h3>Risultato: {{ result }}</h3>
+    {% endif %}
+</body>
+</html>
