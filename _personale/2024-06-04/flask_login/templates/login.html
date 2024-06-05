@@ -1,6 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>LOGIN</title>
+    {% include 'includes/template_head.html' %}
+</head>
+<body>
+    <div class="container mt-3">
+        <h1>Benvenuto nella Pagina di LOGIN</h1>
+
+        <form method="post">
+            <div class="mb-3 mt-3">
+              <label for="username_input" class="form-label">Nome:</label>
+              <input type="text" class="form-control" id="username_input" placeholder="inserisci il nome" name="tx_user">
+            </div>
+            <div class="mb-3">
+              <label for="password_input" class="form-label">Password:</label>
+              <input type="password" class="form-control" id="password_input" placeholder="inserisci la password" name="tx_password">
+            </div>
+            
+            </div>
+            <button type="submit" class="btn btn-primary">Invia</button>
+          </form>
+          
+        
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
@@ -21,4 +60,4 @@
 </html>
 
 
-
+ -->

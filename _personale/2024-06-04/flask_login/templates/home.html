@@ -1,4 +1,26 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Home - Semplici Applicazioni</title>
+    {% include 'includes/template_head.html' %}
+</head>
+<body>
+    <div class="container mt-3">
+        <h1>Benvenuto nella Home</h1>
+        <div class="list-group">
+            {% for dato in contenitore %}
+            <a href="{{ dato.url }}" class="list-group-item list-group-item-action">{{ dato.title }}</a>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
+
+<!-- <!DOCTYPE html>
 <html>
 <head>
     <title>Home</title>
@@ -12,4 +34,4 @@
         {% endfor %}
     </ul>
 </body>
-</html>
+</html> -->
