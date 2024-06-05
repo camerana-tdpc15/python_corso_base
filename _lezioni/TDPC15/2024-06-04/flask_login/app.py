@@ -8,9 +8,12 @@ USERS = {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 >>>>>>> upstream/main
+=======
+>>>>>>> origin/main
 # route per Home
 @app.route('/')
 def home():
@@ -33,25 +36,34 @@ def login():
         if rx_username in USERS:
             if rx_password == USERS[rx_username]:
 <<<<<<< HEAD
+<<<<<<< HEAD
                 ...
         #       return render_template('films.html')
 =======
+=======
+>>>>>>> origin/main
                 # ATTENZIONE: Notate che se restituite il template films.html
                 #             l'URL rimane il medesimo!
                 # return render_template('films.html')
 
                 # Bisogna invece fare un redirect:
                 return redirect(url_for('films'))
+<<<<<<< HEAD
 >>>>>>> upstream/main
+=======
+>>>>>>> origin/main
 
     return render_template('login.html')
 
 
 # route per Films
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 >>>>>>> upstream/main
+=======
+>>>>>>> origin/main
 @app.route('/films')
 def films():
     return render_template('films.html')
