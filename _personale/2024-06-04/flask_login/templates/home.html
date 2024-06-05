@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>Benvenuto nella Home</h1>
+    <ul>
+        {% for dato in contenitore %}
+            <li><a href="{{ dato.url }}">{{ dato.title }}</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
