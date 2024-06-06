@@ -49,10 +49,10 @@ def esercizio_range():
 # http://127.0.0.1:5000/potenze?base_number=4
 @app.route('/potenze')
 def esercizio_potenze():
-    numero = int(request.args.get('base_number', default=2))
+    numero = int(request.args.get('base_number', default=0))
     # print('Numero ricevuto:', numero)
     potenze = {}
-    for esponente in range(2, 6):
+    for esponente in range(2, 8):
         potenze[esponente] = numero ** esponente
 
     # potenze = {esponente: numero ** esponente for esponente in range(2, 6)}
@@ -67,7 +67,7 @@ def esercizio_date():
     lista_date = []
     oggi = date.today()
     for num in range(6):
-        data = oggi + timedelta(days=2*num)
+        data = oggi + timedelta(days=3*num)
         lista_date.append(data.strftime('%A %d/%m/%Y').capitalize())
     # print(lista_date)
 
@@ -105,5 +105,8 @@ def esercizio_stringhe():
 
 
 
-# Avvia direttamente l'applicazione, in modalità debug.
-app.run(debug=True)
+# Avvia direttamente l'applicazione, in modalità debug.}
+if __name__ == '__main__':
+    # sono sicuro che l'applicaizone es trata avviata come script
+    # e dunque il server va avviato
+    app.run(debug=True)
