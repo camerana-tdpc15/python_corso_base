@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Home del mio sito{% endblock %}
+
+{% block content %}
+<div class="jumbotron bg-light p-5 rounded-lg">
+    <h1 class="display-4">Benvenuto nel mio sito!</h1>
+    <p class="lead">Questa è la homepage del mio bellissimo sito</p>
+</div>
+<div class="list-group">
+    {% for dato in contenitore %}
+    <a href="{{ dato.url }}" class="list-group-item list-group-item-action">{{ dato.title }}</a>
+    {% endfor %}
+</div>
+{% endblock %}
