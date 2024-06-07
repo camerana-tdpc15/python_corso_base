@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Date</title>
+    {% include 'template_head.html' %}
+</head>
+<body>
+    <div class="container mt-3">
+        <h1>Date</h1>
+        <form method="post">
+            <button type="submit" class="btn btn-primary" name="submit_dates">Genera date</button>
+        </form>
+        <ul class="list-group mt-3">
+            {% for date in date_list %}
+            <li class="list-group-item">{{ date }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
+</body>
+</html>
