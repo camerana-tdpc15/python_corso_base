@@ -1,17 +1,20 @@
 <ul class="pagination pagination-lg justify-content-center ">
-    <li class="page-item">
-      <a class="page-link bg-warning" href="#" >Previous</a>
-    </li>
+    
     <li class="page-item">
       <a class="page-link bg-warning" href="/">Home</a>
     </li>
+    
     <li class="page-item">
+      <a class="page-link bg-warning" href="/films">Films</a>
+    </li>
+
+    {%if 'username' in session %}
+    <li class="page-item">      
+      <a class="page-link bg-warning" href="/logout">Logout</a>
+    </li>
+    {% else %}
+    <li class="page-item">      
       <a class="page-link bg-warning" href="/login">Login</a>
     </li>
-    <li class="page-item">
-      <a class="page-link bg-warning" href="/film">Films</a>
-    </li>
-    <li class="page-item">
-      <a class="page-link bg-warning" href="#">Next</a>
-    </li>
+    {% endif %}
   </ul>
