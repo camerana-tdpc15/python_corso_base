@@ -1,12 +1,13 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect, url_for
 
 app = Flask(__name__)
 
+# Struttura dati per contenere gli utenti
+# (in futuro leggeremo questi dati direttamente da un database)
 USERS = {
     'mrossi': 'osoejfj3',
     'ggangi': 'odoeooeee'
 }
-
 
 # route per Home
 @app.route('/')
@@ -29,14 +30,17 @@ def login():
         # Per copntrollare se un utente è presente
         if rx_username in USERS:
             if rx_password == USERS[rx_username]:
-                ...
-        #       return render_template('films.html')
+                # ATTENZIONE: Notate che se restituite il template films.html
+                #             l'URL rimane il medesimo!
+                # return render_template('films.html')
+
+                # Bisogna invece fare un redirect:
+                return redirect(url_for('films'))
 
     return render_template('login.html')
 
 
 # route per Films
-
 @app.route('/films')
 def films():
     return render_template('films.html')
