@@ -1,15 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home</title>
 
     <!-- incluco boostrap -->
-    {%include 'boostrap_5.html'%}
-    
-</head>
-<body>
-    
-</body>
+    {% include 'boostrap_5.html' %}
+  </head>
+  <body class="bg-warning">
+    <div class="container-fluid">
+      {% include 'menu.html' %}
+
+      <div class="p-5 my-5 bg-primary text-white border border-0 d-flex align-items-center">
+        <img src="img/ciak.png" alt="ciak" class="img-fluid me-3" />
+        <h1 class="mb-0">Benventuti su Sito Film</h1>
+        <img src="img/ciak.png" alt="ciak" class="img-fluid me-3" />
+      </div>
+
+      <div class="bg-danger text-white text-center mt-0">
+        <h2>Questa è la home page del sito.</h2>
+
+        <h3>Fai il <a href="/login">login</a> per accedere.</h3>
+      </div>
+    </div>
+  </body>
 </html>
