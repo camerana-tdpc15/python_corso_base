@@ -4,9 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
+    <!-- importo boostrap -->
+    {% include 'boostrap.html' %}
     
 </head>
 <body>
-    
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <div class="container-fluid">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" >Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/films" >Film</a>
+                </li>
+                
+            </ul>
+        </div>
+    </nav>
+    {%if 'username' in session %}
+    <p>Vai alla <a href="/films">pagina dei film</a></p>
+    <p>oppure fai <a href="/logout">Logout</a></p>
+    {%else%}
+    <p>Fai il <a href="/login">Login</a> per accedere</p>
+    {%endif%}
 </body>
 </html>

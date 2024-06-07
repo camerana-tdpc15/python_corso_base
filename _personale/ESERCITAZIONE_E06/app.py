@@ -1,6 +1,8 @@
-from flask import Flask,request, render_template
+from flask import Flask,request, render_template, redirect,url_for,session
 
 app= Flask(__name__)
+#impostiamo una chiave segreta
+app.secret_key='paolortaldapaolortaldapaolortalda'
 
 USERS= {
 # Nome : password 
@@ -9,7 +11,7 @@ USERS= {
 }
 
 
-@app.route("/home")
+@app.route("/")
 def home():
    return render_template('home.html')
 
@@ -18,8 +20,10 @@ def home():
 
 @app.route("/films")
 def films():
-   return render_template('films.html')
-
+    if 'username'in session:
+        return render_template('films.html')
+    else:
+       return redirect(url_for('login')) 
 
 
 
@@ -34,12 +38,15 @@ def login():
         if rx_username in USERS:          
 
             if rx_password == USERS[rx_username]:
+               session['username']= rx_username
                 
-               return render_template('films.html')
-               
-    return render_template('login.html')
+               return redirect(url_for('films'))
+    return render_template('login.html')        
 
-
+@app.route('/logout')
+def logout():
+    session.pop('username')
+    return redirect (url_for('home'))
 
 if __name__ == '__main__':
     app.run(debug=True)
