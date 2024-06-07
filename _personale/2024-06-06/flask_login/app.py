@@ -10,10 +10,8 @@ USER = {"mrossi": "osoejfj3", "ggangi": "odoeooeee"}
 
 @app.route("/")
 def home():
-     # Lista di dizionari contenenti titolo e URL
-    contenitore = [
-        {'title': 'Login', 'url': '/login'}
-    ]
+    # Lista di dizionari contenenti titolo e URL
+    contenitore = [{"title": "Login", "url": "/login"}]
     # Passiamo la lista al template
 
     return render_template("home.html", contenitore=contenitore)
@@ -39,11 +37,12 @@ def login():
         if rx_username in USER:
             if rx_password == USER[rx_username]:
 
-                return redirect(url_for('films'))
+                return redirect(url_for("films"))
             else:
-                return ('PASSWORD ERRATA')
+                return "PASSWORD ERRATA"
+
         else:
-            return ('USER NON VALIDO')
+            return "USER NON VALIDO"
 
     return render_template("login.html")
 
