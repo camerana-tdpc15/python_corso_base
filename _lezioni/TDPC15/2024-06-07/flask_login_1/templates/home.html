@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    {% include 'includes/head.html' %}
+</head>
+<body>
+    {% include 'includes/navbar.html' %}
+    
+    <!-- Ho aggiunto un div con classe Bootstrap per un migliore layout -->
+    <div class="container mt-4">
+
+        <h1 class="display-4">Benventuti su Sito Film!</h1>
+        <p class="lead">Questa è la home page del sito.</p>
+        {% if 'username' in session %}
+        <p>Vai alla <a href="/films">pagina dei film</a>;</p>
+        <p>oppure <a href="/logout">fai il logout</a></p>
+        {% else %}
+        <p>Fai il <a href="/login">login</a> per accedere.</p>
+        {% endif %}
+    
+    </div>
+
+</body>
+</html>
