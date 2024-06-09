@@ -1,6 +1,8 @@
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, session
 
 app = Flask(__name__)
+
+app.secret_key = 'my_very_secret_key123'
 
 USER = {"mrossi": "osoejfj3", "ggangi": "odoeooeee"}
 
@@ -36,6 +38,7 @@ def login():
 
         if rx_username in USER:
             if rx_password == USER[rx_username]:
+                session['username'] = rx_username
 
                 return redirect(url_for("films"))
             else:
@@ -52,8 +55,21 @@ def login():
 
 @app.route("/films")
 def films():
+    if 'username' in session:
 
-    return render_template("films.html")
+        films = [
+            {'title': 'Akira', 'image': '/static/akira.jpg'}
+        ]
+
+        return render_template('films.html', films=films)
+    else:
+        return redirect(url_for('login'))
+
+
+@app.route('/logout')
+def logout():
+    session.pop('username')
+    return redirect(url_for('home'))
 
 
 if __name__ == "__main__":
