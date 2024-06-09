@@ -1,0 +1,19 @@
+html, body {
+    height: 100%;
+}
+body {
+    display: flex;
+    flex-direction: column;
+}
+.container {
+    flex: 1;
+}
+footer {
+    flex-shrink: 0;
+}
+
+.card-img-top {
+    height: 225px; /* Altezza fissa */
+    object-fit: cover; /* Mantiene le proporzioni, tagliando l'eccesso */
+    width: 100%; /* Adatta la larghezza del box */
+}
