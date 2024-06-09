@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    {% include 'includes/head.html' %}
+</head>
+<body>
+    {% include 'includes/navbar.html' %}
+
+    <div class="container mt-4">
+
+        <h2>Lista film</h2>
+
+        <!-- Uso le classi row e col per impaginare le locandine -->
+        <!-- Per esempio posso creare una row contenitore -->
+        <div class="row">
+            <!-- Ciclo la lista contenente i film -->
+            {% for film in films %}
+                <!-- E metto ciascuna locandina in una colonna -->
+                <!-- Fino a 768px (md) di larghezza usa 4 colonne -->
+                <div class="col-md-4">
+                    <!-- Uso una card Bootstrap -->
+                    <div class="card mb-4 shadow-sm">
+                        <!-- Uso  film.image e film.title -->
+                        <img src="{{ url_for('static', filename='imgs/'+film.image) }}" class="bd-placeholder-img card-img-top">
+                        <div class="card-body">
+                            <p class="card-text">{{ film.title }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+</body>
+</html>
