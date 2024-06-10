@@ -52,7 +52,7 @@ def login():
 
 @app.route('/logout')
 def logout():
-    session.pop('username')
+    session.pop('username', None)
     return redirect(url_for('home'))
 
 

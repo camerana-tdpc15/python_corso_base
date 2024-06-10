@@ -6,16 +6,15 @@
 </head>
 <body>
     {% include 'include_navbar.html' %}
-    <div class="jumbotron">
-        <h1 class="display-4">Benventuti su Sito Film!</h1>
-        <p class="lead">Questa è la home page del sito.</p>
-        {% if 'username' in session %}
-        <p>Vai alla <a href="/films">pagina dei film</a>;</p>
-        <p>oppure <a href="/logout">fai il logout</a></p>
-        {% else %}
-        <p>Fai il <a href="/login">login</a> per accedere.</p>
-        {% endif %}
-    </div>
+    
+    <h1 class="display-4">Benventuti su Sito Film!</h1>
+    <p class="lead">Questa è la home page del sito.</p>
+    {% if 'username' in session %}
+    <p>Vai alla <a href="/films">pagina dei film</a>;</p>
+    <p>oppure <a href="/logout">fai il logout</a></p>
+    {% else %}
+    <p>Fai il <a href="/login">login</a> per accedere.</p>
+    {% endif %}
 
 </body>
 </html>

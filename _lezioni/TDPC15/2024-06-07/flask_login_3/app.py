@@ -1,22 +1,9 @@
-# NOVITA': Importiamo anche la funzione "flash" !
 from flask import Flask, request, render_template, redirect, url_for, session, flash
+from db import USERS, FILMS
 
 app = Flask(__name__)
 
 app.secret_key = 'my_very_secret_key123'
-
-USERS = {
-    'mrossi': 'osoejfj3',
-    'ggangi': 'odoeooeee'
-}
-
-FILMS = [
-    {'title': 'Akira', 'image': 'akira.jpg'},
-    {'title': 'Ghost in the Shell', 'image': 'gits.jpg'},
-    {'title': 'Blade Runner', 'image': 'blade-runner.jpg'},
-    {'title': 'Hackers', 'image': 'hackers.jpg'},
-    {'title': 'Nirvana', 'image': 'nirvana.jpg'},
-]
 
 @app.route('/')
 def home():
@@ -32,18 +19,12 @@ def login():
 
         # Se il nome utente è presente e la password è corretta:
         if rx_username in USERS and rx_password == USERS[rx_username]:
-            # NOVITA': Uso la funzionalità "flash" per mostrare un messaggio
-            #          Vedi /templates/includes/flash.html
-            flash('Login avvenuto correttamente!', 'success')
-
             session['username'] = rx_username
-
+            flash('Login avvenuto correttamente!', 'success')
             return redirect(url_for('films'))
         
         # Altrimenti, se le credenziali non sono corrette:
         else:
-            # NOVITA': Uso la funzionalità "flash" per mostrare un messaggio
-            #          Vedi /templates/includes/flash.html
             flash('Username o password non validi.', 'danger')
 
     return render_template('login.html')
@@ -52,8 +33,6 @@ def login():
 @app.route('/logout')
 def logout():
     session.pop('username', None)
-    # NOVITA': Uso la funzionalità "flash" per mostrare un messaggio
-    #          Vedi /templates/includes/flash.html
     flash('Logout effettuato correttamente.', 'warning')
     return redirect(url_for('home'))
 
