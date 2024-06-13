@@ -24,22 +24,23 @@ def get_user_password(username):
     """
     try:
         # Connessione al database
-        with sqlite3.connect(DATABASE) as conn:
-            # Creazione di un cursore
-            cursor = conn.cursor()
-            # Preparazione della query SQL
-            query = f"SELECT PASSWORD FROM {USER_TABLE_NAME} WHERE LOGIN = ?"
-            # Esecuzione della query
-            cursor.execute(query, (username,))
-            # Recupero del risultato
-            result = cursor.fetchone()
-            # Chiusura esplicita del cursore
-            cursor.close()
-            # Restituisce la password se l'utente è stato trovato
-            if result:
-                return result[0]
-            else:
-                return None
+        conn = sqlite3.connect(DATABASE)
+        # Creazione di un cursore
+        cursor = conn.cursor()
+        # Preparazione della query SQL
+        query = f"SELECT PASSWORD FROM {USER_TABLE_NAME} WHERE LOGIN = ?"
+        # Esecuzione della query
+        cursor.execute(query, (username,))
+        # Recupero del risultato
+        result = cursor.fetchone()  # tuple es. ('password1',)
+        # Chiusura della connessione
+        conn.close()
+        # Restituisce la password se l'utente è stato trovato
+        if result:
+            return result[0]
+        else:
+            return None
+
     except sqlite3.Error as err:
         print(f"Si è verificato un errore durante l'accesso al database: {err}")
         return None
@@ -90,8 +91,10 @@ def _init_user_table():
     if os.path.exists(USER_TABLE_CSV):
         # Usa un blocco try-except per gestire eventuali errori in modo controllato
         try:
-            # Apre la connessione al database
-            with sqlite3.connect(DATABASE) as conn:
+            # Apre la connessione al DB
+            conn = sqlite3.connect(DATABASE)
+            # Apre un contesto sulla connessione
+            with conn:
                 # Crea un cursore per poter eseguire le query
                 cursor = conn.cursor()
 
@@ -123,9 +126,9 @@ def _init_user_table():
                     print('La tabella utente esiste già. Non è necessario inizializzarla.')
 
                 # Non è necessario fare commit e chiudere la connessione se
-                # si usa `with` per gestire la connessione.
-                # conn.commit()
-                # conn.close()
+                # si usa `with` per gestire la connessione, ma è una buona prassi.
+                conn.commit()
+            conn.close()
 
         except sqlite3.Error as err:
             print(f'Si è verificato un errore del database: {err}')

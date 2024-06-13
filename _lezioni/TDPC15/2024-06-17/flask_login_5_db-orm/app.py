@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, redirect, url_for, session, flash
 from settings import DATABASE
-from models import init_db, db, User, Film
+from models import init_db, db, User, Filmpippo
 
 app = Flask(__name__)
 

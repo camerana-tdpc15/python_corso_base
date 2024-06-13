@@ -23,8 +23,8 @@ class User(db.Model):
     data_reg = db.Column(db.Date)
 
 
-class Film(db.Model):
-    __tablename__ = FILM_TABLE_NAME
+class Filmpippo(db.Model):
+    # __tablename__ = FILM_TABLE_NAME
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80), nullable=False)
     image = db.Column(db.String(80), nullable=False)
@@ -79,14 +79,14 @@ def init_db(app):
         app.logger.info(f'Tabella "{USER_TABLE_NAME}" già popolata.')
 
     # Idem come sopra, ma per la tabella Film
-    if not Film.query.first():
+    if not Filmpippo.query.first():
         if os.path.exists(FILM_TABLE_CSV):
             with open(FILM_TABLE_CSV, 'r') as csv_file:
                 csv_reader = csv.DictReader(csv_file)
                 for row in csv_reader:
-                    new_record = Film(
+                    new_record = Filmpippo(
                         title=row['TITLE'],
-                        image=row['IMAGE']
+                        image=row['IMAGE'],
                     )
                     db.session.add(new_record)
                 db.session.commit()
