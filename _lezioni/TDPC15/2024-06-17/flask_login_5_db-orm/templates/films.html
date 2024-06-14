@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Films - Sito Film{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <h2>Lista Film</h2>
+    <div class="row">
+        {% for film in films %}
+            <div class="col-md-4">
+                <div class="card mb-4 shadow-sm">
+                    <img src="{{ url_for('static', filename='imgs/'+film.image) }}" class="bd-placeholder-img card-img-top">
+                    <div class="card-body">
+                        <p class="card-text">{{ film.title }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
