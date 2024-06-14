@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html class="h-100">
+<head>
+    <title>Login - Sito Film</title>
+    {% include 'includes/head.html' %}
+</head>
+<body class="d-flex flex-column h-100">
+
+    <header>
+        {% include 'includes/navbar.html' %}
+    </header>
+
+    <main class="flex-shrink-0">
+        <div class="container mt-4">
+
+            {% include 'includes/flash.html' %}
+            
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <h2>Login</h2>
+                    <form method="post">
+                        <div class="mb-3">
+                            <label for="username_input" class="form-label">Username:</label>
+                            <input type="text" class="form-control" id="username_input" name="tx_user" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password_input" class="form-label">Password:</label>
+                            <input type="password" class="form-control" id="password_input" name="tx_password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" name="bt_login">Invia</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    {% include 'includes/footer.html' %}
+
+</body>
+</html>
