@@ -1,17 +1,4 @@
-html, body {
-    height: 100%;
-}
-body {
-    display: flex;
-    flex-direction: column;
-}
-.container {
-    flex: 1;
-}
-footer {
-    flex-shrink: 0;
-}
-
+/* Override della classe Bootstrap per le immagini delle card */
 .card-img-top {
     height: 225px; /* Altezza fissa */
     object-fit: cover; /* Mantiene le proporzioni, tagliando l'eccesso */
