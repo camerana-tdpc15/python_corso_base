@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html class="h-100">
+<head>
+    <title>Films - Sito Film</title>
+    {% include 'includes/head.html' %}
+</head>
+<body class="d-flex flex-column h-100">
+    <header>
+        {% include 'includes/navbar.html' %}
+    </header>
+
+    <main class="flex-shrink-0">
+        <div class="container mt-4">
+
+            {% include 'includes/flash.html' %}
+
+            <h2>Lista film</h2>
+
+            <div class="row">
+                {% for film in films %}
+                    <div class="col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            <img src="{{ url_for('static', filename='imgs/'+film.image) }}" class="bd-placeholder-img card-img-top">
+                            <div class="card-body">
+                                <p class="card-text">{{ film.title }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+        </div>
+    </main>
+    
+    {% include 'includes/footer.html' %}
+
+</body>
+</html>
