@@ -1,12 +1,24 @@
 from flask import Flask,request, render_template, redirect, url_for, session
+
+
 app = Flask (__name__)
 
-
+app.secret_key = 'my_very_secret_key123'
 
 UserLogin ={
     'mrossi': '12345',
     'ggangi': '67890'
 }
+
+
+FILMS = [
+    {'title': 'Akira', 'image': 'akira.jpg'},
+    {'title': 'Ghost in the Shell', 'image': 'gits.jpg'},
+    {'title': 'Blade Runner', 'image': 'blade-runner.jpg'},
+    {'title': 'Hackers', 'image': 'hackers.jpg'},
+    {'title': 'Nirvana', 'image': 'nirvana.jpg'},
+    ]
+
     # route  home
 @app.route('/')
 def home():
@@ -29,18 +41,15 @@ def login():
 @app.route('/logout')
 def logout():
     session.pop('username', None)
-    return redirect(url_for('home_login0'))
+    return redirect(url_for('login0'))
 
     # route film
 app.route('/film_login0')
 def  film_loginn0():
     if 'username' in session:
-        films =[
-            {'title':'AKIRA', 'image':url_for('static'filename='AKIRA.jpg')},
-        ]
-    return render_template('film_login0.html', films=film_loginn0.html)
-else:
-    return redirect(url_for('film_login0'))
+      return render_template('film_login0.html', films=FILMS)
+    else:
+      return redirect(url_for('film_login0'))
          
 
 
