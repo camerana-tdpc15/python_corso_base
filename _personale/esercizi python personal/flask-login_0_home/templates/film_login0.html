@@ -19,7 +19,10 @@
                   <img src="{{ url_for('static', filename='imgs/'+film.image) }}" class="bd-placeholder-img card-img-top">
                         <div class="card-body">
                             <p class="card-text">{{ film.title }}</p>
-             </div>
+                        </div>
+            </div>
+        {% endfor %}
+        </div>
     </div>
 </div>
 
