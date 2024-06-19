@@ -1,35 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html class="h-100">
 <head>
-    <title>Login</title>
+    <title>Login - Sito Film</title>
     {% include 'includes/head.html' %}
 </head>
-<body>
+<body class="d-flex flex-column h-100">
 
-    {% include 'includes/navbar.html' %}
+    <header>
+        {% include 'includes/navbar.html' %}
+    </header>
 
-    <div class="container mt-4">
+    <main class="flex-shrink-0">
+        <div class="container mt-4">
 
-        {% include 'includes/flash.html' %}
-        
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <h2>Login</h2>
-                <form method="post">
-                    <div class="mb-3">
-                        <label for="username_input" class="form-label">Username:</label>
-                        <input type="text" class="form-control" id="username_input" name="tx_user" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="password_input" class="form-label">Password:</label>
-                        <input type="password" class="form-control" id="password_input" name="tx_password" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary" name="bt_login">Invia</button>
-                </form>
+            {% include 'includes/flash.html' %}
+            
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <h2>Login</h2>
+                    <form method="post">
+                        <div class="mb-3">
+                            <label for="username_input" class="form-label">Username:</label>
+                            <input type="text" class="form-control" id="username_input" name="tx_user" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password_input" class="form-label">Password:</label>
+                            <input type="password" class="form-control" id="password_input" name="tx_password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" name="bt_login">Invia</button>
+                    </form>
+                </div>
             </div>
-        </div>
 
-    </div>
+        </div>
+    </main>
 
     {% include 'includes/footer.html' %}
 

@@ -29,7 +29,7 @@ def login():                                   # nome ENDPOINT 'login'
         # Leggiamo la password (rx_password)
         rx_password = request.form.get('tx_password')
 
-        # Controllo se un utente è presente
+        # Controllo se l'utente è presente
         if rx_username in USERS:
             # Controllo se la password è corretta
             if rx_password == USERS[rx_username]:
@@ -55,7 +55,7 @@ def login():                                   # nome ENDPOINT 'login'
 @app.route('/logout')
 def logout():
     # Rimuoviamo la chiave 'username' da session, e quindi anche dal cookie
-    session.pop('username')
+    session.pop('username', None)
     # Reindirizziamo alla home
     return redirect(url_for('home'))
 

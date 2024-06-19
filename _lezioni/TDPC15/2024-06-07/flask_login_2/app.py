@@ -51,7 +51,7 @@ def login():
 
 @app.route('/logout')
 def logout():
-    session.pop('username')
+    session.pop('username', None)
     # NOVITA': Uso la funzionalità "flash" per mostrare un messaggio
     #          Vedi /templates/includes/flash.html
     flash('Logout effettuato correttamente.', 'warning')
