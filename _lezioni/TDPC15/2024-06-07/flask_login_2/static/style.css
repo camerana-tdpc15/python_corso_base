@@ -1,0 +1,6 @@
+/* Override della classe Bootstrap per le immagini delle card */
+.card-img-top {
+    height: 225px; /* Altezza fissa */
+    object-fit: cover; /* Mantiene le proporzioni, tagliando l'eccesso */
+    width: 100%; /* Adatta la larghezza del box */
+}

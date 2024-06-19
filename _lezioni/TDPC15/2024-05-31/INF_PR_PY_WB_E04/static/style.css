@@ -1,0 +1,30 @@
+.calculator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.calc-section {
+    margin: 5px;
+}
+.calc-operation {
+    display: flex;
+    flex-direction: column;
+}
+button {
+    margin: 2px;
+    width: 30px;
+    height: 30px;
+}
+input, .result {
+    width: 100px;
+    text-align: center;
+}
+input, button, .calc-section {
+    font-family: Arial, sans-serif;
+    font-size: 20px;
+}
+.result {
+    border: 1px solid #000;
+    border-radius: 3px;
+    padding: 5px;
+}
