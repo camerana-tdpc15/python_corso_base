@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Guestbook</h1>
+    <form id="messageForm" >
+        <label for="nome">Nome:</label><br>
+        <input type="text" id="nome" name="nome" ><br>
+        <label for="messaggio">Messaggio:</label><br>
+        <input type="text" id="messaggio" name="messaggio" ><br><br>
+        <button type="button" onclick="sendMessage()">Invia</button>
+    </form>
+    <ul id="messaggi_scritti">
+
+    </ul>
+   
+    <script>
+        function sendMessage() {
+            let data = {
+            'nome': document.getElementById('nome').value,
+            'messaggio': document.getElementById('messaggio').value,
+        
+            };
+            fetch('/api/guestbook', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if ( result.success) {
+                    function fetchMessages() {result.messages.forEach( message=> {
+                        document.getElementById('messaggi_scritti').innerHTML +=
+                    `<p><strong>${risposta.nome}</strong>: ${risposta.messaggio}</p>`  
+                    })
+                        
+                    }
+                    
+                } 
+                else if (result.error) {
+                    alert(result.error)
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+
+    </script>
+
+
+
+
+    
+</body>
+</html>
