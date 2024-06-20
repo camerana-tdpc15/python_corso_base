@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+</head>
+<body>
+
+    
+
+<form id="msg-form">
+    <label for="nome">Nome:</label>
+    <input type="text" id="nome" name="nome" required>
+    <br>
+    <label for="messaggio">Messaggio:</label>
+    <input type="text" id="messaggio" name="messaggio" required>
+    <br>
+    <button type="button" onclick="sendMessage()">Invia</button>
+</form>
+
+
+
+
+<script>
+  
+    function sendMessage() {
+        let data = {
+            'nome': document.getElementById('nome').value,
+            'messaggio': document.getElementById('messaggio').value,
+        };
+
+        fetch('/api/guestbook', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        })
+        .then(result => response.json())
+        .then(result => {
+            if (result.success) {
+                fetchMessages();
+                // ........
+            } else if (result.error) {
+                alert(result.error)
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function getMessage() {
+        
+
+        fetch('/api/guestbook', {
+            method: 'GET',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        })
+        .then(result => response.json())
+        .then(result => {
+            if (result.success) {
+                fetchMessages();
+                // ........
+            } else if (result.error) {
+                alert(result.error)
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+
+  
+
+</script>
+
+</body>
+</html>
