@@ -35,7 +35,7 @@ def login():
     else:    
         if os.path.exists(MIO_FILE_PATH):
            
-            with open(MIO_FILE_PATH, mode='a', encoding='utf-8') as file:
+            with open(MIO_FILE_PATH, mode='r', encoding='utf-8') as file:
                 file.write(f'{rx_nome} {rx_messaggio}\n')  # <<-- \n !!    
 
         return redirect(url_for('api/guestbook'))
