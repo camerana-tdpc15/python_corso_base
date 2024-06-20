@@ -22,7 +22,7 @@ def gestisci_messaggi():
 
     return render_template('home_test09_sol02.html', messaggi=messaggi)
 
-@app.route('/')
+@app.route('/visualisaMessaggi')
 def visualizza_messaggi():
     with open(MIO_FILE_PATH, 'r') as file:
         messaggi = file.readlines()
