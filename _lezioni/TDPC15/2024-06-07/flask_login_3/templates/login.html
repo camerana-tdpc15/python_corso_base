@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Sito Film{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h2>Login</h2>
+            <form method="post" action="/login">
+                <div class="mb-3">
+                    <label for="tx_user" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="tx_user" name="tx_user" required>
+                </div>
+                <div class="mb-3">
+                    <label for="tx_password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="tx_password" name="tx_password" required>
+                </div>
+                <button type="submit" class="btn btn-primary" name="bt_login">Login</button>
+            </form>
+    </div>
+</div>
+
+{% endblock %}
