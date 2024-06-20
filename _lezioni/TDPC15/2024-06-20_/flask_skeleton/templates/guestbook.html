@@ -1,0 +1,45 @@
+<body>
+<!-- FORM-DATA -->
+
+<form method="post" action="/api/guestbook">
+    <input type="text" id="nome" name="nome" required >
+    <input type="text" id="messaggio" name="messaggio" required>
+    <button type="submit">Invia messaggio</button>
+</form>
+
+
+<!-- ALTERNATIVA CON FETCH API -->
+
+<form id="msg-form">
+    <input type="text" id="nome" name="nome" required >
+    <input type="text" id="messaggio" name="messaggio" required>
+    <button type="button" onclick="sendMessage()">Invia messaggio</button>
+</form>
+
+<script>
+    function sendMessage() {
+        let data = {
+            'nome': document.getElementById('nome').value,
+            'messaggio': document.getElementById('messaggio').value,
+        };
+        // Invia la richiesta al server
+        fetch('/api/guestbook', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                fetchMessages();
+                // Reset dei campi del form
+                // ...
+            } else if (result.error) {
+                alert(result.error)
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+
+</body>
