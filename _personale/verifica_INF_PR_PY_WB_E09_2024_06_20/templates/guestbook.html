@@ -1,89 +1,88 @@
 <!DOCTYPE html>
 <html class="h-100">
-
-<head>
+  <head>
     <title>Guestbook</title>
     {% include 'includes/head.html' %}
-</head>
 
-<body class="d-flex flex-column h-100">
+    <style>
+        header {
+            text-align: center; /* Centra il testo all'interno dell'elemento header */
+        }
+    </style>
 
+  </head>
+
+  <body class="d-flex flex-column h-100">
     <header>
-        <h1>Guestbook</h1>
+      <h1>Guestbook</h1>
     </header>
 
     <body class="flex-shrink-0">
-        <div class="container mt-4">
+      <div class="container mt-4">
+        {% include 'includes/flash.html' %}
 
-            {% include 'includes/flash.html' %}
-
-            <div class="row justify-content-center">
-                <div class="col-md-6">
-                    <h2>Nome</h2>
-                    <form>
-                        <div class="mb-3">
-                            <label for="name_input" class="form-label">scrivi il tuo nome:</label>
-                            <input type="text" class="form-control" id="nome" name="nome" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="message_input" class="form-label">Messaggio:</label>
-                            <input type="text" class="form-control" id="message" name="messaggio" required>
-                        </div>
-                        <button type="button" onclick="sendMessage()" class="btn btn-primary" name="bt_send">Invia
-                            messaggio</button>
-                    </form>
-
-
-                </div>
-            </div>
-
-            <div class="row justify-content-center mt-4">
-                <div class="col-md-6">
-                    <h2>Messaggi già scritti:</h2>
-                    <ul id="messaggi_scritti">
-
-
-                    </ul>
-                </div>
-            </div>
-
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <h2>Nome</h2>
+            <form action="/api/guestbook" method="POST">
+              <div class="mb-3">
+                <label for="name_input" class="form-label">scrivi il tuo nome:</label>
+                <input type="text" class="form-control" id="nome" name="nome" required />
+              </div>
+              <div class="mb-3">
+                <label for="message_input" class="form-label">Messaggio:</label>
+                <input type="text" class="form-control" id="message" name="messaggio" required />
+              </div>
+              <button type="submit" onclick="sendMessage()" class="btn btn-primary" name="bt_send">Invia messaggio</button>
+            </form>
+          </div>
         </div>
 
-        <script>
-            function sendMessage() {
-                let data = {
-                    'nome': document.getElementById('nome').value,
-                    'messaggio': document.getElementById('messaggio').value,
-                };
+        <div class="row justify-content-center mt-4">
+          <div class="col-md-6">
+            <h2>Messaggi già scritti:</h2>
+            <ul id="messaggi_scritti">
+              {% for messaggio in messaggi %}
+                <li>{{ messaggio }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
 
-                // invia la richiesta al server
+      </div>
 
-                fetch('/api/guestbook', {
-                    method: 'POST',
-                    headers: { 'Contents-Type': 'application/json' },
-                    body: JSON.stringify(data)
+      <script>
+        function sendMessage() {
+          let data = {
+            nome: document.getElementById('nome').value,
+            messaggio: document.getElementById('messaggio').value
+          }
+        
+          // invia la richiesta al server
+        
+          fetch('/api/guestbook', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+          })
+            .then((Response) => Response.json())
+            .then((result) => {
+              if (result.success) {
+                fetchMessage()
+                
+                // Aggiungi i nuovi messaggi alla lista
+                result.messages.forEach((message) => {
+                  document.getElementById('messaggi_scritti').innerHTML += `<p><strong>${messaggi_json.nome}</strong>: ${messaggi_json.messaggio}</p>`
                 })
-                    .then(Response => Response.json())
-                    .then(result => {
-                        if (result.success) {
-                            fetchMessage();
-
-                            result.messages.forEach(message => {
-                                document.getElementById('messaggi_scritti').innerHTML += `<p><strong>${messaggi_json.nome}</strong>: ${messaggi_json.messaggio}</p>`;
-                            });
-
-                            
-                        } else if (result.error) {
-                            alert(result.error)
-                        }
-                    })
-                    .catch(error => console.error('Error:', error))
-            }
-        </script>
+              } else if (result.error) {
+                alert(result.error)
+              }
+            })
+            .catch((error) => console.error('Error:', error))
+        }
+      </script>
     </body>
 
     {% include 'includes/footer.html' %}
-
-</body>
-
+  </body>
 </html>
