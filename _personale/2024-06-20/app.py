@@ -27,20 +27,21 @@ def login():
             return jsonify(response)
         
         # Per copntrollare se un utente è presente
-        print(MIO_FILE_PATH)
-
+        
         with open(MIO_FILE_PATH, mode='a', encoding='utf-8') as file:
             file.write(f'{rx_nome} {rx_messaggio}\n')
         
     else:    
         if os.path.exists(MIO_FILE_PATH):
+            print('...............ci sono')
            
             with open(MIO_FILE_PATH, mode='r', encoding='utf-8') as file:
-                file.write(f'{rx_nome} {rx_messaggio}\n')  # <<-- \n !!    
+                fx_messaggio = file.readlines()
+                
+               
+                return jsonify(fx_messaggio)    
 
-        return redirect(url_for('api/guestbook'))
-
-    return render_template('guestbook.html')
+   
     
 
     

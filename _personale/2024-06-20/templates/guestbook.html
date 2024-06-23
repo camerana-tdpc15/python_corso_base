@@ -33,10 +33,11 @@
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(data)
         })
-        .then(result => response.json())
+        .then(response => response.json())
         .then(result => {
             if (result.success) {
                 getMessage();
+                console.log(result)
                 // ........
             } else if (result.error) {
                 alert(result.error)
@@ -47,17 +48,10 @@
 
     function getMessage() {
         
-        fetch('/api/guestbook', {
-            method: 'GET',
-        })
-        .then(result => response.json())
+        fetch('/api/guestbook')
+        .then(response => response.json())
         .then(result => {
-            if (result.success) {
-                fetchMessages();
-                // ........
-            } else if (result.error) {
-                alert(result.error)
-            }
+            console.log(result)
         })
         .catch(error => console.error('Error:', error));
     }
