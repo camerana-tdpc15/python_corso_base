@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Login</title>
+</head>
+
+<body>
+
+
+
+    <form id="msg-form">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" required>
+        <br>
+        <label for="messaggio">Messaggio:</label>
+        <input type="text" id="messaggio" name="messaggio" required>
+        <br>
+        <button type="button" onclick="sendMessage()">Invia</button>
+    </form>
+
+
+    <div>
+        <h2>Messaggio</h2>
+        <ul id="lista-messaggi"></ul>
+    </div>
+
+
+
+
+    <script>
+
+        function sendMessage() {
+            let data = {
+                'nome': document.getElementById('nome').value,
+                'messaggio': document.getElementById('messaggio').value,
+            };
+
+            fetch('/api/guestbook', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        getMessage();
+                        // ........
+                    } else if (result.error) {
+                        alert(result.error)
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function getMessage() {
+
+            fetch('/api/guestbook')
+                .then(response => response.json())
+                .then(result => {
+                    //console.log(result);
+                    const listaMessaggi = document.getElementById('lista-messaggi');
+                    listaMessaggi.innerHTML = '';
+                    for (lista of result) {
+                        listaMessaggi.innerHTML += `
+                        <li>${lista}</li>
+                    `;
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+
+
+
+    </script>
+
+</body>
+
+</html>
