@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guestbook</title>
+</head>
+<body>
+    <h1>Guestbook</h1>
+    <form action="/submit" method="post">
+        <label for="name">Nome:</label>
+        <input type="text" id="name" name="name" required>
+        <br>
+        <label for="message">Messaggio:</label>
+        <textarea id="message" name="message" rows="4" required></textarea>
+        <br>
+        <button type="submit">Invia</button>
+    </form>
+
+    <!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guestbook</title>
+</head>
+
+
+    <h2>Messaggi:</h2>
+    <ul>
+        {% for message in messages %}
+            <li>{{ message.name }} ha scritto: {{ message.message }}</li>
+        {% endfor %}
+    </ul>
+
+
+</body>
+</html>
