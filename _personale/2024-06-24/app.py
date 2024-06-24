@@ -27,7 +27,7 @@ def login():
         # Per copntrollare se un utente è presente
 
         with open(MIO_FILE_PATH, mode="a", encoding="utf-8") as file:
-            file.write(f"{rx_nome} {rx_messaggio}\n")
+            file.write(f"{rx_nome}: {rx_messaggio}\n")
             response = {"success": "ok"}
         return jsonify(response)
 
@@ -37,9 +37,13 @@ def login():
 
             with open(MIO_FILE_PATH, mode="r", encoding="utf-8") as file:
                 fx_messaggio = file.readlines()
+                print(fx_messaggio)
+                fx_messaggio_invertito = fx_messaggio[::-1]
 
-        return jsonify(fx_messaggio)
+        return jsonify(fx_messaggio_invertito)
 
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+

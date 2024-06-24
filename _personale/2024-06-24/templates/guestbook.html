@@ -43,14 +43,9 @@
             })
                 .then(response => response.json())
                 .then(result => {
-                    if (result.success) {
-                        getMessage();
-                        // ........
-                    } else if (result.error) {
-                        alert(result.error)
-                    }
+                    getMessage()
                 })
-                .catch(error => console.error('Error:', error));
+                
         }
 
         function getMessage() {
@@ -67,7 +62,7 @@
                     `;
                     }
                 })
-                .catch(error => console.error('Error:', error));
+                
         }
 
 
