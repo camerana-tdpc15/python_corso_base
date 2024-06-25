@@ -11,12 +11,12 @@
          Quindi in questa esercitazione decidiamo di non usare la funzione di 
          invio "automatico" che usa il formato FormData, ma preferiamo fare noi
          fetch della richiesta con JavaScript -->
-    <form method="post" action="/api/guestbook">
+    <!--<form method="post" action="/api/guestbook">
         <input type="text" id="nome" name="nome" required >
         <input type="text" id="messaggio" name="messaggio" required>
         <button type="submit">Invia messaggio</button>
     </form>
-
+    -->
 
     <!-- ALTERNATIVA CON FETCH API -->
     <!-- In questo modo è Javascript a inviare la rischiesta e a leggere la risposta. -->
@@ -32,7 +32,7 @@
     <!-- SPAZIO PER I MESSAGGI -->
     <div>
         <h2>Messages</h2>
-        <ul id="message-list"></ul>
+        <ul id="messages-container"></ul>
     </div>
 
     <!-- importa static/script.js -->
