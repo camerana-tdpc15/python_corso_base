@@ -27,7 +27,7 @@
                 </div>
                 <label for="messaggio">Comments:</label>
                 <textarea class="form-control" rows="5" id="messaggio" name="text"></textarea>
-                <button type="button" class="mt-2 btn btn-success btn-lg" onclick="submit()">Invia un messaggio!</button>
+                <button type="button" id="submitBtn" class="mt-2 btn btn-success btn-lg" >Invia un messaggio!</button>
             </form>
         </div>
     </div>
@@ -42,16 +42,14 @@
     <div class="row">
         <div class="col-md-6">
 
-            <div id="messaggio">
-                
-            </div>
+            <li id="messages-container"></li>
 
         </div>
     </div>
 
 
 
-<script src="../static/app.js"></script>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
 
 </html>

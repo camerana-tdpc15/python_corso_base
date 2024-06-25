@@ -10,11 +10,11 @@ document.addEventListener('...', () => {
     poi aggiorna la lista dei messaggi */
 function getMessages() {
     fetch('/api/guestbook')
-    .then(
-        // Legge la risposta come JSON
-        // ...
+    .then( 
     )
     .then(
+     
+        
         // Aggiorna la lista dei messaggi con i dati ricevuti
         // Inserisce i messaggi nella lista <ul> con id="message-list"
         // ...

@@ -15,51 +15,50 @@ def home():
 
 
 
-@app.route('/api/guestbook',method=['POST'])
-
+# Route per la gestione delle API del guestbook:
+#    - Se la richiesta è GET, restituisce i messaggi presenti sul file.
+#    - Se la richiesta è POST, riceve un nuovo messaggio da scrivere sul file.
+@app.route('/api/guestbook', methods=['GET', 'POST'])
 def guestbook():
+    
+    # Se la richiesta è POST, dovremmo avere ricevuto un messaggio da scrivere
     if request.method == 'POST':
-        # Lettura di nome e messagio
+        # Lettura di nome e messaggio dalla request
         nome = request.json.get('nome')
-        messagio = request.json.get('messagio')
+        messaggio = request.json.get('messaggio')
 
-
-       
-
-
-        if not nome or not messagio:
-            response = {'error':'Nome e messagio sono obbligatori'}
+        if not nome or not messaggio:
+            response = {'error': 'Nome e messaggio sono obbligatori!'}
             return jsonify(response)
+        else:
+         
+    
+         if os.path.exists(MIO_FILE_PATH):
+            # LETTURA DEL FILE
+            with open(MIO_FILE_PATH, 'r') as file:
+                messages = file.readlines()
+                #messages.reverse()
+         else:
+            messages = []   
+        return jsonify(messages)
+     
+           
+     # Se la richiesta è GET, dovremmo restituire i messaggi presenti sul file
+    else:
+        if  os.path.exists('guestbook.txt'):  # Controllo del file: se il file esiste
         
-        response = {'success!': 'ok'}
-        return jsonify(response)
-        # Scritura su file
-        #with open('guestbook.txt', mode='a') as file:
-         #   file.write(f'Success\n')
-    with open('guestbook.txt','a') as file:
-           file.write()
-       
-
-   # else: #richiesta GET
-       
-       
-
-           # Lettura del file
-            #Restituzioe delle righe delle file in formato JSON
+            # LETTURA DEL FILE
+            with open('guestbook.txt','r') as file:  # Apertura del file in modalità lettura
+                messages = file.readlines()  # Lettura delle righe del file come lista
+                # messages.reverse() # Inversione dell'ordine delle righe nella lista
+        # Se il file non esiste
+        else:
+            messages = []  # La risposta sarà una lista vuota
         
-    #   with open('datos.txt', 'r') as file:
-     #      file = file.readlines
-   
-
-
-
-
-
+        # Restituzione delle righe del file in formato JSON
+        return jsonify(messages)
 
 
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
- 
