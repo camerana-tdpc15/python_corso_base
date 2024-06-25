@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- ... -->
+</head>
+<body>
+
+    <!-- USO DI FORM-DATA (non per questa esercitazione) -->
+    <!-- In questo modo la risposta da Flask deve essere un redirect sulla
+         pagina home, e non possiamo propriamente leggere una risposta dal server.
+         Quindi in questa esercitazione decidiamo di non usare la funzione di 
+         invio "automatico" che usa il formato FormData, ma preferiamo fare noi
+         fetch della richiesta con JavaScript -->
+    <form method="post" action="/api/guestbook">
+        <input type="text" id="nome" name="nome" required >
+        <input type="text" id="messaggio" name="messaggio" required>
+        <button type="submit">Invia messaggio</button>
+    </form>
+
+
+    <!-- ALTERNATIVA CON FETCH API -->
+    <!-- In questo modo è Javascript a inviare la rischiesta e a leggere la risposta. -->
+    <!-- Poi va invocata la funzione che recupera i messaggi e li mostra -->
+    <form id="msg-form">
+        <input type="text" id="nome" name="nome" required >
+        <input type="text" id="messaggio" name="messaggio" required>
+        <button type="button" onclick="sendMessage()">Invia messaggio</button>
+        <!-- ATTENZIONE: usiamo type="button" per evitare che il form venga
+                         inviato automaticamente -->
+    </form>
+
+    <!-- SPAZIO PER I MESSAGGI -->
+    <div>
+        <h2>Messages</h2>
+        <ul id="message-list"></ul>
+    </div>
+
+    <!-- importa static/script.js -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+
+</html>
