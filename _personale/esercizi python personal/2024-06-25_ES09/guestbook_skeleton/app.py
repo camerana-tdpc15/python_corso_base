@@ -20,7 +20,7 @@ def guestbook():
     # Se la richiesta è POST, dovremmo avere ricevuto un messaggio da scrivere
     if request.method == 'POST':
         # Lettura di nome e messaggio dalla request
-        nome = ...
+        nome = request.form.get('user')
         messaggio = ...
 
         if not nome or not messaggio:
