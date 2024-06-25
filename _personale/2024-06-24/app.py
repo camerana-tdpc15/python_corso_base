@@ -2,7 +2,7 @@ import os
 from flask import Flask, request, render_template, redirect, url_for, jsonify
 
 BASE_DIR_PATH = os.path.abspath(os.path.dirname(__file__))
-MIO_FILE_PATH = os.path.join(BASE_DIR_PATH, "guestbook.txt")
+MIO_FILE_PATH = os.path.join(BASE_DIR_PATH, "templates", "guestbook.txt")
 
 app = Flask(__name__)
 
