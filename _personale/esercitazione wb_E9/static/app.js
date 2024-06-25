@@ -1,4 +1,4 @@
-const messagesContainer = document.getElementById('messages');
+const messagesContainer = document.getElementById('messaggio');
 const url = '/api/guestbook'
 
 
@@ -40,7 +40,6 @@ function stampa(){
     .then(response => response.json())
     .then(data => {
         console.log(data);
-        document.getElementById('messagio').innerText = data
         
     })
    
