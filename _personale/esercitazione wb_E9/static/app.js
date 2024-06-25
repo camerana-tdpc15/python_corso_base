@@ -40,20 +40,20 @@ function sendMessage() {
         messaggio: document.getElementById('messaggio').value,
     };
     // Invia la richiesta al server
-    fetch(url, {
+    fetch(url), {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(data)
-    })
+    }
     .then(response => response.json())
     .then(result => {
         if (result.success) {
             getMessages();
              // @DA FARE: Reset dei campi del form
-             document.getElementById('nome').value == ''; 
-             document.getElementById('messaggio').value == '';
+             let form= getElementById('myform').reset();
+       
             
             // ...
         } else if (result.error) {
