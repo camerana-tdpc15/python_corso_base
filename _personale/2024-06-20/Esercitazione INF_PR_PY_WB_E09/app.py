@@ -6,12 +6,13 @@ MIO_FILE_PATH = os.path.join(BASE_DIR_PATH, 'guestbook.txt')
 
 app = Flask(__name__)
 
-@app.route('/')
-def home():
+# 
+@app.route('/guestbook')
+def guestbook():
     return render_template('guestbook.html')
 
 @app.route('/api/guestbook', methods=['GET', 'POST'])
-def guestbook():
+def api_guestbook():
     if request.method == 'POST':
         name = request.json.get('nome')
         message = request.json.get('messaggio')
