@@ -1,0 +1,30 @@
+<!doctype html>
+<html class="h-100">
+<head>
+    <!-- BLOCCO DEL TITOLO -->
+    <title>{% block title %}- Sito Film{% endblock %}</title>
+
+    {% include 'includes/head.html' %}
+
+</head>
+<body class="d-flex flex-column h-100">
+
+    <header>
+        {% include 'includes/navbar.html' %}
+    </header>
+    
+    <main class="flex-shrink-0">
+        <div class="container mt-4">
+    
+        {% include 'includes/flash.html' %}
+
+        <!-- BLOCCO DEL CONTENUTO -->
+        {% block content %}{% endblock %}
+    
+        </div>
+    </main>
+
+    {% include 'includes/footer.html' %}
+
+</body>
+</html>
