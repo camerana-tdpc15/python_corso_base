@@ -31,21 +31,18 @@ def guestbook():
             response = {'error': 'Nome e messaggio sono obbligatori!'}
             return jsonify(response)
         else:
-         
-    
+             
          if os.path.exists(MIO_FILE_PATH):
             # LETTURA DEL FILE
-            with open(MIO_FILE_PATH, 'r') as file:
-                messages = file.readlines()
-                #messages.reverse()
-         else:
-            messages = []   
-        return jsonify(messages)
+            with open('guestbook.txt', 'a') as file:
+                file.write(f"{nome}:{messaggio}\n")
+                messaggio.append(reversed(list('guestbook.txt')))
+    
      
            
      # Se la richiesta è GET, dovremmo restituire i messaggi presenti sul file
     else:
-        if  os.path.exists('guestbook.txt'):  # Controllo del file: se il file esiste
+        if  os.path.exists(MIO_FILE_PATH):  # Controllo del file: se il file esiste
         
             # LETTURA DEL FILE
             with open('guestbook.txt','r') as file:  # Apertura del file in modalità lettura
