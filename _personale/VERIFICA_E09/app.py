@@ -7,6 +7,8 @@ app = Flask(__name__)
 BASE_DIR_PATH = os.path.abspath(os.path.dirname(__file__))
 MIO_FILE_PATH = os.path.join(BASE_DIR_PATH, 'guestbook.txt')
 
+
+
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -14,17 +16,30 @@ def home():
 @app.route('/api/guestbook', methods=['GET', 'POST'])
 def guestbook():
     if request.method == 'POST':
-        nome = request.form['nome']
-        messaggio = request.form['messaggio']
-        with open('guestbook.txt', mode='a', encoding='utf-8') as file:
-            file.write(f'{nome}: {messaggio} \n')
+        nome = request.json.get('nome')
+        messaggio = request.json.get('messaggio')
+
+        if not nome or not messaggio:
+            response = {'error': 'Nome e messaggio sono obbligatori!'}
+        else:
+            with open('guestbook.txt', mode='a', encoding='utf-8') as file:
+                file.write(f'{nome}: {messaggio} \n')
+
+                response = {'success': 'ok'}
+
+        return jsonify(response)
     
     else: 
-     request.method == 'GET'
-    with open(MIO_FILE_PATH, mode='r', encoding='utf-8') as file:
-        righe = file.readlines()
+        if request.method == 'GET':
+            if os.path.exists(MIO_FILE_PATH):
+                with open(MIO_FILE_PATH, mode='r', encoding='utf-8') as file:
+                    lines = file.readlines()
+                    lines = [lines.strip() for line in lines]
+                    
 
-        risposta= jsonify(righe)
+            else:
+                lines = []
+        risposta= jsonify(lines)
 
     return risposta
 

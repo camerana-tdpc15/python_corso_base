@@ -34,13 +34,11 @@
             .then(response => response.json())
             .then(result => {
                 if ( result.success) {
-                    function fetchMessages() {result.messages.forEach( message=> {
-                        document.getElementById('messaggi_scritti').innerHTML +=
-                    `<p><strong>${risposta.nome}</strong>: ${risposta.messaggio}</p>`  
-                    })
-                        
-                    }
-                    
+                   function getMessages() {result.forEach( message=> {
+                    document.getElementById('messaggi_scritti').innerHTML +=
+                    `<li>${message}</li>`; 
+                    })                        
+                   }                        
                 } 
                 else if (result.error) {
                     alert(result.error)
