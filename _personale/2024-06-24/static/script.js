@@ -1,3 +1,16 @@
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    getMessage();
+    
+});
+
+
+const btnUno = document.getElementById('btn1');
+
+btnUno.onclick = sendMessage
+
+
 function sendMessage() {
     let data = {
         'nome': document.getElementById('nome').value,
@@ -12,9 +25,14 @@ function sendMessage() {
         .then(response => response.json())
         .then(result => {
             console.log(result)
-            getMessage()
+            if (result.success) {
+                getMessage();
+
+            } else if (result.error) {
+                alert(result.error)
+            }
         })
-        
+        .catch(error => console.error('Error:', error));
 }
 
 function getMessage() {
@@ -27,7 +45,7 @@ function getMessage() {
             listaMessaggi.innerHTML = '';
             for (lista of result) {
                 listaMessaggi.innerHTML += `
-                <li>${lista}</li>
+                <li class="list-group-item">${lista}</li>
             `;
             }
         })

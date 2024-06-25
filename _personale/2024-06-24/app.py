@@ -23,6 +23,7 @@ def login():
 
         if not rx_nome or not rx_messaggio:
             response = {"error": "nome e messaggio sono obbligatori"}
+            return jsonify(response)
 
         # Per copntrollare se un utente è presente
 
@@ -33,8 +34,6 @@ def login():
 
     else:
         if os.path.exists(MIO_FILE_PATH):
-            print("...............ci sono")
-
             with open(MIO_FILE_PATH, mode="r", encoding="utf-8") as file:
                 fx_messaggio = file.readlines()
                 print(fx_messaggio)
