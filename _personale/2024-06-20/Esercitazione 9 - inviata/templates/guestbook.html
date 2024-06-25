@@ -1,84 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Guestbook</title>
     <!-- Carico Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</head>
+  </head>
 
-<body>
-    <!-- creo il form -->
+  <body>
+    <!-- Creo il form -->
     <div class="container">
-        <h1 class="mt-5">Guestbook</h1>
-        <form id="guestbook-form" class="mt-4">
-            <div class="mb-3">
-                <label for="name" class="form-label">Name</label>
-                <input type="text" class="form-control" id="name" required>
-            </div>
-            <div class="mb-3">
-                <label for="message" class="form-label">Message</label>
-                <textarea class="form-control" id="message" rows="3" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-success">Submit</button>
-        </form>
-        <!-- creo la lista dei messaggi -->
-        <ul id="messages" class="list-group mt-4"></ul>
+      <h1 class="mt-5">Guestbook</h1>
+      <form id="guestbook-form" class="mt-4">
+        <div class="mb-3">
+          <label for="name" class="form-label">Nome</label>
+          <input type="text" class="form-control" id="name" required />
+        </div>
+        <div class="mb-3">
+          <label for="message" class="form-label">Messaggio</label>
+          <textarea
+            class="form-control"
+            id="message"
+            rows="3"
+            required
+          ></textarea>
+        </div>
+        <button type="submit" class="btn btn-success">Invia messaggio</button>
+      </form>
+      <!-- Creo la lista dei messaggi -->
+      <ul id="messages" class="list-group mt-4"></ul>
     </div>
 
-
     <script>
-        // Carico i messaggi al caricamento della pagina
-        document.addEventListener('DOMContentLoaded', function () {
-            const form = document.getElementById('guestbook-form');
-            const messagesList = document.getElementById('messages');
+      // Funzione per aggiungere un messaggio alla lista
+      function addMessageToList(name, message) {
+        const li = document.createElement("li");
+        li.className = "list-group-item";
+        li.textContent = `${name}: ${message}`;
+        const messagesList = document.getElementById("messages");
+        messagesList.appendChild(li);
+      }
 
-            // Fetch dei messaggi dal server
-            fetch('/api/guestbook')
-                .then(response => response.json())
-                .then(messages => {
-                    messages.forEach(msg => {
-                        // Aggiungo i messaggi nella lista
-                        const li = document.createElement('li');
-                        li.className = 'list-group-item';
-                        li.textContent = `${msg.name}: ${msg.message}`;
-                        messagesList.appendChild(li);
-                    });
-                });
+      // Funzione per gestire la risposta del server
+      function handleResponse(response) {
+        if (!response.ok) {
+          return response.json().then((data) => {
+            throw new Error(data.message || "Errore sconosciuto");
+          });
+        }
+        return response.json();
+      }
 
-            // Gestisco il form e la risposta dal server
-            form.addEventListener('submit', function (event) {
-                event.preventDefault();
-                const name = document.getElementById('name').value;
-                const message = document.getElementById('message').value;
-                // Invio i dati al server
-                fetch('/api/guestbook', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ name: name, message: message }),
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.status === 'success') {
-                            const li = document.createElement('li');
-                            li.className = 'list-group-item';
-                            li.textContent = `${name}: ${message}`;
-                            messagesList.insertBefore(li, messagesList.firstChild);
-                            form.reset();
-                        } else {
-                            alert('Error: ' + data.message);
-                        }
-                    });
+      // Funzione per caricare i messaggi
+      function getMessages() {
+        const messagesList = document.getElementById("messages");
+        messagesList.innerHTML = ""; // Pulisco la lista prima di caricare i messaggi
+        fetch("/api/guestbook")
+          .then(handleResponse)
+          .then((messages) => {
+            messages.forEach((msg) => {
+              addMessageToList(msg.name, msg.message);
+            });
+          })
+          .catch((error) => {
+            console.error("Errore nel caricamento dei messaggi:", error);
+          });
+      }
+
+      // Carico i messaggi al caricamento della pagina
+      document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("guestbook-form");
+
+        getMessages();
+
+        // Gestisco il form e la risposta dal server
+        form.addEventListener("submit", function (event) {
+          event.preventDefault();
+          const name = document.getElementById("name").value;
+          const message = document.getElementById("message").value;
+
+          // Invio i dati al server
+          fetch("/api/guestbook", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ name: name, message: message }),
+          })
+            .then(handleResponse)
+            .then((data) => {
+              if (data.status === "success") {
+                getMessages();
+                form.reset();
+              } else {
+                alert("Errore: " + data.message);
+              }
+            })
+            .catch((error) => {
+              console.error("Errore nell'invio del messaggio:", error);
+              alert(
+                "Si è verificato un errore durante l'invio del messaggio. Riprova più tardi."
+              );
             });
         });
-
-
+      });
     </script>
-</body>
-
+  </body>
 </html>
+
