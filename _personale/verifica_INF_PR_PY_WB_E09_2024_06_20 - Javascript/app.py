@@ -24,8 +24,7 @@ def scrittura():
         messaggio = request.form.get('messaggio')
         with open(GUESTBOOK_PATH, mode='a', encoding='utf-8') as file:
             file.write(f'{nome} : {messaggio}\n')
-        return redirect('/')   
-        
+        return redirect('/')          
 
     else:
         with open(GUESTBOOK_PATH, mode='r', encoding='utf-8') as file:

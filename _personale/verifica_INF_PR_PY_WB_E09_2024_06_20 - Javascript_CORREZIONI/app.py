@@ -17,20 +17,25 @@ def home():
     return render_template('guestbook.html', messaggi=messaggi)
     
 # Route per gestire l'aggiunta di nuovi messaggi al guestbook
-@app.route('/api/guestbook', methods = ['POST'])
+# @MOD: MANCAVA IL METODO GET
+@app.route('/api/guestbook', methods = ['GET', 'POST'])
 def scrittura():
     if request.method == 'POST':
-        nome = request.form.get('nome')
-        messaggio = request.form.get('messaggio')
+        # @MOD: ORA BISOGNA LEGGERE I DATI DA JSON E NON DA FORM
+        nome = request.json.get('nome')
+        messaggio = request.json.get('messaggio')
+        # @DA FARE: VALIDAZIONE DEI CAMPI: controlla che nome e messaggio ci siano
+        #           altrimenti ritorna un errore es. {'error': 'Nome e messaggio sono obbligatori'}
         with open(GUESTBOOK_PATH, mode='a', encoding='utf-8') as file:
             file.write(f'{nome} : {messaggio}\n')
-        return redirect('/')   
+        return jsonify({'success': 'ok'})
         
-
     else:
         with open(GUESTBOOK_PATH, mode='r', encoding='utf-8') as file:
             messaggi = file.readlines()
             
+        # @MOD: ORDINA I MESSAGGI DAL PIÙ RECENTE AL PIÙ VECCHIO
+        messaggi.reverse()
         messaggi_json = jsonify(messaggi)
         return messaggi_json
         
