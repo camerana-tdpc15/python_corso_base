@@ -25,10 +25,13 @@ def scrittura():
         nome = request.json.get('nome')
         messaggio = request.json.get('messaggio')
         # @DA FARE: VALIDAZIONE DEI CAMPI: controlla che nome e messaggio ci siano
-        #           altrimenti ritorna un errore es. {'error': 'Nome e messaggio sono obbligatori'}
-        with open(GUESTBOOK_PATH, mode='a', encoding='utf-8') as file:
-            file.write(f'{nome} : {messaggio}\n')
-        return jsonify({'success': 'ok'})
+        if not nome or not messaggio:
+            response = {'error' : 'Nome e messaggio sono obbligatori'}
+        #altrimenti ritorna un errore es. {'error': 'Nome e messaggio sono obbligatori'}
+        else:
+            with open(GUESTBOOK_PATH, mode='a', encoding='utf-8') as file:
+                file.write(f'{nome} : {messaggio}\n')
+            return jsonify({'success': 'ok'})
         
     else:
         with open(GUESTBOOK_PATH, mode='r', encoding='utf-8') as file:

@@ -17,14 +17,14 @@
       <h1>Guestbook</h1>
     </header>
 
-    <body class="flex-shrink-0">
+    <div class="flex-shrink-0">
       <div class="container mt-4">
         {% include 'includes/flash.html' %}
 
         <div class="row justify-content-center">
           <div class="col-md-6">
             <h2>Nome</h2>
-            <form action="/api/guestbook" method="POST">
+            <form action="/api/guestbook" method="POST" id="msg-form">
               <div class="mb-3">
                 <!-- @MOD: LABER FOR= E INPUT ID= DEVONO ESSERE UGUALI !-->
                 <label for="nome_input" class="form-label">scrivi il tuo nome:</label>
@@ -72,7 +72,9 @@
             .then((result) => {
               if (result.success) {
                 fetchMessages()
-                
+                //come fare per resettare i campi
+                // let form = getElementById('msg-form');
+                // form.reset();
                 
               } else if (result.error) {
                 alert(result.error)
@@ -100,7 +102,7 @@
       // Chiamata a fetchMessages() al caricamento della pagina
       document.addEventListener('DOMContentLoaded', fetchMessages);
       </script>
-    </body>
+    </div>
 
     {% include 'includes/footer.html' %}
   </body>
