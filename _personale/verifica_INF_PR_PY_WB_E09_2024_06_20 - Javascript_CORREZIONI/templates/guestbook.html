@@ -73,8 +73,8 @@
               if (result.success) {
                 fetchMessages()
                 //come fare per resettare i campi
-                // let form = getElementById('msg-form');
-                // form.reset();
+                let form = document.getElementById('msg-form');
+                form.reset();
                 
               } else if (result.error) {
                 alert(result.error)
