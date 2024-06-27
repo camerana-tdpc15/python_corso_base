@@ -29,6 +29,8 @@ def guestbook():
 
         if not nome or not messaggio:
             response = {'error': 'Nome e messaggio sono obbligatori!'}
+            with open(MIO_FILE_PATH,'a') as file:
+                file.write(f"{nome}: {messaggio}\n")
             return jsonify(response)
         else:
              
@@ -46,8 +48,8 @@ def guestbook():
         
             # LETTURA DEL FILE
             with open('guestbook.txt','r') as file:  # Apertura del file in modalità lettura
-                messages = file.readlines()  # Lettura delle righe del file come lista
-                # messages.reverse() # Inversione dell'ordine delle righe nella lista
+              for  line in reversed(list(file))  # Lettura delle righe del file come lista
+                messages.append(line.strip()) # Inversione dell'ordine delle righe nella lista
         # Se il file non esiste
         else:
             messages = []  # La risposta sarà una lista vuota
