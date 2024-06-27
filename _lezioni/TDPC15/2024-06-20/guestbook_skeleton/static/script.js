@@ -1,8 +1,11 @@
 // Quando il DOM è pronto, legge e mostra i messaggi (completa tu il codice)
 // Questo serve perchè altrimenti all'apertura la pagina non verrebbe
 // popolata con i messaggi
-document.addEventListener('...', () => {
+document.addEventListener('DOMContentLoaded', () => {
     getMessages();
+
+
+    document.getElementById('submit-btn').addEventListener('click', sendMessage)
 
 });
 
@@ -46,9 +49,10 @@ function sendMessage() {
         if (result.success) {
             getMessages();
             // @DA FARE: Reset dei campi del form
-            // ...
+            let form = document.getElementById('msg-form');
+            form.reset();
         } else if (result.error) {
-            alert(result.error)
+            alert(result.error);
         }
     })
     .catch(error => console.error('Error:', error));
