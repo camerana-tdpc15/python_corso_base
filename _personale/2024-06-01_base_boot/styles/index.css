@@ -1,0 +1,10 @@
+
+/* creo classe rosso che verrà aggiunta dinamicamente con js */
+.rosso {
+    color: red;
+}
+
+/* modifico l'altezza testo del footer con css */
+#footer-1 {
+    font-size: 20px;
+}
