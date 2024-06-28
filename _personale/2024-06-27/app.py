@@ -70,8 +70,9 @@ FILE_JSON = [
 
 @app.route('/', methods=['GET'])
 def home():
-    # data_file =  jsonify(FILE_JSON)
-    return render_template('index.html', FILE_JSON=FILE_JSON)
+    data_file =  jsonify(FILE_JSON)
+    #return render_template('index.html', FILE_JSON=FILE_JSON)
+    return data_file
 
 
 
