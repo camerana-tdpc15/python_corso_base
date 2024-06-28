@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Qua le solite cose... -->
+</head>
+<body>
+
+    <!-- USO DI FORM-DATA (non per questa esercitazione) -->
+    <!-- Se usassimo il form in questo modo, la risposta da Flask dovrebbe essere
+         un redirect sulla pagina home (/), e non potremmo propriamente leggere
+         una risposta dal server. Incece noi vogliamo leggere l'esito dell'operazione.
+         Quindi in questa esercitazione decidiamo di non usare la funzione di 
+         invio "automatico" che usa il formato FormData, ma preferiamo fare noi
+         fetch della richiesta con JavaScript -->
+    <form method="post" action="/api/guestbook">
+        <input type="text" id="nome" name="nome" required >
+        <input type="text" id="messaggio" name="messaggio" required>
+        <button type="submit">Invia messaggio</button>
+        <!-- ATTENZIONE: - Usando type="button", quando l'utente fa click il
+                           browser tenta di inviare il form automaticamente.
+                           Per mantenere type="submit" e prevenire l'invio automatico
+                           dovremmo usare preventDefault() in un eventListener.
+                           Vedi: https://developer.mozilla.org/en-US/docs/Web/API/Event/preventDefault -->
+    </form>
+
+
+    <!-- ALTERNATIVA CON FETCH API (usa questo modo) -->
+    <!-- In questo modo è Javascript a inviare la rischiesta e a leggere la risposta. -->
+    <!-- Poi va invocata la funzione che recupera i messaggi e li mostra -->
+    <form id="msg-form">
+        <input type="text" id="nome" name="nome" required >
+        <input type="text" id="messaggio" name="messaggio" required>
+        <button type="button" id="submit-btn" onclick="sendMessage()">Invia messaggio</button>
+        <!-- ATTENZIONE: - Usiamo type="button" per evitare che il form venga
+                           inviato automaticamente.
+                         - Usiamo onclick= per invocare la funzione sendMessage()
+                           invece di usare il submit del form o aggiungere un
+                           eventListener (vedi script.js)  -->
+    </form>
+
+
+    
+    <!-- SPAZIO PER I MESSAGGI -->
+    <div>
+        <h2>Messages</h2>
+        <ul id="message-list">
+            <!-- Qui dovranno essere inseriti i messaggi usando l'id del tag
+                 <ul> che in questo caso è "message-list"
+             -->
+        </ul>
+    </div>
+
+    <!-- importa static/script.js -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <!--  NOTA BENE: è bene usare url_for() per generare il path corretto
+                     anziché scrivere il path a mano. Così si evitano complicazioni
+                     in caso di cambiamenti del path dell'applicazione.
+    -->
+
+</body>
+
+</html>
