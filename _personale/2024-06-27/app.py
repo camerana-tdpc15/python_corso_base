@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, jsonify
 
 app = Flask(__name__)
 
@@ -70,6 +70,7 @@ FILE_JSON = [
 
 @app.route('/', methods=['GET'])
 def home():
+    # data_file =  jsonify(FILE_JSON)
     return render_template('index.html', FILE_JSON=FILE_JSON)
 
 
