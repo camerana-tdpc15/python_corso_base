@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guestbook</title>
+</head>
+<body>
+    <h1>GUESTBOOK</h1>
+
+    <p>Lascia un messaggio sul nostro guestbook!</p>
+
+    <!-- USO DEL FORM CON FETCH API -->
+    <!-- In questo modo è Javascript a inviare la rischiesta e a leggere la risposta. -->
+    <!-- (poi va invocata la funzione che recupera i messaggi e li mostra) -->
+    <form id="msg-form">
+        Nome: <input type="text" id="nome" name="nome" required>
+        Messaggio: <input type="text" id="messaggio" name="messaggio" required>
+        <button type="button" id="submit-btn" onclick="sendMessage()">
+            Invia messaggio
+        </button>
+        <!-- ATTENZIONE: - Usiamo type="button" per evitare che il form venga
+                           inviato automaticamente.
+                         - Usiamo onclick= per invocare la funzione sendMessage()
+                           invece di usare il submit del form o aggiungere un
+                           eventListener (vedi script.js)  -->
+    </form>
+
+    <!-- SPAZIO PER I MESSAGGI -->
+    <h2>Messages</h2>
+    <ul id="message-list">
+        <!-- Qui dovranno essere inseriti i messaggi usando l'id del tag
+             <ul> che in questo caso è "message-list"
+        -->
+    </ul>
+
+    <!-- importa static/script.js -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <!--  NOTA BENE: è bene usare url_for() per generare il path corretto
+                     anziché scrivere il path a mano. Così si evitano complicazioni
+                     in caso di cambiamenti del path dell'applicazione.
+    -->
+
+</body>
+
+</html>
