@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+
+    <!-- includo la head -->
+    {% include 'includes/head.html' %}
+
+    <style>
+    body{
+            text-align: center; /* Centra il testo all'interno dell'elemento header */
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Home</h2>
+    
+    <!-- Mostra i messaggi flash -->
+    {% include 'includes/flash.html' %}
+
+    {% if 'user_id' in session %}
+        <p>Benvenuto, {{ utente.username }} detto {{ utente.nickname }}!</p>
+        <p><a href="{{ url_for('guestbook') }}">Vai al Guestbook</a>.</p>
+        <p>Oppure <a href="{{ url_for('logout') }}">fai il Logout</a>.</p>
+    {% else %}
+        <p>
+            Per accedere fai il <a href="{{ url_for('login') }}"> <mark> Login</mark> </a> 
+            <br>
+            oppure, se non hai un account, fai il <a href="{{ url_for('signup') }}"><mark>Sign Up</mark></a>
+        </p>
+    {% endif %}
+    
+    <div class="row mb-5">
+        <div class="col">
+            <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg btn-success" role="button">Login</a>            
+        </div>
+        
+        <div class="col" >
+            <a href="{{ url_for('signup') }}" class="btn btn-primary btn-lg " role="button">Sign up</a>            
+        </div>
+    </div>
+    
+    <!-- includo il footer -->
+    {% include 'includes/footer.html' %}
+</body>
+
+</html>

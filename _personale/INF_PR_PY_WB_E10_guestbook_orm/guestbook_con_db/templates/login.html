@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+
+    <!-- includo la head -->
+    {% include 'includes/head.html' %}
+
+    <style>
+    body{
+            text-align: center; /* Centra il testo all'interno dell'elemento header */
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Login</h2>    
+    
+    <form method="POST" action="/login">
+
+        <div class="mb-3 mt-3">
+            <label for="username">Username:</label>
+            <input type="text" class="form-control" id="username" name="username"  placeholder="Enter username" required>
+        </div>
+    
+        <div class="mb-3">
+          <label for="password" class="form-label">Password:</label>
+          <input type="password" id="password" class="form-control" name="password" placeholder="Enter password" required>
+        </div>
+        
+        <div class="col" style="margin: 30px">
+            <button href="{{ url_for('login') }}" type="submit" class="btn btn-primary btn-lg btn-success" role="button">Login</button>            
+        </div>
+      </form>
+     
+
+    <!-- Mostra i messaggi flash -->
+    {% include 'includes/flash.html' %}
+
+    <!-- includo il footer -->
+    {% include 'includes/footer.html' %}
+</body>
+
+</html>

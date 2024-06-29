@@ -1,0 +1,16 @@
+<form method="POST" action="/login">
+
+    <div class="mb-3 mt-3">
+        <label for="username">Username:</label>
+        <input type="text" class="form-control" id="username" placeholder="Enter username" name="username" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="password" class="form-label">Password:</label>
+      <input type="password" id="password" class="form-control"  placeholder="Enter password" name="password" required>
+    </div>
+    
+    <div class="col" style="margin: 30px">
+        <a href="{{ url_for('login') }}" type="submit" class="btn btn-primary btn-lg btn-success" role="button">Login</a>            
+    </div>
+  </form>
