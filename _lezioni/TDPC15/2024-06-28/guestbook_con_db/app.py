@@ -14,8 +14,8 @@ db = SQLAlchemy(app)
 class Utente(db.Model):
     __tablename__ = 'utenti'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    nickname = db.Column(db.String(80), unique=True, nullable=False)
-    username = db.Column(db.String(80), unique=True, nullable=False)
+    nickname = db.Column(db.String, unique=True, nullable=False)
+    username = db.Column(db.String(), unique=True, nullable=False)
     password = db.Column(db.String(30), nullable=False)
     # messaggi = db.relationship('Messaggio', backref=db.backref('utente'))
     # --- OR ---
@@ -64,6 +64,8 @@ def api_guestbook():
         messaggi = Messaggio.query.order_by(Messaggio.timestamp.desc()).all()
         response = [
             {'nickname': messaggio.utente.nickname, 'messaggio': messaggio.messaggio} 
+            # utente = db.session.get(User, messaggio.user_id)
+            # utente.nickname
             for messaggio in messaggi
         ]
         return jsonify(response), 200
