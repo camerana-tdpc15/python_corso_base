@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PromemoriApp</title>
+
+    <!-- includo boostrap -->
+    {% include 'boostrap_5.html' %}
+  </head>
+  <body>
+    <nav class="navbar navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <img src="https://cdn-icons-png.flaticon.com/512/3388/3388607.png" alt="" width="30" height="30" class="d-inline-block align-text-top" />
+          PromemoriApp
+        </a>
+      </div>
+    </nav>
+
+    <div class="accordion" id="accordionExample">
+
+        {% for post in posts %}
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">{{ post.titolo }}</button></h2>
+            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+                {{ post.info}}
+            </div>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+    
+  </body>
+</html>

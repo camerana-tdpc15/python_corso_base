@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html class="h-100">
+  <head>
+    <title>Guestbook</title>
+    {% include 'includes/head.html' %}
+
+    <style>
+        header {
+            text-align: center; /* Centra il testo all'interno dell'elemento header */
+        }
+    </style>
+
+  </head>
+
+  <body class="d-flex flex-column h-100">
+    <header>
+      <h1>Guestbook</h1>
+    </header>
+
+    <div class="flex-shrink-0">
+      <div class="container mt-4">
+        {% include 'includes/flash.html' %}
+
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <h2>Nome</h2>
+            <form action="/api/guestbook" method="POST" id="msg-form">
+              <div class="mb-3">
+                <!-- @MOD: LABER FOR= E INPUT ID= DEVONO ESSERE UGUALI !-->
+                <label for="nome_input" class="form-label">scrivi il tuo nome:</label>
+                <input type="text" class="form-control" id="nome_input" name="nome" required />
+              </div>
+              <div class="mb-3">
+                <!-- @MOD: LABER FOR= E INPUT ID= DEVONO ESSERE UGUALI !-->
+                <label for="messaggio_input" class="form-label">Messaggio:</label>
+                <input type="text" class="form-control" id="messaggio_input" name="messaggio" required />
+              </div>
+              <!-- @MOD: TYPE=BUTTON -->
+              <button type="button" onclick="sendMessage()" class="btn btn-primary" name="bt_send">Invia messaggio</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="row justify-content-center mt-4">
+          <div class="col-md-6">
+            <h2>Messaggi già scritti:</h2>
+            <ul id="messaggi_scritti">
+              <!-- @MOD: RIMOSSO CICLO FOR JINJA -->
+               <!--      qua deve essere popolato con Javascript -->
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+      <script>
+        function sendMessage() {
+          let data = {
+            // @MOD: L'ID DEGLI INPUT ERA SBAGLIATO
+            nome: document.getElementById('nome_input').value,
+            messaggio: document.getElementById('messaggio_input').value
+          }
+        
+          // invia la richiesta al server
+        
+          fetch('/api/guestbook', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+          })
+            .then((Response) => Response.json())
+            .then((result) => {
+              if (result.success) {
+                fetchMessages()
+                //come fare per resettare i campi
+                let form = document.getElementById('msg-form');
+                form.reset();
+                
+              } else if (result.error) {
+                alert(result.error)
+              }
+            })
+            .catch((error) => console.error('Error:', error))
+        }
+
+        function fetchMessages() {
+          fetch('/api/guestbook')
+          .then((response) => response.json())
+          .then((result) => {
+              document.getElementById('messaggi_scritti').innerHTML = '';
+              // @MOD: SOLO "result.forEach" E NON "result.messages.forEach"
+              //       "messages" da dove arriverebbe?
+              result.forEach((message) => {
+                  // @MOD: USARE TAG <LI> PER CREARE LISTA E NON <P>
+                  // @MOD: IL MESSAGGIO È UNICO, NON DIVISO IN NOME E MESSAGGIO! 
+                  document.getElementById('messaggi_scritti').innerHTML += `<li>${message}</li>`;
+              });
+          })
+          .catch((error) => console.error('Error:', error));
+      }
+      
+      // Chiamata a fetchMessages() al caricamento della pagina
+      document.addEventListener('DOMContentLoaded', fetchMessages);
+      </script>
+    </div>
+
+    {% include 'includes/footer.html' %}
+  </body>
+</html>
