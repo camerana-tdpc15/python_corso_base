@@ -1,10 +1,32 @@
-<!DOCTYPE html>
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    <h2>Login</h2>
+    <form method="POST" action="{{ url_for('login') }}">
+        <div class="mb-3">
+            <label for="tx_email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="tx_email" name="tx_email" required>
+        </div>
+        <div class="mb-3">
+            <label for="tx_password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="tx_password" name="tx_password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+{% endblock %}
+
+
+
+
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Login</title> -->
     <!-- Importo Bootstrap 5 -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
@@ -23,4 +45,4 @@
         </form>
     </div>
 </body>
-</html>
+</html> -->
