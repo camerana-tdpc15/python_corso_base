@@ -8,7 +8,7 @@ db = SQLAlchemy()  # Crea l'istanza di SQLAlchemy
 
 
 
-class user(db.Model):
+class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     cognome = db.Column(db.String(50),nullable=False)
@@ -17,7 +17,7 @@ class user(db.Model):
     email = db.Column(db.String(50), nullable=False)
     password = db.Column(db.String(30), nullable=False)
 
-class produttore(db.Model):
+class Produttore(db.Model):
     __tablename__ = 'produttori'
     id = db.Column(db.Integer, primary_key=True)
     nome_produttore= db.Column(db.String(),unique=True) 
@@ -29,14 +29,14 @@ class produttore(db.Model):
 
 
 
-class prodotto(db.Model):
+class Prodotto(db.Model):
     __tablename__ = 'prodotti'
     id = db.Column(db.Integer, primary_key=True, autoincremet=True)
     produttori_id= db.Column(db.Integer,db.ForeginKey('produttori.id'),nullable=True, unique=True) #fk
     nome_prodotto = db.Column(db.String(80))
  
 
-class lotto(db.Model):
+class Lotto(db.Model):
     __tablename__ = 'lotti'
     id = db.Column(db.Integer, primary_key=True,autoincrement=True)
     prodotto_id = db.Column(db.String(80),db.ForeginKey('prodotti.id')) #fk
@@ -46,7 +46,7 @@ class lotto(db.Model):
     prezzo_unitario=db.Column(db.Float,nullable=False)
     sospeso = db.Column(db.Boolean,default=False)
 
-class prenotazione(db.Model):
+class Prenotazione(db.Model):
     __tablename__ = 'prenotazioni'
     id = db.Column(db.Integer, primary_key=True)
     utente_id= db.Column(db.Integer,db.ForeginKey('users.id')) #fk
