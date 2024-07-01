@@ -17,7 +17,7 @@
       <h1>Guestbook</h1>
     </header>
 
-    <body class="flex-shrink-0">
+    <div class="flex-shrink-0">
       <div class="container mt-4">
         {% include 'includes/flash.html' %}
 
@@ -93,7 +93,7 @@
       // Chiamata a fetchMessages() al caricamento della pagina
       document.addEventListener('DOMContentLoaded', fetchMessages);
       </script>
-    </body>
+    </div>
 
     {% include 'includes/footer.html' %}
   </body>
