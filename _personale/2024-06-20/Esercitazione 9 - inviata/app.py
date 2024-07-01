@@ -1,51 +1,26 @@
-import os
 from flask import Flask, render_template, request, session, redirect, flash, url_for, jsonify
-from flask_sqlalchemy import SQLAlchemy
 from markupsafe import escape
-
-BASE_DIR_PATH = os.path.abspath(os.path.dirname(__file__))
-#percorso del file di database
-DATABASE_PATH = os.path.join(BASE_DIR_PATH, 'db.sqlite3')
+from models import db, Utente, Messaggio
+import settings
 
 app = Flask(__name__)
-#utilizzo sqlAlchemy come motore di database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+DATABASE_PATH
-app.config['SECRET_KEY'] = 'mysecretkey'
-db = SQLAlchemy(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = settings.SQLALCHEMY_DATABASE_URI
+app.config['SECRET_KEY'] = settings.SECRET_KEY
+db.init_app(app)
 
-# creo le classi user e messaggio
-class Utente(db.Model):
-    __tablename__ = 'utenti'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    nickname = db.Column(db.String, unique=True, nullable=False)
-    username = db.Column(db.String(), unique=True, nullable=False)
-    password = db.Column(db.String(30), nullable=False)
-    messaggi = db.relationship('Messaggio', back_populates='utente')
-
-class Messaggio(db.Model):
-    __tablename__ = 'messaggi'
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('utenti.id'), nullable=False)
-    messaggio = db.Column(db.Text, nullable=False)
-    timestamp = db.Column(db.DateTime, default=db.func.now(), nullable=False)
-    utente = db.relationship('Utente', back_populates='messaggi')
-
-# Route per la pagina HTML
 @app.route('/')
 def home():
     if 'user_id' in session:
-        user = db.session.query(Utente).get(session['user_id'])
+        user = db.session.get(Utente, session['user_id'])
         return render_template('home.html', utente=user)
     return render_template('home.html')
-    
-# route per il guestbook
+
 @app.route('/guestbook')
 def guestbook():
     if 'user_id' not in session:
         return redirect(url_for('login'))
     return render_template('guestbook.html')
 
-# Route per l'API
 @app.route('/api/guestbook', methods=['GET', 'POST'])
 def api_guestbook():
     if 'user_id' not in session:
@@ -64,13 +39,10 @@ def api_guestbook():
         messaggi = Messaggio.query.order_by(Messaggio.timestamp.desc()).all()
         response = [
             {'nickname': messaggio.utente.nickname, 'messaggio': messaggio.messaggio} 
-            # utente = db.session.get(User, messaggio.user_id)
-            # utente.nickname
             for messaggio in messaggi
         ]
         return jsonify(response), 200
 
-# Route per la registrazione
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
@@ -90,7 +62,6 @@ def signup():
         return redirect(url_for('login'))
     return render_template('signup.html')
 
-# Route per il login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -106,7 +77,6 @@ def login():
             return redirect(url_for('login'))
     return render_template('login.html')
 
-# Route per il logout
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
@@ -114,7 +84,6 @@ def logout():
     return redirect(url_for('home'))
 
 if __name__ == '__main__':
-    # Creare il database e le tabelle se non esistono
     with app.app_context():
         db.create_all()  
     app.run(debug=True)

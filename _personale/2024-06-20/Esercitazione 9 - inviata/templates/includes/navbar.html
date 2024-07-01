@@ -1,0 +1,31 @@
+<nav class="navbar navbar-expand-sm bg-secondary navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="static/foglie.jpg">Il mio guestbook</a>
+        <img src="static/foglie.jpg" alt="Logo" style="width:60px;" class="rounded-pill">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+                </li>
+                {% if 'user_id' in session %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('guestbook') }}">Guestbook</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('signup') }}">Registrazione</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

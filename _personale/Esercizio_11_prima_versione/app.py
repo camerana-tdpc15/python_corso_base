@@ -56,17 +56,13 @@ def prodotti():
     # Altrimenti riporta sulla pagina di login
     else:
         return redirect(url_for('login'))
-    
-@app.route('/lotti')
-def lotti():
+
+def lotti(prodotto_id):
     if 'email' in session:
-        lotti = Lotto.query.filter_by(sospeso='False').all()    #se imposto su booleano mi dà errore
-        return render_template('prodotti.html', lotti=lotti)
+        lotti = Lotto.query.filter_by(prodotto_id=prodotto_id, sospeso=False).all()
+        return render_template('lotti.html', lotti=lotti)
     else:
-        return redirect(url_for('login'))
-
-
-
+        return redirect(url_for('login'))    
 
 if __name__ == '__main__':
     with app.app_context():

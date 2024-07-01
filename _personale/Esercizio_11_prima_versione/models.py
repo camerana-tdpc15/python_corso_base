@@ -17,6 +17,7 @@ class User(db.Model):
     telefono = db.Column(db.String(15))
     email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
+    prenotazioni = db.relationship('Prenotazione', back_populates='utente')
 
 class Produttore(db.Model):
     __tablename__ = PRODUTTORE_TABLE_NAME
@@ -26,12 +27,16 @@ class Produttore(db.Model):
     indirizzo = db.Column(db.String(250))
     telefono = db.Column(db.String(15))
     email = db.Column(db.String(150))
+    prodotti = db.relationship('Prodotto', back_populates='produttore')
 
 class Prodotto(db.Model):
     __tablename__ = PRODOTTO_TABLE_NAME
     id = db.Column(db.Integer, primary_key=True)
     produttore_id = db.Column(db.Integer, db.ForeignKey('produttore.id'), nullable=False)
     nome_prodotto = db.Column(db.String(150), nullable=False)
+    produttore = db.relationship('Produttore', back_populates='prodotti')
+    lotti = db.relationship('Lotto', back_populates='prodotto')
+
 
 class Lotto(db.Model):
     __tablename__ = LOTTO_TABLE_NAME
@@ -41,8 +46,11 @@ class Lotto(db.Model):
     qta_unita_misura = db.Column(db.String(10), nullable=False)
     qta_lotto = db.Column(db.Integer, nullable=False)
     prezzo_unitario = db.Column(db.Float, nullable=False)
-    # sospeso = db.Column(db.Boolean, default=False)
-    sospeso = db.Column(db.String(5), default='False')
+    sospeso = db.Column(db.Boolean, default=False)
+    # sospeso = db.Column(db.String(5), default='False')
+    prodotto = db.relationship('Prodotto', back_populates='lotti')
+    prenotazioni = db.relationship('Prenotazione', back_populates='lotto')
+
 
 class Prenotazione(db.Model):
     __tablename__ = PRENOTAZIONE_TABLE_NAME
@@ -50,6 +58,9 @@ class Prenotazione(db.Model):
     utente_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     lotto_id = db.Column(db.Integer, db.ForeignKey('lotto.id'), nullable=False)
     qta = db.Column(db.Integer, nullable=False)
+    utente = db.relationship('User', back_populates='prenotazioni')
+    lotto = db.relationship('Lotto', back_populates='prenotazioni')
+
 
 # def init_db(app):
 #     # Crea le tabelle nel database, se queste non esistono già
