@@ -65,6 +65,6 @@ def lotti(prodotto_id):
         return redirect(url_for('login'))    
 
 if __name__ == '__main__':
-    with app.app_context():
+    with app.app_context(): # forse da togliere, è gia in models
         init_db(app)
     app.run()    
