@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Guestbook{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="row">
+
+        <div class="col-lg-12">
+
+            <h2>Guestbook</h2>
+
+            <form id="message-form">
+                <textarea id="message" class="form-control" name="message" required></textarea><br>
+                <button class="btn btn-primary" type="submit">Submit</button>
+            </form>
+
+        </div>
+
+        <div class="col-lg-12 mt-4 mb-4">
+
+            <h3>Messages:</h3>
+
+            <ul class="list-group" id="messages-list"></ul>
+
+        </div>
+
+
+    </div>
+</div>
+
+
+{% endblock %}
