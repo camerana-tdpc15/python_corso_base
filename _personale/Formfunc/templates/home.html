@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guestbook</title>
+</head>
+
+<body>
+
+    <form id="guestbook-form" onsubmit="sendMessage(event)">
+        <label for="nome">Nome</label>
+        <input type="text" id="nome" name="nome" required>
+        <textarea name="messaggio" id="messaggio" required></textarea>
+        <br><br>
+        <button id="submit-button" type="submit">Lascia il tuo messaggio!</button>
+    </form>
+    <ul id="messages"></ul>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+
+</html>

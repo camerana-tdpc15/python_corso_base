@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La mia pagina</title>
+</head>
+<body>
+
+    <!-- con post definiamo il metodo con cui
+     inviaremo i dati
+     e con action specifichiamo dove vanno i dati -->
+    <form method="post" action="/login">
+        <div>
+            <label for="username">Username</label>
+            <input type="text"  id="username" name="username" required>
+         </div>
+
+         <div>
+            <label for="contraseña">Password</label>
+            <input type="password" id="contraseña" name="contraseña" required>
+        
+         </div>
+         <div>
+            <button type="submit" name="bot">Login</button>
+         </div>
+    </form>
+    
+</body>
+</html>
