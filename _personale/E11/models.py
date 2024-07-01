@@ -17,6 +17,25 @@ class user(db.Model):
     email = db.Column(db.String(50), nullable=False)
     password = db.Column(db.String(30), nullable=False)
 
+class produttore(db.Model):
+    __tablename__ = 'produttori'
+    id = db.Column(db.Integer, primary_key=True)
+    nome_produttore= db.Column(db.String(),unique=True) 
+    descrizione = db.Column(db.Text(),nullable=False) 
+    indirizzo = db.Column(db.Text(),nullable=False)
+    telefono = db.Column(db.Text(),nullable=False)
+    email = db.Column(db.String(), nullable = False)
+
+
+
+
+class prodotto(db.Model):
+    __tablename__ = 'prodotti'
+    id = db.Column(db.Integer, primary_key=True, autoincremet=True)
+    produttori_id= db.Column(db.Integer,db.ForeginKey('produttori.id'),nullable=True, unique=True) #fk
+    nome_prodotto = db.Column(db.String(80))
+ 
+
 class lotto(db.Model):
     __tablename__ = 'lotti'
     id = db.Column(db.Integer, primary_key=True,autoincrement=True)
@@ -33,24 +52,6 @@ class prenotazione(db.Model):
     utente_id= db.Column(db.Integer,db.ForeginKey('users.id')) #fk
     lotto_id = db.Column(db.Integer,db.ForeginKey('lotti.id')) #fk
     qta = db.Column(db.Integer)
-
-
-class prodotto(db.Model):
-    __tablename__ = 'prodotti'
-    id = db.Column(db.Integer, primary_key=True, autoincremet=True)
-    produttori_id= db.Column(db.Integer,db.ForeginKey('produttori.id'),nullable=True, unique=True) #fk
-    nome_prodotto = db.Column(db.String(80))
- 
-
-class produttore(db.Model):
-    __tablename__ = 'produttori'
-    id = db.Column(db.Integer, primary_key=True)
-    nome_produttore= db.Column(db.String(),unique=True) 
-    descrizione = db.Column(db.Text(),nullable=False) 
-    indirizzo = db.Column(db.Text(),nullable=False)
-    telefono = db.Column(db.Text(),nullable=False)
-    email = db.Column(db.String(), nullable = False)
-
 
 
 
