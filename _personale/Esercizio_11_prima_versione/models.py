@@ -9,14 +9,14 @@ from settings import LOTTO_TABLE_CSV, LOTTO_TABLE_NAME, PRENOTAZIONE_TABLE_CSV, 
 db = SQLAlchemy()   # creo istanza SQLAlchemy
 
 # creo la struttura delle tabelle
-class User(db.Model):
+class User(db.Model):        # nome della classe al singolare e iniziale maiuscola, nome della tabella plurale
     __tablename__ = USER_TABLE_NAME
-    id = db.Column(db.Integer, primary_key=True)
-    cognome = db.Column(db.String(150), nullable=False)
-    nome = db.Column(db.String(150), nullable=False)
-    telefono = db.Column(db.String(15))
-    email = db.Column(db.String(150), unique=True, nullable=False)
-    password = db.Column(db.String(150), nullable=False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    cognome = db.Column(db.String(50), nullable=False)
+    nome = db.Column(db.String(50), nullable=False)
+    telefono = db.Column(db.String(20))
+    email = db.Column(db.String(50), unique=True, nullable=False)
+    password = db.Column(db.String(30), nullable=False)
     prenotazioni = db.relationship('Prenotazione', back_populates='utente')
 
 class Produttore(db.Model):
@@ -47,7 +47,6 @@ class Lotto(db.Model):
     qta_lotto = db.Column(db.Integer, nullable=False)
     prezzo_unitario = db.Column(db.Float, nullable=False)
     sospeso = db.Column(db.Boolean, default=False)
-    # sospeso = db.Column(db.String(5), default='False')
     prodotto = db.relationship('Prodotto', back_populates='lotti')
     prenotazioni = db.relationship('Prenotazione', back_populates='lotto')
 
@@ -193,8 +192,8 @@ class Prenotazione(db.Model):
 def init_db(app):
     #db.init_app(app)
     
-    with app.app_context():
-        db.create_all()
+    with app.app_context(): # attivo il contesto dell'app
+        db.create_all()     # crea tutte le tabelle
         
         populate_table(User, USER_TABLE_CSV, app)
         populate_table(Produttore, PRODUTTORE_TABLE_CSV, app)

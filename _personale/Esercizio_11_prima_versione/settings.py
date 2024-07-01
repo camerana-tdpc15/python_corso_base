@@ -1,5 +1,6 @@
 import os
 
+# Percorso assoluto di dove ci troviamo noi
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 # Percorso assoluto al file del database SQLite
