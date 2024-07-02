@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Lotti{% endblock %}
+
+{% block content %}
+    <h2>Lotti</h2>
+    <div class="list-group">
+        {% for lotto in lotti %}
+            <div class="list-group-item">
+                <h5 class="mb-1">{{ lotto.prodotto.nome_prodotto }}</h5>
+                <p class="mb-1">Data Consegna: {{ lotto.data_consegna }}</p>
+                <p class="mb-1">Quantità: {{ lotto.qta_lotto }} {{ lotto.qta_unita_misura }}</p>
+                <p class="mb-1">Prezzo Unitario: €{{ lotto.prezzo_unitario }}</p>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
