@@ -44,6 +44,8 @@ class Prenotazione(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     qta = db.Column(db.Integer, nullable=False)
 
+    # @TODO: Da implementare l'unique constraint per la coppia lotto_id e user_id
+    # ...
 
 def init_db():
     # Crea le tabelle se non esistono già
