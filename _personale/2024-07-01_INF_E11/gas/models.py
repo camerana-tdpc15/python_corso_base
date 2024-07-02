@@ -44,9 +44,10 @@ class Prenotazione (db.Model):
     lotto_id = db.Column(db.Integer, db.ForeignKey('lotti.id'),nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'),nullable=False)
 
-    def init_db(app):
-       # crea le tabelle se non esistono già
-        db.create_all()
+
+def init_db(app):
+   # crea le tabelle se non esistono già
+    db.create_all()
 
             
             
