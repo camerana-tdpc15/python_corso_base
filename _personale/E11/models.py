@@ -7,10 +7,6 @@ from settings import USERS_FILE_PATH,LOTTI_FILE_PATH,PRODUTTORI_FILE_PATH,PRODOT
 db = SQLAlchemy()  # Crea l'istanza di SQLAlchemy
 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> c02427b135c29614b2488d114ce09c7710306354
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -29,12 +25,7 @@ class Produttore(db.Model):
     telefono = db.Column(db.String(), nullable=False)
     email = db.Column(db.String(), nullable=False)
 
-<<<<<<< HEAD
 
-
-
-=======
->>>>>>> c02427b135c29614b2488d114ce09c7710306354
 class Prodotto(db.Model):
     __tablename__ = 'prodotti'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -51,10 +42,6 @@ class Lotto(db.Model):
     prezzo_unitario = db.Column(db.Float, nullable=False)
     sospeso = db.Column(db.Boolean, default=False)
 
-<<<<<<< HEAD
-=======
-
->>>>>>> c02427b135c29614b2488d114ce09c7710306354
 class Prenotazione(db.Model):
     __tablename__ = 'prenotazioni'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
