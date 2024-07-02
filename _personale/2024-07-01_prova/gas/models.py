@@ -1,10 +1,11 @@
+
+import logging
 import csv
-from datetime import datetime
 import os
 import sys
-
+from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
-
+from settings import USER_TABLE_CSV, PRODUTTORI_TABLE_CSV, PRODOTTI_TABLE_CSV, PRENOTAZIONI_TABLE_CSV, LOTTI_TABLE_CSV, USER_TABLE_NAME, PRODUTTORI_TABLE_NAME, PRODOTTI_TABLE_NAME, PRENOTAZIONI_TABLE_NAME, LOTTI_TABLE_NAME
 
 
 db = SQLAlchemy()  # Crea l'istanza di SQLAlchemy
@@ -13,8 +14,8 @@ db = SQLAlchemy()  # Crea l'istanza di SQLAlchemy
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    nome = db.Column(db.String(50), nullable=False)
     cognome = db.Column(db.String(50), nullable=False)
+    nome = db.Column(db.String(50), nullable=False)
     telefono = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(30), nullable=False)
@@ -51,33 +52,33 @@ class Prenotazione(db.Model):
     lotto_id = db.Column(db.Integer, db.ForeignKey('lotti.id'), unique=True, nullable=False)
     qta = db.Column(db.Integer, nullable=False)
 
-def init_db():
+def init_db(app):
     # crea le tabelle se non esestono gia'
     db.create_all()
 
     #  popolo le tabelle .....
 
-    if not Sala.query.first():
-        if os.path.exists(SALA_TABLE_CSV):
-            with open(SALA_TABLE_CSV, 'r') as csv_file:
+    if not User.query.first():
+        if os.path.exists(USER_TABLE_CSV):
+            with open(USER_TABLE_CSV, 'r') as csv_file:
                 csv_reader = csv.DictReader(csv_file)
-                
                 for row in csv_reader:
-                    new_record = Sala(
-                       cod_s=row["CodS"],
-                       nome_s = row["NomeS"],
-                       citta = row["Città"],
-                       capienza = row["Capienza"] 
+                    new_record = User(
+                       cognome = row["cognome"],
+                       nome = row["nome"],
+                       telefono = row["telefono"],
+                       email = row["email"], 
+                       password = row["password"] 
                     )
                     db.session.add(new_record)
                 #modifiche si propagano sul db
                 db.session.commit()
-                app.logger.info(f"Tabella {SALE_TABLE_NAME} è stata popolata")    
+                app.logger.info(f"Tabella {USER_TABLE_CSV} è stata popolata")    
         else:
-            app.logger.info(f"File {SALA_TABLE_CSV} non esiste")
+            app.logger.info(f"File {USER_TABLE_CSV} non esiste")
             sys.exit(1)    
     else:
-        app.logger.info(f"Tabella {SALE_TABLE_NAME} già popolata.")
+        app.logger.info(f"Tabella {USER_TABLE_CSV} già popolata.")
         
 
    
