@@ -34,8 +34,8 @@ def login():
         email = request.form['email']
         password = request.form['password']
         user = User.query.filter_by(email=email).first()
-        if user and user.password == password:
-            session['username'] = user
+        if email and email.password == password:
+            session['nome'] = user
             flash('Login exitoso!', 'success')
             return redirect(url_for('product_list'))
         else:
