@@ -4,7 +4,9 @@ from settings import DATABASE_PATH
 
 app = Flask(__name__)
 
-app.confi
+app.config.update(
+    SQLALCHEMY_DATABASE_URI='sqlite:///'+DATABASE_PATH
+)
 
 db.init_app(app) # Inizializzare l'istanza di SQLAlchemy con l'app
 
