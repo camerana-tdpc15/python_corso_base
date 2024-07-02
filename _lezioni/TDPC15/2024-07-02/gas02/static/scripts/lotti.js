@@ -30,7 +30,7 @@ const rowLotti = document.querySelector('#row-lotti');
 
             <div class="col-lg-3 my-2">
 
-                <div class="card h-100">
+                <div class="card h-120">
                     <div class="header">
                         <h4 class="card-title">${lotto.prodotto.nome}</h4>
                         <p class="text-end"><small>(codice lotto:${lotto.id})</small></p>   
