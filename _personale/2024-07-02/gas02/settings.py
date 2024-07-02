@@ -1,5 +1,7 @@
 import os
 
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+# percorso assoluto app
+BASE_DIR_PATH = os.path.abspath(os.path.dirname(__file__))
 
-DATABASE_PATH = os.path.join(BASE_DIR, 'database', 'db.sqlite3')
+#percorso database, dicendo che è uguale a BASE_DIR_PATH
+DATABASE_PATH = os.path.join(BASE_DIR_PATH,'database','db.sqlite3')

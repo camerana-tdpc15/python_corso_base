@@ -11,3 +11,4 @@ def init_db():
     db.create_all()
 
     # Popolo le tabelle con i dati
+    ...

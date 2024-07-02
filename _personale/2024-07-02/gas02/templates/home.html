@@ -5,15 +5,10 @@
 </head>
 
 <body>
-    <h1>Home</h1>
-    <p>Guarda in console...</p>
+    <h1>Lotti disponibili</h1>
+    
 
-    <script>
-        // Fa fetch di un file JSON e lo stampa in console
-        fetch("{{ url_for('static', filename='data/dati_lotti.json') }}")
-            .then(response => response.json())
-            .then(data => console.log(data));
-    </script>
+    <script src="{{ url_for('static', filename='data/scripts/lotti.js') }}"></script>
 
 </body>
 
