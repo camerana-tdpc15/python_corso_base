@@ -12,7 +12,7 @@ db = SQLAlchemy()  # Crea l'istanza di SQLAlchemy
 
 
 class User(db.Model):
-    __tablename__ = 'users'
+    __tablename__ = USER_TABLE_NAME
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     cognome = db.Column(db.String(50), nullable=False)
     nome = db.Column(db.String(50), nullable=False)
@@ -21,7 +21,7 @@ class User(db.Model):
     password = db.Column(db.String(30), nullable=False)
 
 class Produttore(db.Model):
-    __tablename__ = 'produttori'
+    __tablename__ = PRODUTTORI_TABLE_NAME
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nome_produttore = db.Column(db.String(100), unique=True, nullable=False)
     descrizione = db.Column(db.Text, nullable=False)
@@ -30,13 +30,13 @@ class Produttore(db.Model):
     email = db.Column(db.String(50), unique=True, nullable=False)
 
 class Prodotto(db.Model):
-    __tablename__ = 'prodotti'
+    __tablename__ = PRODOTTI_TABLE_NAME
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     produttore_id = db.Column(db.Integer, db.ForeignKey('produttori.id'), unique=True, nullable=False)
     nome_prodotto = db.Column(db.String(50), nullable=False)
     
 class Lotto(db.Model):
-    __tablename__ = 'lotti'
+    __tablename__ = LOTTI_TABLE_NAME
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     prodotto_id = db.Column(db.Integer, db.ForeignKey('prodotti.id'), nullable=False)
     data_consegna = db.Column(db.Date, nullable=False)
@@ -46,7 +46,7 @@ class Lotto(db.Model):
     sospeso = db.Column(db.Boolean, default=False)
 
 class Prenotazione(db.Model):
-    __tablename__ = 'prenotazioni'
+    __tablename__ = PRENOTAZIONI_TABLE_NAME
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     utente_id = db.Column(db.Integer, db.ForeignKey('users.id'), unique=True, nullable=False)
     lotto_id = db.Column(db.Integer, db.ForeignKey('lotti.id'), unique=True, nullable=False)
@@ -79,6 +79,47 @@ def init_db(app):
             sys.exit(1)    
     else:
         app.logger.info(f"Tabella {USER_TABLE_CSV} già popolata.")
-        
+
+
+    if not Produttore.query.first():
+        if os.path.exists(PRODUTTORI_TABLE_CSV):
+            with open(PRODUTTORI_TABLE_CSV, 'r') as csv_file:
+                csv_reader = csv.DictReader(csv_file)
+                for row in csv_reader:
+                    new_record = Produttore(
+                       nome_produttore = row["nome_produttore"],
+                       descrizione = row["descrizione"],
+                       indirizzo = row["indirizzo"],
+                       telefono = row["telefono"], 
+                       email = row["email"] 
+                    )
+                    db.session.add(new_record)
+                #modifiche si propagano sul db
+                db.session.commit()
+                app.logger.info(f"Tabella {PRODUTTORI_TABLE_CSV} è stata popolata")    
+        else:
+            app.logger.info(f"File {PRODUTTORI_TABLE_CSV} non esiste")
+            sys.exit(1)    
+    else:
+        app.logger.info(f"Tabella {PRODUTTORI_TABLE_CSV} già popolata.")    
+
+    if not Prodotto.query.first():
+        if os.path.exists(PRODOTTI_TABLE_CSV):
+            with open(PRODOTTI_TABLE_CSV, 'r') as csv_file:
+                csv_reader = csv.DictReader(csv_file)
+                for row in csv_reader:
+                    new_record = Prodotto(
+                       produttore_id = row["produttore_id"],
+                       nome_prodotto = row["nome_prodotto"],
+                    )
+                    db.session.add(new_record)
+                #modifiche si propagano sul db
+                db.session.commit()
+                app.logger.info(f"Tabella {PRODOTTI_TABLE_CSV} è stata popolata")    
+        else:
+            app.logger.info(f"File {PRODOTTI_TABLE_CSV} non esiste")
+            sys.exit(1)    
+    else:
+        app.logger.info(f"Tabella {PRODOTTI_TABLE_CSV} già popolata.")    
 
    
