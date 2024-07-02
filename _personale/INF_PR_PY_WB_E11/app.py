@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 
 # qui importo il db da models
 from settings import DATABASE_PATH
@@ -13,7 +13,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+DATABASE_PATH
 db.init_app(app)
 
 
-
+@app.route('/')
+def home():
+    return render_template('home.html')
     
 
 if __name__ == '__main__':
