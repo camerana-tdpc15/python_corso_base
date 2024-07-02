@@ -22,7 +22,7 @@ def guestbook():
         if not nome or not messaggio:
             response = {'error': 'Nome e messaggio sono obbligatori!'}
         else:
-            with open('guestbook.txt', mode='a', encoding='utf-8') as file:
+            with open(MIO_FILE_PATH, mode='a', encoding='utf-8') as file:
                 file.write(f'{nome}: {messaggio} \n')
 
                 response = {'success': 'ok'}
@@ -39,9 +39,9 @@ def guestbook():
 
             else:
                 lines = []
-        risposta= jsonify(lines)
+        response= jsonify(lines)
 
-    return risposta
+    return response
 
     
 
