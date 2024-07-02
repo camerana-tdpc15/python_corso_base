@@ -16,6 +16,27 @@ db.init_app(app)  # Inizializza l'istanza di SQLAlchemy con l'app Flask
 def home():
     return render_template('home.html')
 
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        cognome = request.form.get('cognome')
+        nome = request.form.get('nome')
+        telefono = request.form.get('telefono')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        if not cognome or not nome or not telefono or not email or not password:
+            flash('Tutti i campi sono obbligatori!')
+            return redirect(url_for('signup'))
+        if User.query.filter_by(email=email).first():
+            flash("Email già in uso!")
+            return redirect(url_for('signup'))
+        new_user = User(email=email, nome=nome, cognome=cognome, telefono=telefono, password=password)
+        db.session.add(new_user)
+        db.session.commit()
+        flash('Registrazione effettuata con successo!')
+        return redirect(url_for('login'))
+    return render_template('signup.html')
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -49,14 +70,9 @@ def logout():
 
 @app.route('/prodotti')
 def prodotti():
-    # Se l'utente è autenticato, mostra la pagina dei prodotti
-    if 'email' in session:
-        prodotti = Prodotto.query.all()
-        return render_template('prodotti.html', prodotti=prodotti)
-    # Altrimenti riporta sulla pagina di login
-    else:
-        return redirect(url_for('login'))
+    return render_template('prodotti.html', prodotti=prodotti)
 
+@app.route('/lotti/<int:prodotto_id>')
 def lotti(prodotto_id):
     if 'email' in session:
         lotti = Lotto.query.filter_by(prodotto_id=prodotto_id, sospeso=False).all()
