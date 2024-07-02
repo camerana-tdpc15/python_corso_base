@@ -60,7 +60,7 @@ class Lotto(db.Model):
     qta_unita_misura = db.Column(db.String(10), nullable=False)
     qta_lotto = db.Column(db.Integer, nullable=False)
     prezzo_unitario = db.Column(db.Float, nullable=False)
-    #sospeso = db.Column(db.Boolean, )
+    #sospeso = db.Column(db.Boolean, default=False)
     sospeso = db.Column(db.String)
     prodotto = db.relationship("Prodotto", back_populates="lotti")
     prenotazioni = db.relationship("Prenotazione", back_populates="lotto")
