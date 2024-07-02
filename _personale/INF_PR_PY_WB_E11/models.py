@@ -45,14 +45,13 @@ class Lotto(db.Model):
 class Prenotazione(db.Model):
     __tablename__ = 'prenotazioni'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.column(db.Integer, db.ForeignKey('users.id'), )
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), )
     lotto_id = db.Column(db.Integer, db.ForeignKey('lotti.id'), nullable=False)    
     qta = db.Column(db.Integer, nullable=False)
 
 
-    # creo la funzione che inizializza il db, ma NON LA USO
-    def init_db(app):
+# creo la funzione che inizializza il db, ma NON LA USO
+def init_db(app):
 
-        
-            # crea il db con tutte le tabelle
-            db.create_all()
+    # crea il db con tutte le tabelle
+    db.create_all()
