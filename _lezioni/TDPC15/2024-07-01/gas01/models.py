@@ -1,11 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
-import os
-import csv
-import sys
 
-
-db = SQLAlchemy()  # Crea l'istanza di SQLAlchemy
-
+db = SQLAlchemy()
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -49,35 +44,12 @@ class Prenotazione(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     qta = db.Column(db.Integer, nullable=False)
 
+    # @TODO: Da implementare l'unique constraint per la coppia lotto_id e user_id
+    # ...
 
-
-def init_db(app):
+def init_db():
     # Crea le tabelle se non esistono già
     db.create_all()
 
-    if not User.query.first():
-
-        if os.path.exists('users'):
-
-            with open('users','r') as csv_file:
-
-                csv_reader= csv.DictReader(csv_file)
-
-                for row  in csv_reader:
-
-                    new_record= User(
-                        nome=row['nome'],
-                        cognome=row['cognome'],
-                        telefono=row['telefono'],
-                        email=row['email'],
-                        password=row['password'],
-                    )
-
-                    db.session.add(new_record)
-                db.session.commit()
-                app.logger.info(f'Tabella Users popolata correttamente')
-        else:
-            app.logger.error(f'Tabella Users non esiste, Verifica il percorso e riprova')
-            sys.exit(1)
-    else:
-        app.logger.info(f'Tabella Users già popolata.')
+    # Popolo le tabelle con i dati
+    ...
