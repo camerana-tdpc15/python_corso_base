@@ -12,7 +12,11 @@
         // Fa fetch di un file JSON e lo stampa in console
         fetch("{{ url_for('static', filename='data/dati_lotti.json') }}")
             .then(response => response.json())
-            .then(data => console.log(data));
+            .then(data => {
+                for (lotto of data) {
+                    console.log(lotto.prodotto.nome)
+                }
+            })
     </script>
 
 </body>
