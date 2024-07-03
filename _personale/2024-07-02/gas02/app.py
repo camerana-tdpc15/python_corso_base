@@ -7,9 +7,15 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+DATABASE_PATH
 
 db.init_app(app)  # Inizializza l'istanza di SQLAlchemy con l'app Flask
 
+
 @app.route('/')
 def home():
     return render_template('home.html')
+
+
+@app.route('/produttori')
+def produttori():
+    return render_template('produttori.html')
 
 
 # @TODO: Qua ci vanno le routes
