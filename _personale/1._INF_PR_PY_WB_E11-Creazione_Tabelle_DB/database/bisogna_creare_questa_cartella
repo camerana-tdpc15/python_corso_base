@@ -1,0 +1,1 @@
+Se non crei la cartella "database" quando SQLALchemy prova a creare il database non riuscirevve perché gli abbiamo detto di metterlo qua dentro!
