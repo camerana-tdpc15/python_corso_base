@@ -1,11 +1,21 @@
-
 import logging
 import csv
 import os
 import sys
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
-from settings import USER_TABLE_CSV, PRODUTTORI_TABLE_CSV, PRODOTTI_TABLE_CSV, PRENOTAZIONI_TABLE_CSV, LOTTI_TABLE_CSV, USER_TABLE_NAME, PRODUTTORI_TABLE_NAME, PRODOTTI_TABLE_NAME, PRENOTAZIONI_TABLE_NAME, LOTTI_TABLE_NAME
+from settings import (
+    USER_TABLE_CSV,
+    PRODUTTORI_TABLE_CSV,
+    PRODOTTI_TABLE_CSV,
+    PRENOTAZIONI_TABLE_CSV,
+    LOTTI_TABLE_CSV,
+    USER_TABLE_NAME,
+    PRODUTTORI_TABLE_NAME,
+    PRODOTTI_TABLE_NAME,
+    PRENOTAZIONI_TABLE_NAME,
+    LOTTI_TABLE_NAME,
+)
 
 
 db = SQLAlchemy()  # Crea l'istanza di SQLAlchemy
@@ -20,6 +30,7 @@ class User(db.Model):
     email = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(30), nullable=False)
 
+
 class Produttore(db.Model):
     __tablename__ = PRODUTTORI_TABLE_NAME
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -29,28 +40,38 @@ class Produttore(db.Model):
     telefono = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
 
+
 class Prodotto(db.Model):
     __tablename__ = PRODOTTI_TABLE_NAME
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    produttore_id = db.Column(db.Integer, db.ForeignKey('produttori.id'), unique=True, nullable=False)
+    produttore_id = db.Column(
+        db.Integer, db.ForeignKey("produttori.id"), unique=True, nullable=False
+    )
     nome_prodotto = db.Column(db.String(50), nullable=False)
-    
+
+
 class Lotto(db.Model):
     __tablename__ = LOTTI_TABLE_NAME
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    prodotto_id = db.Column(db.Integer, db.ForeignKey('prodotti.id'), nullable=False)
+    prodotto_id = db.Column(db.Integer, db.ForeignKey("prodotti.id"), nullable=False)
     data_consegna = db.Column(db.Date, nullable=False)
     qta_unita_misura = db.Column(db.String(10), nullable=False)
     qta_lotto = db.Column(db.Integer, unique=True, nullable=False)
     prezzo_unitario = db.Column(db.Float, nullable=False)
     sospeso = db.Column(db.Boolean, default=False)
 
+
 class Prenotazione(db.Model):
     __tablename__ = PRENOTAZIONI_TABLE_NAME
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    utente_id = db.Column(db.Integer, db.ForeignKey('users.id'), unique=True, nullable=False)
-    lotto_id = db.Column(db.Integer, db.ForeignKey('lotti.id'), unique=True, nullable=False)
+    utente_id = db.Column(
+        db.Integer, db.ForeignKey("users.id"), unique=True, nullable=False
+    )
+    lotto_id = db.Column(
+        db.Integer, db.ForeignKey("lotti.id"), unique=True, nullable=False
+    )
     qta = db.Column(db.Integer, nullable=False)
+
 
 def init_db(app):
     # crea le tabelle se non esestono gia'
@@ -60,66 +81,86 @@ def init_db(app):
 
     if not User.query.first():
         if os.path.exists(USER_TABLE_CSV):
-            with open(USER_TABLE_CSV, 'r') as csv_file:
+            with open(USER_TABLE_CSV, "r") as csv_file:
                 csv_reader = csv.DictReader(csv_file)
                 for row in csv_reader:
                     new_record = User(
-                       cognome = row["cognome"],
-                       nome = row["nome"],
-                       telefono = row["telefono"],
-                       email = row["email"], 
-                       password = row["password"] 
+                        cognome=row["cognome"],
+                        nome=row["nome"],
+                        telefono=row["telefono"],
+                        email=row["email"],
+                        password=row["password"],
                     )
                     db.session.add(new_record)
-                #modifiche si propagano sul db
+                # modifiche si propagano sul db
                 db.session.commit()
-                app.logger.info(f"Tabella {USER_TABLE_CSV} è stata popolata")    
+                app.logger.info(f"Tabella {USER_TABLE_CSV} è stata popolata")
         else:
             app.logger.info(f"File {USER_TABLE_CSV} non esiste")
-            sys.exit(1)    
+            sys.exit(1)
     else:
         app.logger.info(f"Tabella {USER_TABLE_CSV} già popolata.")
 
-
     if not Produttore.query.first():
         if os.path.exists(PRODUTTORI_TABLE_CSV):
-            with open(PRODUTTORI_TABLE_CSV, 'r') as csv_file:
+            with open(PRODUTTORI_TABLE_CSV, "r") as csv_file:
                 csv_reader = csv.DictReader(csv_file)
                 for row in csv_reader:
                     new_record = Produttore(
-                       nome_produttore = row["nome_produttore"],
-                       descrizione = row["descrizione"],
-                       indirizzo = row["indirizzo"],
-                       telefono = row["telefono"], 
-                       email = row["email"] 
+                        nome_produttore=row["nome_produttore"],
+                        descrizione=row["descrizione"],
+                        indirizzo=row["indirizzo"],
+                        telefono=row["telefono"],
+                        email=row["email"],
                     )
                     db.session.add(new_record)
-                #modifiche si propagano sul db
+                # modifiche si propagano sul db
                 db.session.commit()
-                app.logger.info(f"Tabella {PRODUTTORI_TABLE_CSV} è stata popolata")    
+                app.logger.info(f"Tabella {PRODUTTORI_TABLE_CSV} è stata popolata")
         else:
             app.logger.info(f"File {PRODUTTORI_TABLE_CSV} non esiste")
-            sys.exit(1)    
+            sys.exit(1)
     else:
-        app.logger.info(f"Tabella {PRODUTTORI_TABLE_CSV} già popolata.")    
+        app.logger.info(f"Tabella {PRODUTTORI_TABLE_CSV} già popolata.")
 
     if not Prodotto.query.first():
         if os.path.exists(PRODOTTI_TABLE_CSV):
-            with open(PRODOTTI_TABLE_CSV, 'r') as csv_file:
+            with open(PRODOTTI_TABLE_CSV, "r") as csv_file:
                 csv_reader = csv.DictReader(csv_file)
                 for row in csv_reader:
                     new_record = Prodotto(
-                       produttore_id = row["produttore_id"],
-                       nome_prodotto = row["nome_prodotto"],
+                        produttore_id=row["produttore_id"],
+                        nome_prodotto=row["nome_prodotto"],
                     )
                     db.session.add(new_record)
-                #modifiche si propagano sul db
+                # modifiche si propagano sul db
                 db.session.commit()
-                app.logger.info(f"Tabella {PRODOTTI_TABLE_CSV} è stata popolata")    
+                app.logger.info(f"Tabella {PRODOTTI_TABLE_CSV} è stata popolata")
         else:
             app.logger.info(f"File {PRODOTTI_TABLE_CSV} non esiste")
-            sys.exit(1)    
+            sys.exit(1)
     else:
-        app.logger.info(f"Tabella {PRODOTTI_TABLE_CSV} già popolata.")    
+        app.logger.info(f"Tabella {PRODOTTI_TABLE_CSV} già popolata.")
 
-   
+    if not Lotto.query.first():
+        if os.path.exists(LOTTI_TABLE_CSV):
+            with open(LOTTI_TABLE_CSV, "r") as csv_file:
+                csv_reader = csv.DictReader(csv_file)
+                for row in csv_reader:
+                    new_record = Lotto(
+                        prodotto_id=row["prodotto_id"],
+                        data_consegna=row["data_consegna"],
+                        qta_unita_misura=row["qta_unita_misura"],
+                        qta_lotto=row["qta_lotto"],
+                        prezzo_unitario=row["prezzo_unitario"],
+                        sospeso=row["sospeso"],
+                    )
+                    db.session.add(new_record)
+                # modifiche si propagano sul db
+                db.session.commit()
+                app.logger.info(f"Tabella {LOTTI_TABLE_CSV} è stata popolata")
+        else:
+            app.logger.info(f"File {LOTTI_TABLE_CSV} non esiste")
+            sys.exit(1)
+    else:
+        app.logger.info(f"Tabella {LOTTI_TABLE_CSV} già popolata.")
