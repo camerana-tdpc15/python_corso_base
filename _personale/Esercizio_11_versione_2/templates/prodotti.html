@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Product{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <h2>{{ prodotto.nome_prodotto }}</h2>
+        <p><strong>Produttore:</strong> {{ prodotto.produttore.nome_produttore }}</p>
+        <p><strong>Descrizione:</strong> {{ prodotto.descrizione }}</p>
+        <form method="POST">
+            <div class="form-group">
+                <label for="quantita">Quantità</label>
+                <input type="number" class="form-control" id="quantita" name="quantita" required>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Aggiungi al carrello</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
