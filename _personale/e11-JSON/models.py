@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from settings import BASE_DIR
 from pprint import pprint
-import datetime
+from datetime import date
 import os
 import json
 
@@ -93,6 +93,9 @@ def init_db():
                 lista_record = json.load(json_file)
 
             for record_dict in lista_record:
+
+                if 'data_consegna' in record_dict:
+                    record_dict['data_consegna']= record_dict['data_consegna'].date()
 
                 new_user = model(**record_dict) # solo en json seusa el doble asterisco, para la llave y valor  
 
