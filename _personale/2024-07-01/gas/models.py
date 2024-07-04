@@ -1,5 +1,10 @@
 
+import json
+import os
+from datetime import date
+from pprint import pprint
 from flask_sqlalchemy import SQLAlchemy
+from settings import BASE_DIR
 
 
 
@@ -14,6 +19,7 @@ class User(db.Model):
     telefono = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(30), nullable=False)
+
 
 class Produttore(db.Model):
     __tablename__ = 'produttori'
@@ -43,7 +49,7 @@ class Lotto(db.Model):
 class Prenotazione(db.Model):
     __tablename__ = 'prenotazioni'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    utente_id = db.Column(db.Integer, db.ForeignKey('users.id'), unique=True, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), unique=True, nullable=False)
     lotto_id = db.Column(db.Integer, db.ForeignKey('lotti.id'), unique=True, nullable=False)
     qta = db.Column(db.Integer, nullable=False)
 
@@ -51,7 +57,47 @@ def init_db():
     # crea le tabelle se non esestono gia'
     db.create_all()
 
-    #  popolo le tabelle .....
+    
+
+    # popolo le tabelle se non esiste un record in User
+    if User.query.first() is None:
+
+        
+        json_files = [
+
+        ('lotti.json', Lotto),
+        ('prenotazioni.json', Prenotazione),
+        ('prodotti.json', Prodotto  ),
+        ('produttori.json', Produttore ),
+        ('users.json', User) 
+        
+        ]
+
+        for filename, model in json_files:
+            file_path = os.path.join(BASE_DIR, 'database', 'data_json', filename)
+            print(file_path)
+            
+            with open(file_path, 'r') as file:
+                
+                lista_record = json.load(file)
+            
+            for record_dict in lista_record:
+
+                if 'data_consegna' in record_dict:
+                    var_data_consegna = date.fromisoformat(record_dict['data_consegna'])
+                    record_dict['data_consegna'] = var_data_consegna
+                
+                new_record = model(**record_dict)
+
+                db.session.add(new_record)
+        db.session.commit()
+
+           
+
+
+
+           
+
         
 
    
