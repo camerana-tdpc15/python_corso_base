@@ -95,7 +95,8 @@ def init_db():
             for record_dict in lista_record:
 
                 if 'data_consegna' in record_dict:
-                    record_dict['data_consegna']= record_dict['data_consegna'].date()
+                    data_consegna = date.fromisoformat(record_dict['data_consegna'])
+                    record_dict['data_consegna']= data_consegna
 
                 new_user = model(**record_dict) # solo en json seusa el doble asterisco, para la llave y valor  
 
