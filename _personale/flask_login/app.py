@@ -8,7 +8,6 @@ USERS = {
 }
 
 
-
 #route per Home
 @app.route('/')
 def home():
@@ -33,7 +32,6 @@ def login():
 def logout():
     ...
     return render_template('home.html')
-
 
 #route per Films
 @app.route('/films')

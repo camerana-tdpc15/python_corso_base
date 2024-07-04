@@ -1,14 +1,31 @@
 {% extends "base.html" %}
 
-{% block title %}Prodotto{% endblock %}
+{% block title %}Product{% endblock %}
 
 {% block content %}
 <div class="row">
     <div class="col-md-6">
         <h2>{{ prodotto.nome_prodotto }}</h2>
         <p><strong>Produttore:</strong> {{ prodotto.produttore.nome_produttore }}</p>
-        <p><strong>Descrizione:</strong> {{ prodotto.descrizione }}</p>
+        <p><strong>Prezzo:</strong> {{ prezzo | round(2) if prezzo else 'N/A' }} EUR</p>
         <p><strong>Quantità Disponibile:</strong> {{ quantita_disponibile }}</p>
+        <p><strong>Lotti Disponibili:</strong></p>
+        <ul>
+            {% for lotto in lotti %}
+            <li>
+                Lotto ID: {{ lotto.id }}
+            </li>
+            <li>
+                Data Consegna: {{ lotto.data_consegna }}
+            </li>
+            <li>
+                Quantità: {{ lotto.qta_lotto }}
+            </li>
+            <li>
+                Prezzo: {{ lotto.prezzo_unitario | round(2) }} EUR
+            </li>           
+            {% endfor %}
+        </ul>
         <form method="POST">
             <div class="form-group">
                 <label for="quantita">Quantità</label>

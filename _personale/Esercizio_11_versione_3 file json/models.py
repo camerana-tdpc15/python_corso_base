@@ -1,18 +1,19 @@
-import csv
+import json
 import os
 import sys
 from datetime import datetime
+from flask import app
 from flask_sqlalchemy import SQLAlchemy
 from settings import (
-    LOTTI_TABLE_CSV,
+    LOTTI_TABLE_JSON,
     LOTTI_TABLE_NAME,
-    PRENOTAZIONI_TABLE_CSV,
+    PRENOTAZIONI_TABLE_JSON,
     PRENOTAZIONI_TABLE_NAME,
-    PRODOTTI_TABLE_CSV,
+    PRODOTTI_TABLE_JSON,
     PRODOTTI_TABLE_NAME,
-    PRODUTTORI_TABLE_CSV,
+    PRODUTTORI_TABLE_JSON,
     PRODUTTORI_TABLE_NAME,
-    USERS_TABLE_CSV,
+    USERS_TABLE_JSON,
     USERS_TABLE_NAME,
 )
 
@@ -61,7 +62,6 @@ class Lotto(db.Model):
     qta_lotto = db.Column(db.Integer, nullable=False)
     prezzo_unitario = db.Column(db.Float, nullable=False)
     sospeso = db.Column(db.Boolean)
-    #sospeso = db.Column(db.String)
     prodotto = db.relationship("Prodotto", back_populates="lotti")
     prenotazioni = db.relationship("Prenotazione", back_populates="lotto")
 
@@ -75,29 +75,26 @@ class Prenotazione(db.Model):
     utente = db.relationship("User", back_populates="prenotazioni")
     lotto = db.relationship("Lotto", back_populates="prenotazioni")
 
-
 def init_db(app):
-    with app.app_context():  # attivo il contesto dell'app
-        db.create_all()  # crea tutte le tabelle
+    with app.app_context():  # Attivo il contesto dell'app
+        db.create_all()  # Crea tutte le tabelle
 
-        populate_table(User, USERS_TABLE_CSV, app)
-        populate_table(Produttore, PRODUTTORI_TABLE_CSV, app)
-        populate_table(Prodotto, PRODOTTI_TABLE_CSV, app)
-        populate_table(Lotto, LOTTI_TABLE_CSV, app, date_fields=["data_consegna"])
-        populate_table(Prenotazione, PRENOTAZIONI_TABLE_CSV, app)
+        import_data(User, USERS_TABLE_JSON, app)
+        import_data(Produttore, PRODUTTORI_TABLE_JSON, app)
+        import_data(Prodotto, PRODOTTI_TABLE_JSON, app)
+        import_data(Lotto, LOTTI_TABLE_JSON, app, date_fields=["data_consegna"])
+        import_data(Prenotazione, PRENOTAZIONI_TABLE_JSON, app)
 
-
-def populate_table(model, csv_file_path, app, date_fields=[]):
+def import_data(model, file_path, app, date_fields=[]):
     if not model.query.first():
-        if os.path.exists(csv_file_path):
+        if os.path.exists(file_path):
             try:
-                with open(csv_file_path, "r") as csv_file:
-                    csv_reader = csv.DictReader(csv_file)
-                    for row in csv_reader:
+                with open(file_path, "r") as file:
+                    data = json.load(file)
+                    for item in data:
                         for field in date_fields:
-                            row[field] = datetime.strptime(row[field], "%Y-%m-%d")
-                        new_record = model(**row)
-                        db.session.add(new_record)
+                            item[field] = datetime.strptime(item[field], "%Y-%m-%d")
+                        db.session.add(model(**item))
                     db.session.commit()
                     app.logger.info(
                         f'Tabella "{model.__tablename__}" popolata correttamente.'
@@ -109,7 +106,7 @@ def populate_table(model, csv_file_path, app, date_fields=[]):
                 sys.exit(1)
         else:
             app.logger.error(
-                f'Il file "{csv_file_path}" non esiste. Verifica il percorso e riprova.'
+                f'Il file "{file_path}" non esiste. Verifica il percorso e riprova.'
             )
             sys.exit(1)
     else:

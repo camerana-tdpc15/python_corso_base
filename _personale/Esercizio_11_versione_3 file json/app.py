@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, redirect, url_for, session, flash
 from settings import DATABASE
 from models import init_db, db, User, Prodotto, Produttore, Lotto, Prenotazione
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -17,7 +18,7 @@ def home():
     prodotti = Prodotto.query.all()
     prodotti_disponibili = []
     for prodotto in prodotti:
-        lotto_disponibile = Lotto.query.filter_by(prodotto_id=prodotto.id, sospeso='False').first()
+        lotto_disponibile = Lotto.query.filter_by(prodotto_id=prodotto.id, sospeso=0).first()
         prodotti_disponibili.append((prodotto, lotto_disponibile is not None))
     return render_template('home.html', prodotti_disponibili=prodotti_disponibili)
 
@@ -73,30 +74,30 @@ def prodotto(prodotto_id):
     totale_prenotato = sum(prenotazione.qta for prenotazione in Prenotazione.query.join(Lotto).filter(Lotto.prodotto_id == prodotto_id).all())
     quantita_disponibile = max(totale_disponibile - totale_prenotato, 0)
 
-    # Debugging prints
-    print(f"quantità lotto: {totale_disponibile}")
-    print(f"Prodotto ID: {prodotto_id}")
-    print(f"Totale Disponibile: {totale_disponibile}")
-    print(f"Totale Prenotato: {totale_prenotato}")
-    print(f"Quantità Disponibile: {quantita_disponibile}")
+    # Calcola il prezzo del prodotto basato sui lotti disponibili
+    prezzi_lotti = [lotto.prezzo_unitario for lotto in lotti]
+    prezzo = min(prezzi_lotti) if prezzi_lotti else None
     
     if request.method == 'POST':
         if 'logged_in' in session:
             quantita = int(request.form['quantita'])
             utente_id = session['user_id']
-            lotto = Lotto.query.filter_by(prodotto_id=prodotto_id, sospeso=False).first()
-            if lotto and quantita <= quantita_disponibile:
-                lotto.qta_lotto -= quantita
-                new_prenotazione = Prenotazione(lotto_id=lotto.id, utente_id=utente_id, qta=quantita)
-                db.session.add(new_prenotazione)
-                db.session.commit()
-                flash('Prenotazione effettuata con successo', 'success')
-                return redirect(url_for('carrello'))
+            if quantita <= quantita_disponibile:
+                # Trova un lotto disponibile per fare la prenotazione
+                for lotto in lotti:
+                    if lotto.qta_lotto >= quantita:
+                        lotto.qta_lotto -= quantita
+                        new_prenotazione = Prenotazione(lotto_id=lotto.id, utente_id=utente_id, qta=quantita)
+                        db.session.add(new_prenotazione)
+                        db.session.commit()
+                        flash('Prenotazione effettuata con successo', 'success')
+                        return redirect(url_for('carrello'))
+                flash('Quantità non disponibile in nessun lotto', 'danger')
             else:
                 flash('Quantità non disponibile o lotto sospeso', 'danger')
         else:
             return redirect(url_for('login'))
-    return render_template('prodotti.html', prodotto=prodotto, quantita_disponibile=quantita_disponibile)
+    return render_template('prodotti.html', prodotto=prodotto, quantita_disponibile=quantita_disponibile, prezzo=prezzo, lotti=lotti)
 
 @app.route('/carrello', methods=['GET', 'POST'])
 def carrello():
@@ -123,8 +124,9 @@ def carrello():
                     db.session.delete(prenotazione)
                     db.session.commit()
                     flash('Prodotto rimosso con successo', 'success')
+                return redirect(url_for('carrello'))
 
-        totale = sum(p.qta * p.lotto.prezzo_unitario for p in prenotazioni)
+        totale = round(sum(p.qta * p.lotto.prezzo_unitario for p in prenotazioni), 2)
 
         return render_template('carrello.html', prenotazioni=prenotazioni, totale=totale)
     return redirect(url_for('login'))
@@ -162,12 +164,12 @@ def nuovo_lotto():
     prodotti = Prodotto.query.all()
     if request.method == 'POST':
         prodotto_id = request.form['prodotto_id']
-        data_consegna = request.form['data_consegna']
+        data_consegna = datetime.strptime(request.form['data_consegna'], '%Y-%m-%d')
         qta_unita_misura = request.form['qta_unita_misura']
         qta_lotto = request.form['qta_lotto']
         prezzo_unitario = request.form['prezzo_unitario']
-        #sospeso = request.form.get('sospeso') == 1['sospeso']
-        nuovo_lotto = Lotto(prodotto_id=prodotto_id, data_consegna=data_consegna, qta_unita_misura=qta_unita_misura, qta_lotto=qta_lotto, prezzo_unitario=prezzo_unitario) #sospeso=sospeso
+        sospeso = request.form['sospeso'] == 'true'
+        nuovo_lotto = Lotto(prodotto_id=prodotto_id, data_consegna=data_consegna, qta_unita_misura=qta_unita_misura, qta_lotto=qta_lotto, prezzo_unitario=prezzo_unitario, sospeso=sospeso)
         db.session.add(nuovo_lotto)
         db.session.commit()
         flash('Lotto aggiunto con successo', 'success')
