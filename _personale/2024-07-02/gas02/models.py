@@ -1,5 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
-
+from settings import BASE_DIR_PATH
+import os , json
+from pprint import pprint
+from datetime import date 
 db = SQLAlchemy()
 
 class User(db.Model):
@@ -50,6 +53,42 @@ class Prenotazione(db.Model):
 def init_db():
     # Crea le tabelle se non esistono già
     db.create_all()
+ #Inserisco dati nuovo user nella tabella User
+   # new_user = User(**{ 
+   #     'nome' : 'Pippo',
+   #     'cognome' :'Pluto',
+   #     'email' :'asd@asd.com',
+   #     'password' :'asdasdasd',
+   # })
+   # db.session.add(new_user)
+   # db.session.commit() 
 
-    # Popolo le tabelle con i dati
-    ...
+
+    # Popolo le tabelle con i dati se non esiste il record nella prima tabella
+    if User.query.first() is None:
+        
+        json_files = [          
+           ('users.json',User),
+           ('produttori.json',Produttore),
+           ('prenotazioni.json',Prenotazione),
+           ('prodotti.json',Prodotto),
+           ('lotti.json',Lotto),
+        ]
+    #Scrivo il percorso di ogni file
+        for file_name,model in json_files:
+            file_path = os.path.join(BASE_DIR_PATH,'database','data_json',file_name)
+    #Apro il file json e lo traformo in un file python (dizionario)
+            with open(file_path,'r') as jsonfile:
+                dict_from_json = json.load(jsonfile)
+                #quando la chiave è 'data_consegna' trasforma la data in formato datetime dal formato iso e lo sovrascive
+            for record in dict_from_json:
+                if 'data_consegna' in record:
+                    record['data_consegna'] = date.fromisoformat(record['data_consegna'])
+
+    #per ogni dizionario inserisco la chiave e il valore nella tabella utilizzando il metodo **
+                new_record = model(**record )
+                db.session.add(new_record)
+
+        db.session.commit() 
+
+
