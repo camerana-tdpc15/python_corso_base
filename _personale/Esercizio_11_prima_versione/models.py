@@ -208,7 +208,7 @@ def populate_table(model, csv_file_path, app, date_fields=[]):
 #                         qta_unita_misura=row['qta_unita_misura'],
 #                         qta_lotto=row['qta_lotto'],
 #                         prezzo_unitario=row['prezzo_unitario'],
-#                         sospeso=row['sospeso'],
+#                         sospeso=eval(row['sospeso']),
 #                     )
 #                     db.session.add(new_record)
 #                 db.session.commit()

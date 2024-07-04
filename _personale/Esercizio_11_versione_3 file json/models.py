@@ -1,10 +1,10 @@
-import json
+import json                                 # moduli standard
 import os
 import sys
-from datetime import datetime
+from datetime import datetime               # moduli di terze parti
 from flask import app
 from flask_sqlalchemy import SQLAlchemy
-from settings import (
+from settings import (                      # moduli locali
     LOTTI_TABLE_JSON,
     LOTTI_TABLE_NAME,
     PRENOTAZIONI_TABLE_JSON,
@@ -111,3 +111,20 @@ def import_data(model, file_path, app, date_fields=[]):
             sys.exit(1)
     else:
         app.logger.info(f'Tabella "{model.__tablename__}" già popolata.')
+
+
+# # versione fatta in classe
+# def init_db():
+#     # crea le tabelle se non esistono già
+#     db.create_all()
+#     # Popolo le tabelle con i dati se non esiste un record in User
+#     if User.query.first() is None:
+#         json_files = [
+#             LOTTI_TABLE_JSON,
+#             PRENOTAZIONI_TABLE_JSON,
+#             PRODOTTI_TABLE_JSON,
+#             PRODUTTORI_TABLE_JSON,
+#             USERS_TABLE_JSON,
+#         ]
+
+#         for filename in json_files:

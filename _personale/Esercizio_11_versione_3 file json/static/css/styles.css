@@ -8,7 +8,6 @@ body {
 
 .custom-footer {
     background-color: #124d80; /* Colore di sfondo del footer */
-    color: white; /* Colore del testo del footer */
     padding: 10px 0;
     position: absolute;
     bottom: 0;
