@@ -29,8 +29,8 @@ const rowProduttori = document.querySelector('#row-produttori')
                     </div>
 
 
-                    <button type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#${collapseId}">Prodotti</button>
-                    <div id="${collapseId}o" class="collapse">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#produttore_${produttore.id}">Prodotti</button>
+                    <div id="produttore_${produttore.id}" class="collapse">
                         Prodotti:
                                 <ul>
                                     ${nomi_prodotti_list}
