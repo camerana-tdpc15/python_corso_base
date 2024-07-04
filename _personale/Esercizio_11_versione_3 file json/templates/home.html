@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="row">
+    {% for prodotto, is_disponibile in prodotti_disponibili %}
+    <div class="col-lg-4 my-2">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="card-title">{{ prodotto.nome_prodotto }}</h5>
+                
+            </div>
+            <div class="card-body">
+                <p><b>{{ prodotto.produttore.nome_produttore }}</b></p>
+
+                {% if is_disponibile %}
+                <a href="{{ url_for('prodotto', prodotto_id=prodotto.id) }}" class="btn btn-primary">Vai al prodotto</a>
+                {% else %}
+                <button class="btn btn-secondary" disabled>Non Prenotabile</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
