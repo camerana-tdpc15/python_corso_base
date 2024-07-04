@@ -46,9 +46,9 @@ class Produttore(db.Model):
 class Prodotto(db.Model):
     __tablename__ = PRODOTTI_TABLE_NAME
     id = db.Column(db.Integer, primary_key=True)
-    produttore_id = db.Column(
-        db.Integer, db.ForeignKey("produttore.id"), nullable=False)
+    produttore_id = db.Column(db.Integer, db.ForeignKey("produttore.id"), nullable=False)
     nome_prodotto = db.Column(db.String(150), nullable=False)
+    image_url = db.Column(db.String)
     produttore = db.relationship("Produttore", back_populates="prodotti")
     lotti = db.relationship("Lotto", back_populates="prodotto")
 
