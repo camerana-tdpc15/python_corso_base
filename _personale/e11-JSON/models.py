@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from settings import BASE_DIR
 from pprint import pprint
+import datetime
 import os
 import json
 
@@ -14,6 +15,20 @@ class User(db.Model):
     telefono = db.Column(db.String(20))
     email = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(30), nullable=False)
+
+#esempio come SI FA UN RECORD
+#new_user=User(
+    #nome='Pippo',
+   # cognome='Pluto',
+   # email='pipopluto@asd',
+   ## password='asd1234'
+   # )
+#db.session.add(new_user)
+#db.session.commit()
+    
+
+
+
 
 class Produttore(db.Model):
     __tablename__ = 'produttori'
@@ -75,6 +90,15 @@ def init_db():
 
             with open(file_path, 'r') as json_file:
     
-                finaljsonfile = json.load(json_file)
-                pprint(finaljsonfile)
+                lista_record = json.load(json_file)
+
+            for record_dict in lista_record:
+
+                new_user = model(**record_dict) # solo en json seusa el doble asterisco, para la llave y valor  
+
+
+                db.session.add(new_user)
+
+
+         db.session.commit()
             
