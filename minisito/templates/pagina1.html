@@ -9,7 +9,13 @@
     <p>pagina 1 prova {{ var1 }}</p>
 
     <ul>
-        {%%}
+        {%  for elemento in var_3  %}
+
+        <li>{{ elemento }}</li>
+
+        {% endfor %}
+
+
     </ul>
 
 </body>

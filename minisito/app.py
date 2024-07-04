@@ -15,8 +15,11 @@ def seconda_pagina():
 
     var_locale = 'Simone'
     lista = [1,2,3,4,5]
+    
+    
 
-    return render_template ('pagina1.html', var1=var_locale, var2=lista)
+
+    return render_template ('pagina1.html', var_3=lista)
 
 
 

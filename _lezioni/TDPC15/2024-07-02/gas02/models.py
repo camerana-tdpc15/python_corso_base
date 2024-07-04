@@ -1,4 +1,11 @@
+import os
+import json
+from pprint import pprint
+from datetime import date
+
 from flask_sqlalchemy import SQLAlchemy
+
+from settings import BASE_DIR
 
 db = SQLAlchemy()
 
@@ -10,6 +17,15 @@ class User(db.Model):
     telefono = db.Column(db.String(20))
     email = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(30), nullable=False)
+
+# new_user = User(nome='pippo',
+#                 cognome ='pluto',
+#                 email='zioppolo',
+#                 password='cicci000')
+
+
+
+
 
 class Produttore(db.Model):
     __tablename__ = 'produttori'
@@ -51,5 +67,59 @@ def init_db():
     # Crea le tabelle se non esistono già
     db.create_all()
 
-    # Popolo le tabelle con i dati
+    # data= {
+    #     'nome' : 'pippo',
+    #     'cognome' : 'pluto',
+    #     'email' :'zioppolo',
+    #     'password' :'cicci000'
+    # }
+
+    # new_user = User(**data)
+
+    # db.session.add(new_user)
+    # db.session.commit()
+
+  
+
+    # Popolo le tabelle con i dati se non esiste un record. faccio il controllo solo sulla prima tabella
+    # perhe neklla nostra procedura tutte le tabelle vengono create contemporanemente
+    if  User.query.first() is None:
+
+
+        json_files = [
+
+            ('lotti.json', Lotto), 
+            ('prenotazioni.json', Prenotazione), 
+            ('prodotti.json', Prodotto),
+            ('produttori.json', Produttore), 
+            ('users.json', User)
+        ]
+
+        for file_name,  model in json_files:
+            file_path = os.path.join(BASE_DIR, 'database', 'data_json', file_name)
+            
+            with open(file_path, 'r') as file:
+    
+               lista_record = json.load(file)
+
+            pprint(lista_record)
+
+            for record_dict in lista_record:
+
+                if 'data_consegna' in record_dict:
+                    record_dict['data_consegna'] = date.fromisoformat(record_dict['data_consegna'])
+
+                new_record = model(**record_dict)
+                db.session.add(new_record)
+    
+    
+        db.session.commit()
+
+
+
+
+
+
+
+
     ...
