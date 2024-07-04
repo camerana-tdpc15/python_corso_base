@@ -15,8 +15,15 @@ const rowLotti = document.querySelector('#row-lotti');
             displayButton='<button class= "btn btn-danger w-100" disabled>Sospeso</button>'
           }
 
-        else if{lotto.get_qta_disponibile == 0};
+        else if(lotto.get_qta_disponibile == 0){
 
+          displayButton= '<button class = ""btn btn-warning w-100" disable> Esaurito</button>';
+        }
+
+        else{
+          displayButton='<button class="btn btn-primary w-100">Prenota</button>'
+
+        }
         rowLotti.innerHTML += `
           <div class="col-lg-3 my-2">
               <div class="card h-100">
