@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>lista numeri</title>
+</head>
+<body>
+
+<form action="/range_numeri">
+        <label for="varin1">primo numero:</label><br>
+        <input type="number" id="varin1" name="varin1" value= {{ primo }}><br>
+        <label for="varin2">ultimo numero:</label><br>
+        <input type="varin1" id="varin1" name="varin1" value= {{ ultimo }}><br><br>
+        <input type="submit" value="Submit">
+      </form> 
+
+
+
+
+
+
+    <p> da var1: {{ primo }}</p>
+    <p>  a var2 {{ ultimo }}</p>
+    <p>lista  numeri</p>
+    
+    
+    <ul>
+
+        {% for numero in varout %}
+
+        <li>{{ numero }}</li>
+
+        {% endfor %}
+
+    </ul>
+   
+
+</body>
+</html>
