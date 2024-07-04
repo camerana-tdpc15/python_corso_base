@@ -1,4 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
+from settings import BASE_DIR
+from pprint import pprint
+import os
+import json
 
 db = SQLAlchemy()
 
@@ -51,5 +55,26 @@ def init_db():
     # Crea le tabelle se non esistono già
     db.create_all()
 
-    # Popolo le tabelle con i dati
-    ...
+ # CON FIRST NON SI BLOCCA, CON .ONE SI BLOCCA, si non esiste un record in User(en vez de usar not usamos el as None)
+    if  User.query.first() is None:
+
+         json_files = [
+            ('lotti.json',Lotto), 
+            ('prenotazioni.json',Prenotazione),
+            ('prodotti.json',Prodotto),
+            ('produttori.json',Produttore), 
+            ('users.json',User),
+
+
+        ]
+
+         for filename,model in json_files:
+
+            file_path= os.path.join(BASE_DIR,'database','data',filename)
+            print(file_path)
+
+            with open(file_path, 'r') as json_file:
+    
+                finaljsonfile = json.load(json_file)
+                pprint(finaljsonfile)
+            
