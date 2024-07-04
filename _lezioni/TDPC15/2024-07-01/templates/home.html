@@ -1,0 +1,18 @@
+<html>
+
+<head>
+    <title>Home</title>
+</head>
+
+<body>
+    <h1>Home</h1>
+    <p>Guarda n console...</p>
+    <script>
+        fetch("{{url_for('static', filename='data/dati_lotti.json')}}")
+            .then(Response => response.json)
+            .then(data => console.log(data));
+
+    </script>
+</body>
+
+</html>
