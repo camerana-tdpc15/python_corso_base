@@ -27,34 +27,38 @@ def get_lotti():
 
 # para serializar una estructura usar una libreria
 #proviamo a mano
-    lotti_data = []
+    # lotti_data = []
 
-    for lotto in lotti:
+    # for lotto in lotti:
       
-        prodotto = db.session.get(Prodotto,lotto.prodotto_id)
-        produttore=db.session.get(Produttore,prodotto.produttore_id)
+    #     prodotto = db.session.get(Prodotto,lotto.prodotto_id)
+    #     produttore=db.session.get(Produttore,prodotto.produttore_id)
 
-        data = {
-            'id':lotto.id,
-            'data_consegna':lotto.data_consegna,
-            'get_date':lotto.get_date(),
-            'get_qta_disponibile':lotto.get_qta_disponibile(),
-            'qta_unita_misura':lotto.qta_unita_misura,
-            'qta_lotto':lotto.qta_lotto,
-            'prezzo_unitario':lotto.prezzo_unitario,
-            'sospeso':lotto.sospeso,
-            #'prodotto_nome' : prodotto.nome_prodotto => questa e UNA soluzione
-            #COSI E PIU LEGIBILE E VA BENE CON QUELLO CHE ABBIAMO FATTO
-            'prodotto':{
-                'prodotto_nome' : prodotto.nome_prodotto,
-                'produttore':{ 
-                    'nome_produttore':produttore.nome_produttore}
-            }
-        }
+    #     data = {
+    #         'id':lotto.id,
+    #         'data_consegna':lotto.data_consegna,
+    #         'get_date':lotto.get_date(),
+    #         'get_qta_disponibile':lotto.get_qta_disponibile(),
+    #         'qta_unita_misura':lotto.qta_unita_misura,
+    #         'qta_lotto':lotto.qta_lotto,
+    #         'prezzo_unitario':lotto.prezzo_unitario,
+    #         'sospeso':lotto.sospeso,
+    #         #'prodotto_nome' : prodotto.nome_prodotto => questa e UNA soluzione
+    #         #COSI E PIU LEGIBILE E VA BENE CON QUELLO CHE ABBIAMO FATTO
+    #         'prodotto':{
+    #             'prodotto_nome' : prodotto.nome_prodotto,
+    #             'produttore':{ 
+    #                 'nome_produttore':produttore.nome_produttore}
+    #         }
+    #     }
 
-        lotti_data.append(data)
-    
-    return jsonify(lotti_data)
+    #     lotti_data.append(data)
+    serialize_rules = ('-rel_prodotto.rel_lotti')
+    lotti_datta = []
+    for lotto in lotti:
+        dict_lotto = lotto.to_dict()
+        lotti_datta.append(dict_lotto)
+    return jsonify(lotti_datta)
 
 
 
