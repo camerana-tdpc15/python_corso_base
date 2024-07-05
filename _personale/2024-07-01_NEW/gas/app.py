@@ -37,16 +37,21 @@ def home():
     return render_template("home.html")
 
 
-@app.route("/lotti_disponibili", methods=["GET", "POST"])
+@app.route("/lotti_disponibili")
 def lotti_disponibili():
     if "user_id" in session:
 
-        if request.method == "POST":
-            lotti_disp = Lotto.query.all()
-            db.session.add(lotti_disp)
-            db.session.commit()
-            return jsonify(lotti_disp), 201
+        lotti_disp = Lotto.query.all()
 
+        response = []
+
+        for lotto in lotti_disp:
+            lotto_dict = {
+                'qta_disponibile': lotto.qta_disponibile,
+            }
+
+        return jsonify(lotti_disp), 201
+            
     else:
         return redirect(url_for("login"))
 
