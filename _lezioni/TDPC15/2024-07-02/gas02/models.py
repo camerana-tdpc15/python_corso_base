@@ -4,6 +4,8 @@ from pprint import pprint
 from datetime import date
 
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy_serializer import SerializerMixin
+
 
 from settings import BASE_DIR
 
@@ -42,6 +44,10 @@ class Prodotto(db.Model):
     produttore_id = db.Column(db.Integer, db.ForeignKey('produttori.id'), nullable=False)
     nome_prodotto = db.Column(db.String(50), nullable=False)
 
+    #relazioni
+
+    rel_lotti = db.relationship('Lotto', back_populates='rel_prodotto')
+
 class Lotto(db.Model):
     __tablename__ = 'lotti'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -51,6 +57,28 @@ class Lotto(db.Model):
     qta_lotto = db.Column(db.Integer, nullable=False)
     prezzo_unitario = db.Column(db.Float, nullable=False)
     sospeso = db.Column(db.Boolean, default=False)
+    # relazioni
+
+    rel_prodotto = db.relationship('Prodotto', back_populates='rel_lotti')
+    rel_prenotazioni = db.relationship('Prenotazione', back_populates='rel_lotto')
+
+    def get_date(self):
+        res_data = self.data_consegna.strftime('%A %d-%m-%Y')
+
+        return (res_data)
+    
+    def get_prezzo_str(self):
+        return f'{self.prezzo_unitario} €/ {self.qta_unita_misura}'
+    
+    def get_qta_disponibile(self):
+
+        qta_prenotate = 0
+        for prenot in self.rel_prenotazioni:
+            qta_prenotate += prenot.qta
+        return f'{self.qta_lotto - qta_prenotate}'
+
+        
+
 
 
 class Prenotazione(db.Model):
@@ -59,6 +87,8 @@ class Prenotazione(db.Model):
     lotto_id = db.Column(db.Integer, db.ForeignKey('lotti.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     qta = db.Column(db.Integer, nullable=False)
+
+    rel_lotto = db.relationship('Lotto', back_populates='rel_prenotazioni')
 
     # @TODO: Da implementare l'unique constraint per la coppia lotto_id e user_id
     # ...
