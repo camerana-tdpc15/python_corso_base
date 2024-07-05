@@ -57,33 +57,5 @@ def init_db():
     # Crea le tabelle se non esistono già
     db.create_all()
 
-    # Popolo le tabelle con i dati se non esiste un record in User
-    if User.query.first() is None:
-        # 
-        json_files = [
-            ('lotti.json', Lotto),
-            ('prenotazioni.json', Prenotazione),
-            ('prodotti.json', Prodotto),
-            ('produttori.json', Produttore),
-            ('users.json', User),
-        ]
-
-        for filename, model in json_files:
-            file_path = os.path.join(BASE_DIR, 'database', 'data_json', filename)
-            # print(file_path)
-
-            with open(file_path, 'r') as file:
-                
-                lista_record = json.load(file)
-
-            for record_dict in lista_record:
-
-                if 'data_consegna' in record_dict:
-                    var_data_consegna = date.fromisoformat(record_dict['data_consegna'])
-                    record_dict['data_consegna'] = var_data_consegna
-
-                new_record = model(**record_dict)
-
-                db.session.add(new_record)
-            
-        db.session.commit()
+    # Popolo le tabelle con i dati
+    ...
