@@ -1,5 +1,14 @@
 import os
-from flask import Flask, render_template, request, session, redirect, flash, url_for, jsonify
+from flask import (
+    Flask,
+    render_template,
+    request,
+    session,
+    redirect,
+    flash,
+    url_for,
+    jsonify,
+)
 from flask_sqlalchemy import SQLAlchemy
 from markupsafe import escape
 from models import db, init_db, User, Produttore, Prodotto, Lotto, Prenotazione
@@ -8,10 +17,10 @@ from settings import DATABASE_PATH
 app = Flask(__name__)
 
 app.config.update(
-    SECRET_KEY='my_very_secret_key123',
-    SQLALCHEMY_DATABASE_URI='sqlite:///'+DATABASE_PATH,  # Il path al database
-    DEBUG=True  # Imposto qua la modalità debug
-                # Vedi app.run() alla fine del file
+    SECRET_KEY="my_very_secret_key123",
+    SQLALCHEMY_DATABASE_URI="sqlite:///" + DATABASE_PATH,  # Il path al database
+    DEBUG=True,  # Imposto qua la modalità debug
+    # Vedi app.run() alla fine del file
 )
 
 db.init_app(app)  # Inizializza l'istanza di SQLAlchemy con l'app Flask
@@ -19,131 +28,76 @@ db.init_app(app)  # Inizializza l'istanza di SQLAlchemy con l'app Flask
 
 
 
-'''
 
-class Utente(db.Model):
-    __tablename__ = 'utenti'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    nickname = db.Column(db.String, unique=True, nullable=False)
-    username = db.Column(db.String(), unique=True, nullable=False)
-    password = db.Column(db.String(30), nullable=False)
-    # messaggi = db.relationship('Messaggio', backref=db.backref('utente'))
-    # --- OR ---
-    messaggi = db.relationship('Messaggio', back_populates='utente')
-
-class Messaggio(db.Model):
-    __tablename__ = 'messaggi'
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('utenti.id'), nullable=False)
-    messaggio = db.Column(db.Text, nullable=False)
-    timestamp = db.Column(db.DateTime, default=db.func.now(), nullable=False)
-    # utente = db.relationship('Utente', backref=db.backref('messaggi'))
-    # --- OR ---
-    utente = db.relationship('Utente', back_populates='messaggi')
-
-'''
-    
-@app.route('/')
+@app.route("/")
 def home():
-    if 'users_id' in session:
-        user = db.session.query(User).get(session['users_id'])
-        return render_template('home.html', utente=user)
-    return render_template('home.html')
+    if "user_id" in session:
+        user = db.session.query(User).get(session["user_id"])
+        return render_template("home.html", utente=user)
+    return render_template("home.html")
 
 
-'''
-@app.route('/films')
-def films():
-    # Se l'utente è autenticato, mostra la pagina dei film
-    if 'username' in session:
-        films = Film.query.all()
-        return render_template('films.html', films=films)
-    # Altrimenti riporta sulla pagina di login
-    else:
-        return redirect(url_for('login'))
+@app.route("/lotti_disponibili", methods=["GET", "POST"])
+def lotti_disponibili():
+    if "user_id" in session:
 
-'''
-@app.route('/guestbook')
-def guestbook():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-    return render_template('guestbook.html')
-
-@app.route('/api/prodotti', methods=['GET', 'POST'])
-def api_prodotti():
-    if 'users_id' not in session:
-        return jsonify({'error': 'Accesso non autorizzato.'}), 401
-
-    if request.method == 'POST':
-        messaggio = request.json.get('messaggio')
-        if not messaggio:
-            return jsonify({'error': 'Il messaggio non può essere vuoto!'}), 400
-        new_message = Messaggio(user_id=session['user_id'], messaggio=escape(messaggio))
-        db.session.add(new_message)
-        db.session.commit()
-        return jsonify({'success': True}), 201
+        if request.method == "POST":
+            lotti_disp = Lotto.query.all()
+            db.session.add(lotti_disp)
+            db.session.commit()
+            return jsonify(lotti_disp), 201
 
     else:
-        messaggi = Messaggio.query.order_by(Messaggio.timestamp.desc()).all()
-        response = [
-            {'nickname': messaggio.utente.nickname, 'messaggio': messaggio.messaggio} 
-            # utente = db.session.get(User, messaggio.user_id)
-            # utente.nickname
-            for messaggio in messaggi
-        ]
-        return jsonify(response), 200
+        return redirect(url_for("login"))
 
 
-
-@app.route('/signup', methods=['GET', 'POST'])
+@app.route("/signup", methods=["GET", "POST"])
 def signup():
-    if request.method == 'POST':
-        nickname = request.form.get('nickname')
-        username = request.form.get('username')
-        password = request.form.get('password')
+    if request.method == "POST":
+        nickname = request.form.get("surname")
+        username = request.form.get("username")
+        password = request.form.get("password")
         if not nickname or not username or not password:
-            flash('Tutti i campi sono obbligatori!', 'danger')
-            return redirect(url_for('signup'))
-        if User.query.filter_by(username=username).first() or User.query.filter_by(nickname=nickname).first():
-            flash("Il nickname o l'username sono già in uso!", 'danger')
-            return redirect(url_for('signup'))
+            flash("Tutti i campi sono obbligatori!", "danger")
+            return redirect(url_for("signup"))
+        if (
+            User.query.filter_by(username=username).first()
+            or User.query.filter_by(nickname=nickname).first()
+        ):
+            flash("Il nickname o l'username sono già in uso!", "danger")
+            return redirect(url_for("signup"))
         new_user = User(nickname=nickname, username=username, password=password)
         db.session.add(new_user)
         db.session.commit()
-        flash('Registrazione effettuata con successo!', 'success')
-        return redirect(url_for('login'))
-    return render_template('signup.html')
+        flash("Registrazione effettuata con successo!", "success")
+        return redirect(url_for("login"))
+    return render_template("signup.html")
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-        user = User.query.filter_by(username=username, password=password).first()
+    if request.method == "POST":
+        nome = request.form.get("username")
+        password = request.form.get("password")
+        user = User.query.filter_by(nome=nome, password=password).first()
         if user:
-            session['users_id'] = user.id
-            flash('Login avvenuto correttamente!', 'success')
-            return redirect(url_for('guestbook'))
+            session["user_id"] = user.id
+            flash("Login avvenuto correttamente!", "success")
+            return redirect(url_for("lotti_disponibili"))
         else:
-            flash('Username o password non validi.', 'danger')
-            return redirect(url_for('login'))
-    return render_template('login.html')
+            flash("Username o password non validi.", "danger")
+            return redirect(url_for("login"))
+    return render_template("login.html")
 
-@app.route('/logout')
+
+@app.route("/logout")
 def logout():
-    session.pop('user_id', None)
-    flash('Logout effettuato correttamente.', 'warning')
-    return redirect(url_for('home'))
+    session.pop("user_id", None)
+    flash("Logout effettuato correttamente.", "warning")
+    return redirect(url_for("home"))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     with app.app_context():
         init_db()
     app.run(debug=True)
-
-
-
-
-
-

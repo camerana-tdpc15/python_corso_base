@@ -4,20 +4,20 @@
 
 {% block content %}
 
-<h1 class="display-4">Benventuti sul Prodotti</h1>
+<h1 class="display-4">Benventuti sulla pagina dei Prodotti</h1>
 <!-- <p class="lead">Questa è la home page del sito.</p> -->
 {% if 'user_id' in session %}
 
 <div class="row">
     <div class="col-md-6 mt-4">
-        <h6 class="display-6">Benvenuto, {{ utente.username }} detto {{ utente.nickname }}</h6>
+        <h6 class="display-6">Benvenuto, {{ utente.nome }} detto {{ utente.cognome }}</h6>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-6 mt-4">
-        <h6=>Vai al Guestbook</h6=>
-        <a class="btn btn-primary" href="{{ url_for('guestbook') }}" role="button">GUESTBOOK</a>
+        <h6=>Vai ai Prodotti</h6=>
+        <a class="btn btn-primary" href="{{ url_for('lotti_disponibili') }}" role="button">LOTTI</a>
     </div>
 </div>
 
@@ -48,6 +48,13 @@
 </div>
 
 {% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+
+<!-- Custom JavaScript -->
+<script src="{{ url_for('static', filename='scripts/script.js') }}"></script>
 
 {% endblock %}
 

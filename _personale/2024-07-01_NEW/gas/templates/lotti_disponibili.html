@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Guestbook{% endblock %}
+{% block title %}Lotti disponibili{% endblock %}
 
 {% block content %}
 
@@ -10,26 +10,29 @@
 
         <div class="col-lg-12">
 
-            <h2>Guestbook</h2>
+            <h2>Lotti disponibili</h2>
+            <h1 class="text-center my-4">Lotti disponibili</h1>
 
-            <form id="message-form">
-                <textarea id="message" class="form-control" name="message" required></textarea><br>
-                <button class="btn btn-primary" type="submit">Submit</button>
-            </form>
-
-        </div>
-
-        <div class="col-lg-12 mt-4 mb-4">
-
-            <h3>Messages:</h3>
-
-            <ul class="list-group" id="messages-list"></ul>
+            <div class="row" id="row-lotti">
+                <!-- popolato dinamicamente nel js -->
+            </div>
+        
 
         </div>
+
+    
 
 
     </div>
 </div>
 
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<!-- Custom JavaScript -->
+<script src="{{ url_for('static', filename='scripts/lotti.js') }}"></script>
 
 {% endblock %}

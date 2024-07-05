@@ -4,25 +4,25 @@ const rowLotti = document.querySelector('#row-lotti');
 
 
 // Fa fetch di un file JSON e lo stampa in console
-  fetch("../static/data/dati_lotti.json")
+  fetch('/lotti_disponibili')
   .then(response => response.json())
   .then(data => {
       for (lotto of data){
           //console.log(lotto);
 
-          let displayButton = '';
+        //   let displayButton = '';
           
-          if(lotto.sospeso) {
-            // button rosso
-            displayButton = '<button class="btn btn-danger w-100" disabled>Sospeso</button>';
-          }
-          else if (lotto.get_qta_disponibile == 0) {
-              displayButton = '<button class="btn btn-warning w-100" disabled>Esaurito</button>';  
-            }
-          else {
-             displayButton = '<button class="btn btn-primary w-100">Prenota</button>';  
+        //   if(lotto.sospeso) {
+        //     // button rosso
+        //     displayButton = '<button class="btn btn-danger w-100" disabled>Sospeso</button>';
+        //   }
+        //   else if (lotto.get_qta_disponibile == 0) {
+        //       displayButton = '<button class="btn btn-warning w-100" disabled>Esaurito</button>';  
+        //     }
+        //   else {
+        //      displayButton = '<button class="btn btn-primary w-100">Prenota</button>';  
              
-          }
+        //   }
         
         
 

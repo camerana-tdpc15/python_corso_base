@@ -11,8 +11,8 @@
         <h2>Sign Up</h2>
             <form method="POST" action="/signup">
                 <div class="mb-3">
-                    <label for="nickname" class="form-label">Nickname</label>
-                    <input type="text" class="form-control" id="nickname" name="nickname" required>
+                    <label for="nickname" class="form-label">Surname</label>
+                    <input type="text" class="form-control" id="surname" name="surname" required>
                 </div>
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
@@ -29,3 +29,9 @@
 
 {% endblock %}
 
+{% block scripts %}
+
+<!-- Custom JavaScript -->
+<script src="{{ url_for('static', filename='scripts/script.js') }}"></script>
+
+{% endblock %}
