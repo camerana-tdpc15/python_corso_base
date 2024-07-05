@@ -1,0 +1,340 @@
+[
+    {
+        "cognome": "Bruni",
+        "email": "bc@brunimail.abc",
+        "id": 5,
+        "nome": "Carla",
+        "password": "pwd789",
+        "prenotazioni": [
+            {
+                "get_prezzo_totale_str": "€ 2.00",
+                "id": 5,
+                "lotto": {
+                    "data_consegna": "2024-07-27",
+                    "get_date": "Sabato 27/07/2024",
+                    "get_prezzo_str": "2.00 €/Kg",
+                    "get_qta_disponibile": 99,
+                    "id": 5,
+                    "prezzo_unitario": 2.0,
+                    "prodotto": {
+                        "id": 3,
+                        "nome": "Farina di grano tenero",
+                        "produttore": {
+                            "descrizione": "Prodotti biologici",
+                            "email": "info@unibio.it",
+                            "id": 2,
+                            "indirizzo": "Via Garibaldi 2, Melle",
+                            "nome": "Universo Bio",
+                            "telefono": "011 9876543"
+                        },
+                        "produttore_id": 2
+                    },
+                    "prodotto_id": 3,
+                    "qta_lotto": 100,
+                    "qta_unita_misura": "Kg",
+                    "sospeso": false
+                },
+                "lotto_id": 5,
+                "qta": 1,
+                "user_id": 5
+            }
+        ],
+        "telefono": "3347866223"
+    },
+    {
+        "cognome": "Neri",
+        "email": "franeri@neri.xyz",
+        "id": 4,
+        "nome": "Francesca",
+        "password": "pwd654",
+        "prenotazioni": [
+            {
+                "get_prezzo_totale_str": "€ 5.00",
+                "id": 4,
+                "lotto": {
+                    "data_consegna": "2024-07-30",
+                    "get_date": "Martedì 30/07/2024",
+                    "get_prezzo_str": "2.50 €/Kg",
+                    "get_qta_disponibile": 98,
+                    "id": 4,
+                    "prezzo_unitario": 2.5,
+                    "prodotto": {
+                        "id": 2,
+                        "nome": "Mele Golden",
+                        "produttore": {
+                            "descrizione": "Produttore di olio e frutta secca",
+                            "email": "civetta@civetta.com",
+                            "id": 1,
+                            "indirizzo": "Via Cavour 12, Ugento (LE)",
+                            "nome": "Cascina della Civetta",
+                            "telefono": "0172 123456"
+                        },
+                        "produttore_id": 1
+                    },
+                    "prodotto_id": 2,
+                    "qta_lotto": 100,
+                    "qta_unita_misura": "Kg",
+                    "sospeso": false
+                },
+                "lotto_id": 4,
+                "qta": 2,
+                "user_id": 4
+            },
+            {
+                "get_prezzo_totale_str": "€ 6.00",
+                "id": 9,
+                "lotto": {
+                    "data_consegna": "2024-07-27",
+                    "get_date": "Sabato 27/07/2024",
+                    "get_prezzo_str": "3.00 €/Kg",
+                    "get_qta_disponibile": 98,
+                    "id": 9,
+                    "prezzo_unitario": 3.0,
+                    "prodotto": {
+                        "id": 5,
+                        "nome": "Riso Originario integrale",
+                        "produttore": {
+                            "descrizione": "Prodotti tipici",
+                            "email": "sole@gmail.com",
+                            "id": 3,
+                            "indirizzo": "Via Roma 1, Cuneo",
+                            "nome": "Fattoria del Sole",
+                            "telefono": "0171 987654"
+                        },
+                        "produttore_id": 3
+                    },
+                    "prodotto_id": 5,
+                    "qta_lotto": 100,
+                    "qta_unita_misura": "Kg",
+                    "sospeso": false
+                },
+                "lotto_id": 9,
+                "qta": 2,
+                "user_id": 4
+            }
+        ],
+        "telefono": "3834565646"
+    },
+    {
+        "cognome": "Verdi",
+        "email": "g.verdi@live.zzz",
+        "id": 3,
+        "nome": "Giuseppe",
+        "password": "pwd456",
+        "prenotazioni": [
+            {
+                "get_prezzo_totale_str": "€ 7.50",
+                "id": 3,
+                "lotto": {
+                    "data_consegna": "2024-07-28",
+                    "get_date": "Domenica 28/07/2024",
+                    "get_prezzo_str": "2.50 €/Kg",
+                    "get_qta_disponibile": 197,
+                    "id": 3,
+                    "prezzo_unitario": 2.5,
+                    "prodotto": {
+                        "id": 2,
+                        "nome": "Mele Golden",
+                        "produttore": {
+                            "descrizione": "Produttore di olio e frutta secca",
+                            "email": "civetta@civetta.com",
+                            "id": 1,
+                            "indirizzo": "Via Cavour 12, Ugento (LE)",
+                            "nome": "Cascina della Civetta",
+                            "telefono": "0172 123456"
+                        },
+                        "produttore_id": 1
+                    },
+                    "prodotto_id": 2,
+                    "qta_lotto": 200,
+                    "qta_unita_misura": "Kg",
+                    "sospeso": true
+                },
+                "lotto_id": 3,
+                "qta": 3,
+                "user_id": 3
+            },
+            {
+                "get_prezzo_totale_str": "€ 15.00",
+                "id": 8,
+                "lotto": {
+                    "data_consegna": "2024-07-30",
+                    "get_date": "Martedì 30/07/2024",
+                    "get_prezzo_str": "5.00 €/Kg",
+                    "get_qta_disponibile": 97,
+                    "id": 8,
+                    "prezzo_unitario": 5.0,
+                    "prodotto": {
+                        "id": 4,
+                        "nome": "Miele di acacia Bio",
+                        "produttore": {
+                            "descrizione": "Prodotti biologici",
+                            "email": "info@unibio.it",
+                            "id": 2,
+                            "indirizzo": "Via Garibaldi 2, Melle",
+                            "nome": "Universo Bio",
+                            "telefono": "011 9876543"
+                        },
+                        "produttore_id": 2
+                    },
+                    "prodotto_id": 4,
+                    "qta_lotto": 100,
+                    "qta_unita_misura": "Kg",
+                    "sospeso": false
+                },
+                "lotto_id": 8,
+                "qta": 3,
+                "user_id": 3
+            }
+        ],
+        "telefono": "3456748567"
+    },
+    {
+        "cognome": "Bianchi",
+        "email": "jhonb@ymail.yyy",
+        "id": 2,
+        "nome": "John",
+        "password": "pwd321",
+        "prenotazioni": [
+            {
+                "get_prezzo_totale_str": "€ 8.50",
+                "id": 2,
+                "lotto": {
+                    "data_consegna": "2024-07-29",
+                    "get_date": "Lunedì 29/07/2024",
+                    "get_prezzo_str": "8.50 €/L",
+                    "get_qta_disponibile": 499,
+                    "id": 2,
+                    "prezzo_unitario": 8.5,
+                    "prodotto": {
+                        "id": 1,
+                        "nome": "Olio extravergine di oliva Bio",
+                        "produttore": {
+                            "descrizione": "Produttore di olio e frutta secca",
+                            "email": "civetta@civetta.com",
+                            "id": 1,
+                            "indirizzo": "Via Cavour 12, Ugento (LE)",
+                            "nome": "Cascina della Civetta",
+                            "telefono": "0172 123456"
+                        },
+                        "produttore_id": 1
+                    },
+                    "prodotto_id": 1,
+                    "qta_lotto": 500,
+                    "qta_unita_misura": "L",
+                    "sospeso": false
+                },
+                "lotto_id": 2,
+                "qta": 1,
+                "user_id": 2
+            },
+            {
+                "get_prezzo_totale_str": "€ 5.00",
+                "id": 7,
+                "lotto": {
+                    "data_consegna": "2024-07-28",
+                    "get_date": "Domenica 28/07/2024",
+                    "get_prezzo_str": "5.00 €/Kg",
+                    "get_qta_disponibile": 199,
+                    "id": 7,
+                    "prezzo_unitario": 5.0,
+                    "prodotto": {
+                        "id": 4,
+                        "nome": "Miele di acacia Bio",
+                        "produttore": {
+                            "descrizione": "Prodotti biologici",
+                            "email": "info@unibio.it",
+                            "id": 2,
+                            "indirizzo": "Via Garibaldi 2, Melle",
+                            "nome": "Universo Bio",
+                            "telefono": "011 9876543"
+                        },
+                        "produttore_id": 2
+                    },
+                    "prodotto_id": 4,
+                    "qta_lotto": 200,
+                    "qta_unita_misura": "Kg",
+                    "sospeso": true
+                },
+                "lotto_id": 7,
+                "qta": 1,
+                "user_id": 2
+            }
+        ],
+        "telefono": "3245903845"
+    },
+    {
+        "cognome": "Rossi",
+        "email": "prossi@gmail.xxx",
+        "id": 1,
+        "nome": "Paolo",
+        "password": "pwd123",
+        "prenotazioni": [
+            {
+                "get_prezzo_totale_str": "€ 51.00",
+                "id": 1,
+                "lotto": {
+                    "data_consegna": "2024-06-27",
+                    "get_date": "Giovedì 27/06/2024",
+                    "get_prezzo_str": "8.50 €/L",
+                    "get_qta_disponibile": 94,
+                    "id": 1,
+                    "prezzo_unitario": 8.5,
+                    "prodotto": {
+                        "id": 1,
+                        "nome": "Olio extravergine di oliva Bio",
+                        "produttore": {
+                            "descrizione": "Produttore di olio e frutta secca",
+                            "email": "civetta@civetta.com",
+                            "id": 1,
+                            "indirizzo": "Via Cavour 12, Ugento (LE)",
+                            "nome": "Cascina della Civetta",
+                            "telefono": "0172 123456"
+                        },
+                        "produttore_id": 1
+                    },
+                    "prodotto_id": 1,
+                    "qta_lotto": 100,
+                    "qta_unita_misura": "L",
+                    "sospeso": false
+                },
+                "lotto_id": 1,
+                "qta": 6,
+                "user_id": 1
+            },
+            {
+                "get_prezzo_totale_str": "€ 4.00",
+                "id": 6,
+                "lotto": {
+                    "data_consegna": "2024-07-29",
+                    "get_date": "Lunedì 29/07/2024",
+                    "get_prezzo_str": "2.00 €/Kg",
+                    "get_qta_disponibile": 48,
+                    "id": 6,
+                    "prezzo_unitario": 2.0,
+                    "prodotto": {
+                        "id": 3,
+                        "nome": "Farina di grano tenero",
+                        "produttore": {
+                            "descrizione": "Prodotti biologici",
+                            "email": "info@unibio.it",
+                            "id": 2,
+                            "indirizzo": "Via Garibaldi 2, Melle",
+                            "nome": "Universo Bio",
+                            "telefono": "011 9876543"
+                        },
+                        "produttore_id": 2
+                    },
+                    "prodotto_id": 3,
+                    "qta_lotto": 50,
+                    "qta_unita_misura": "Kg",
+                    "sospeso": false
+                },
+                "lotto_id": 6,
+                "qta": 2,
+                "user_id": 1
+            }
+        ],
+        "telefono": "3304953849"
+    }
+]
