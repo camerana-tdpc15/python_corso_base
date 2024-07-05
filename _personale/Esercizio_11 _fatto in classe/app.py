@@ -18,29 +18,34 @@ def home():
 @app.route('/api/lotti', methods=['GET'])
 def get_lotti(): 
     lotti = Lotto.query.all()
-    lotti_data = []
-    # questo è il metodo più manuale e lungo
-    for lotto in lotti:
+    # lotti_data = []
+    # # questo è il metodo più manuale e lungo
+    # for lotto in lotti:
         
-        prodotto = db.session.get(Prodotto, lotto.prodotto_id)
-        produttore = db.session.get(Produttore, prodotto.produttore_id)
-        data = {
-            'id': lotto.id,
-            'data_consegna': lotto.data_consegna,
-            'get_date': lotto.get_date(),
-            'qta_unita_misura': lotto.qta_unita_misura,
-            'get_qta_disponibile': lotto.get_qta_disponibile(),
-            'qta_lotto': lotto.qta_lotto,
-            'prezzo_unitario': lotto.prezzo_unitario,
-            'sospeso': lotto.sospeso,
-            'prodotto': {
-                'nome_prodotto': prodotto.nome_prodotto,
-                'produttore': {
-                    'nome_produttore': produttore.nome_produttore,
-                }
-            }
-        }
-        lotti_data.append(data)
+    #     prodotto = db.session.get(Prodotto, lotto.prodotto_id)
+    #     produttore = db.session.get(Produttore, prodotto.produttore_id)
+    #     data = {
+    #         'id': lotto.id,
+    #         'data_consegna': lotto.data_consegna,
+    #         'get_date': lotto.get_date(),
+    #         'qta_unita_misura': lotto.qta_unita_misura,
+    #         'get_qta_disponibile': lotto.get_qta_disponibile(),
+    #         'qta_lotto': lotto.qta_lotto,
+    #         'prezzo_unitario': lotto.prezzo_unitario,
+    #         'sospeso': lotto.sospeso,
+    #         'prodotto': {
+    #             'nome_prodotto': prodotto.nome_prodotto,
+    #             'produttore': {
+    #                 'nome_produttore': produttore.nome_produttore,
+    #             }
+    #         }
+    #     }
+    #     lotti_data.append(data)
+    
+    lotti_data =[]
+    for lotto in lotti:
+        dict_lotto = lotto.dict()
+        lotti_data.append(dict_lotto)
 
     return jsonify(lotti_data)
 

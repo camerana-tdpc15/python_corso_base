@@ -4,10 +4,11 @@ from datetime import date
 from pprint import pprint
 from flask_sqlalchemy import SQLAlchemy
 from settings import BASE_DIR
+from sqlalchemy_serializer import SerializerMixin
 
 db = SQLAlchemy()
 
-class User(db.Model):
+class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nome = db.Column(db.String(50), nullable=False)
@@ -19,7 +20,7 @@ class User(db.Model):
     rel_prenotazioni = db.relationship("Prenotazione", back_populates="rel_utente")
 
 
-class Produttore(db.Model):
+class Produttore(db.Model, SerializerMixin):
     __tablename__ = 'produttori'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nome_produttore = db.Column(db.String(), unique=True, nullable=False)
@@ -30,7 +31,7 @@ class Produttore(db.Model):
     # relazioni
     rel_prodotti = db.relationship("Prodotto", back_populates="rel_produttore")
 
-class Prodotto(db.Model):
+class Prodotto(db.Model, SerializerMixin):
     __tablename__ = 'prodotti'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     produttore_id = db.Column(db.Integer, db.ForeignKey('produttori.id'), nullable=False)
@@ -39,7 +40,7 @@ class Prodotto(db.Model):
     rel_lotti = db.relationship("Lotto", back_populates="rel_prodotto")
     rel_produttore = db.relationship("Produttore", back_populates="rel_prodotti")
 
-class Lotto(db.Model):
+class Lotto(db.Model, SerializerMixin):
     __tablename__ = 'lotti'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     prodotto_id = db.Column(db.Integer, db.ForeignKey('prodotti.id'), nullable=False)
@@ -64,7 +65,7 @@ class Lotto(db.Model):
         return self.qta_lotto - qta_prenotata
 
 
-class Prenotazione(db.Model):
+class Prenotazione(db.Model, SerializerMixin):
     __tablename__ = 'prenotazioni'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     lotto_id = db.Column(db.Integer, db.ForeignKey('lotti.id'), nullable=False)
