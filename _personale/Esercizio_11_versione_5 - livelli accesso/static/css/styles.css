@@ -1,0 +1,25 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #bcd5eb; /* Colore di sfondo personalizzato */
+}
+
+.custom-navbar {
+    background-color: #124d80; /* Colore di sfondo della navbar */
+}
+
+.nav-link {
+    color: white;
+}
+
+.custom-footer {
+    background-color: #124d80; /* Colore di sfondo del footer */
+    padding: 10px 0;
+    text-align: center;
+    margin-top: auto; /* Spinge il footer verso il fondo */
+}
+
+.content {
+    flex: 1;    /* per mandare il footer al fondo*/
+}

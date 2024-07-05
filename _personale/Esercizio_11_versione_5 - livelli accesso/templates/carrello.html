@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Carrello{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        {% if user %}
+        <h2 class="mb-3"><b>{{ user.nome }}, ecco i prodotti selezionati:</b></h2>
+        {% else %}
+        <h2>Ecco i prodotti selezionati:</h2>
+        {% endif %}
+        <table class="table" id="carrello-table">
+            <thead>
+                <tr>
+                    <th scope="col">Prodotto</th>
+                    <th scope="col">Quantità</th>
+                    <th scope="col">Prezzo unitario</th>
+                    <th scope="col">Totale</th>
+                    <th scope="col">Azione</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for prenotazione in prenotazioni %}
+                <tr data-id="{{ prenotazione.id }}">
+                    <td>{{ prenotazione.lotto.prodotto.nome_prodotto }} ({{ prenotazione.lotto.qta_unita_misura }}.)</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('carrello') }}" class="d-flex">
+                            <input type="hidden" name="prenotazione_id" value="{{ prenotazione.id }}">
+                            <input type="number" name="quantita" value="{{ prenotazione.qta }}" class="form-control me-2" min="1" required>
+                            <button type="submit" name="update" class="btn btn-primary me-2">Aggiorna</button>
+                        </form>
+                    </td>
+                    <td>{{ prenotazione.lotto.prezzo_unitario | round(2) }}€</td>
+                    <td class="totale">{{ prenotazione.qta * prenotazione.lotto.prezzo_unitario }}€</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('carrello') }}">
+                            <input type="hidden" name="prenotazione_id" value="{{ prenotazione.id }}">
+                            <button type="submit" name="delete" class="btn btn-danger">Elimina</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <h4><b>Totale dell'ordine: <span id="totale-carrello">{{ totale }}€</span></b></h4>
+    </div>
+    <a href="{{ url_for('home') }}" class="btn btn-success mt-3">Continua gli acquisti</a>
+    <a href="#" class="btn btn-primary mt-3">Procedi al pagamento</a>
+</div>
+{% endblock %}
