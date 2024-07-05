@@ -1,4 +1,5 @@
 import os, json
+from sqlalchemy_serializer import SerializerMixin
 from pprint import pprint
 from datetime import date
 
@@ -11,7 +12,7 @@ db = SQLAlchemy()
 
 
 # creo tabella USERS
-class User(db.Model):
+class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nome = db.Column(db.String(50), nullable=False)
@@ -21,7 +22,7 @@ class User(db.Model):
     password = db.Column(db.String(30), nullable=False)    
     
 # creo tabella PRODUTTORI
-class Produttore(db.Model):
+class Produttore(db.Model, SerializerMixin):
     __tablename__ = 'produttori'
     id = db.Column(db.Integer, primary_key=True)
     nome_produttore = db.Column(db.String(100), nullable=False, unique=True)
@@ -36,9 +37,11 @@ class Prodotto(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     produttore_id = db.Column(db.Integer, db.ForeignKey('produttori.id'), nullable=False)
     nome_prodotto = db.Column(db.String(50), nullable=False)
+    # RELATIONSHIPS
+    rel_lotti = db.relationship('Lotto', back_populates = 'rel_prodotto')
 
 # creo tabella LOTTI    
-class Lotto(db.Model):
+class Lotto(db.Model, SerializerMixin):
     __tablename__ = 'lotti'
     id = db.Column(db.Integer, primary_key=True)
     prodotto_id = db.Column(db.Integer, db.ForeignKey('prodotti.id'), nullable=False)
@@ -47,14 +50,37 @@ class Lotto(db.Model):
     qta_lotto = db.Column(db.Integer, nullable=False)
     prezzo_unitario = db.Column(db.Float, nullable=False)
     sospeso = db.Column(db.Boolean, default=False)
+    # RELATIONSHIPS
+    rel_prodotto = db.relationship('Prodotto', back_populates = 'rel_lotti')
+    rel_prenotazioni = db.relationship('Prenotazione', back_populates = 'rel_lotto')
+    serialize_rules = ('-rel_prodotto.rel_lotti', 'get_date','get_qta_disponibile')
     
+    def get_date(self):
+        # creo la varibile res_data cioe la data restituita 
+        # data dal parametro self di data_consegna e poi si 
+        # trasforma in stringa con 'strftime' aggiungendo tra le () i FORMAT STRING
+        res_data = self.data_consegna.strftime('%A %d/%m%Y')
+        return res_data
+    
+    def get_qta_disponibile(self):
+        qta_prenotata = 0
+        for prenotazione in self.rel_prenotazioni:
+            qta_prenotata += prenotazione.qta
+        
+        return self.qta_lotto - qta_prenotata
+
+    
+    
+
 # creo tabella PRENOTAZIONI
-class Prenotazione(db.Model):
+class Prenotazione(db.Model, SerializerMixin):
     __tablename__ = 'prenotazioni'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), )
     lotto_id = db.Column(db.Integer, db.ForeignKey('lotti.id'), nullable=False)    
     qta = db.Column(db.Integer, nullable=False)
+    # RELATIONSHIPS
+    rel_lotto = db.relationship('Lotto', back_populates = 'rel_prenotazioni')
 
 
 # creo la funzione che inizializza il db, ma NON LA USO
