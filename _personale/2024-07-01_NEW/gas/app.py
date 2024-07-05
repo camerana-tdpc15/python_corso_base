@@ -45,12 +45,13 @@ class Messaggio(db.Model):
     
 @app.route('/')
 def home():
-    if 'user_id' in session:
-        user = db.session.query(User).get(session['user_id'])
+    if 'users_id' in session:
+        user = db.session.query(User).get(session['users_id'])
         return render_template('home.html', utente=user)
     return render_template('home.html')
 
 
+'''
 @app.route('/films')
 def films():
     # Se l'utente è autenticato, mostra la pagina dei film
@@ -61,16 +62,16 @@ def films():
     else:
         return redirect(url_for('login'))
 
-
+'''
 @app.route('/guestbook')
 def guestbook():
     if 'user_id' not in session:
         return redirect(url_for('login'))
     return render_template('guestbook.html')
 
-@app.route('/api/guestbook', methods=['GET', 'POST'])
-def api_guestbook():
-    if 'user_id' not in session:
+@app.route('/api/prodotti', methods=['GET', 'POST'])
+def api_prodotti():
+    if 'users_id' not in session:
         return jsonify({'error': 'Accesso non autorizzato.'}), 401
 
     if request.method == 'POST':
@@ -103,10 +104,10 @@ def signup():
         if not nickname or not username or not password:
             flash('Tutti i campi sono obbligatori!', 'danger')
             return redirect(url_for('signup'))
-        if Utente.query.filter_by(username=username).first() or Utente.query.filter_by(nickname=nickname).first():
+        if User.query.filter_by(username=username).first() or User.query.filter_by(nickname=nickname).first():
             flash("Il nickname o l'username sono già in uso!", 'danger')
             return redirect(url_for('signup'))
-        new_user = Utente(nickname=nickname, username=username, password=password)
+        new_user = User(nickname=nickname, username=username, password=password)
         db.session.add(new_user)
         db.session.commit()
         flash('Registrazione effettuata con successo!', 'success')
@@ -119,9 +120,9 @@ def login():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-        user = Utente.query.filter_by(username=username, password=password).first()
+        user = User.query.filter_by(username=username, password=password).first()
         if user:
-            session['user_id'] = user.id
+            session['users_id'] = user.id
             flash('Login avvenuto correttamente!', 'success')
             return redirect(url_for('guestbook'))
         else:
