@@ -6,7 +6,9 @@ from flask_sqlalchemy import SQLAlchemy
 
 from settings import BASE_DIR_PATH
 
+# configuro SQLAlchemy per la gestione del db
 db = SQLAlchemy()
+
 
 # creo tabella USERS
 class User(db.Model):
@@ -16,10 +18,7 @@ class User(db.Model):
     cognome = db.Column(db.String(50), nullable=False)
     telefono = db.Column(db.String(20))
     email = db.Column(db.String(50), unique=True, nullable=False)
-    password = db.Column(db.String(30), nullable=False)
-
-
-    
+    password = db.Column(db.String(30), nullable=False)    
     
 # creo tabella PRODUTTORI
 class Produttore(db.Model):
@@ -65,11 +64,12 @@ def init_db(app):
     db.create_all()
   
    
-    # così controllo se la tabella user è gia popolata 
+    # controllo se la tabella user è vuota
     if User.query.first() is None:
-        # tiro fuori la lista dei file json
-        json_files = [
-            # per utilità oltre ai file eassocio anche i nomi delle tabelle
+        
+        # Definisce una lista di tuple, 
+        # dove ogni tupla contiene il nome di un file JSON e la corrispondente classe del modello.
+        json_files = [           
             ('lotti.json', Lotto),
             ('prenotazioni.json',Prenotazione), 
             ('prodotti.json',Prodotto),
@@ -77,28 +77,39 @@ def init_db(app):
             ('users.json',User),
         ]
 
-        # con ciclo FOR mi tiro fuori il path di ogni file 
+        # con ciclo FOR per ogni file JSON nella lista
         for file_name, model in json_files:
+            
+            # Costruisce il percorso del file.
             file_path = os.path.join(BASE_DIR_PATH, 'database','data_json', file_name)
             
+            # stampo il file_path
             print(file_path)
+            
             # apro e leggo il file json
             with open(file_path, 'r')as json_file:
 
-                # creo dizionario dal file json
+                # caricandone i dati in lista_record
                 lista_record = json.load(json_file)
 
                 # faccio ciclo for per prendere un record alla volta
                 for record_dict in lista_record:
-
+                    
+                    # se il record contiene una data (data_consegna), 
                     if 'data_consegna' in record_dict:
-                        var_data_consegna = date.fromisoformat(record_dict['data_consegna'])
+                        
+                        # converte la stringa ISO in un oggetto date.
+                        var_data_consegna = date.fromisoformat(record_dict['data_consegna'])                        
                         record_dict['data_consegna'] = var_data_consegna 
 
 
-                    # creo un nuovo modello
+                    # creo un nuovo oggetto
                     new_record = model(**record_dict)
+                    
+                    # Aggiunge il nuovo record alla sessione del database.
                     db.session.add(new_record)
+         
+        # salvo            
         db.session.commit()
 
 
