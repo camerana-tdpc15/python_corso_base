@@ -24,7 +24,7 @@ if result.status_code == 200:
     # Lista per memorizzare gli oggetti di interesse
     items = []
 
-    # # Itera sui prodotti trovati
+    # Itera sui prodotti trovati
     for adv in products:
         # Estrae i dati di interesse dal prodotto corrente
         data = {
