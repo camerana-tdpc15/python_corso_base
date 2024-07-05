@@ -53,6 +53,8 @@ class Lotto(db.Model, SerializerMixin):
     rel_prodotto = db.relationship("Prodotto", back_populates="rel_lotti")
     rel_prenotazioni = db.relationship("Prenotazione", back_populates="rel_lotto")
 
+    serialize_rules = ('rel_prodotto.rel_lotti')
+
     def get_date(self):
         res_data = self.data_consegna.strftime('%A %d/%m/%Y')
         return res_data
