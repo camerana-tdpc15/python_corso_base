@@ -31,6 +31,9 @@ class Prodotto(db.Model):
     produttore_id = db.Column(db.Integer, db.ForeignKey('produttori.id'), nullable=False)
     nome_prodotto = db.Column(db.String(50), nullable=False)
 
+#RELATIONSHIPS
+    rel_lotti = db.relationship('Lotto', back_populates = 'rel_prodotti')
+
 class Lotto(db.Model):
     __tablename__ = 'lotti'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -41,6 +44,25 @@ class Lotto(db.Model):
     prezzo_unitario = db.Column(db.Float, nullable=False)
     sospeso = db.Column(db.Boolean, default=False)
 
+#RELATIONSHIPS
+    rel_prodotto = db.relationship('Prodotto', back_populates = 'rel_lotti')
+    rel_prenotazioniì= db.relationship('Prenotazione', back_papulates = 'rel_lotto')
+
+
+    def get_date(self):
+        res_data = self.data_consegna.strftime('%A %d/%m/%Y')
+        return res_data
+    
+    def get_prezzo_str(self):
+        return f'{self.prezzo_unitario} €/{self.qta_unita_misura}'
+    
+    def get_qta_disponibile(self):
+        qta_prenotate = 0
+        for prenot in self.rel_prenotazioniì:
+            qta_prenotate += prenot.qta
+
+        return self.qta_lotto - qta_prenotate
+
 
 class Prenotazione(db.Model):
     __tablename__ = 'prenotazioni'
@@ -48,7 +70,9 @@ class Prenotazione(db.Model):
     lotto_id = db.Column(db.Integer, db.ForeignKey('lotti.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     qta = db.Column(db.Integer, nullable=False)
-
+#RELATIONSHIPS
+    
+    rel_lotto = db.relationship('Lotto',back_populates = 'rel_prenotazioni')
     # @TODO: Da implementare l'unique constraint per la coppia lotto_id e user_id
     # ...
 
@@ -61,11 +85,11 @@ def init_db():
         
         json_files = [
             
-            ('lotti.json', Lotto) 
-            ('prenotazioni.json', Prenotazione) 
-            ('prodotti.json', Prodotto) 
-            ('produttori.json', Produttore) 
-            ('users.json', User)
+            ('lotti.json', Lotto), 
+            ('prenotazioni.json', Prenotazione),
+            ('prodotti.json', Prodotto), 
+            ('produttori.json', Produttore), 
+            ('users.json', User),
         ]
 
         for filename, model in json_files:
