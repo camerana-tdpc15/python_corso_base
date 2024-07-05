@@ -1,4 +1,9 @@
+import os
+import json
+from pprint import pprint
 from flask_sqlalchemy import SQLAlchemy
+from settings import BASE_DIR
+
 
 db = SQLAlchemy()
 
@@ -52,4 +57,23 @@ def init_db():
     db.create_all()
 
     # Popolo le tabelle con i dati
-    ...
+    if User.query.first() is None:
+        json_files = [
+          'lotti.json',
+          'prenotazioni.json',
+          'prodotti.json',
+          'produttori.json',
+          'users.json',
+        ]
+
+        for filename in json_files:
+            
+            file_path= os.path.join(BASE_DIR, 'database', 'json_data' ,filename)
+            print(file_path)
+
+            with open(file_path, 'r') as json_file:
+               
+               
+                finaljsonfile = json.load(json_file)
+                pprint( finaljsonfile)
+
