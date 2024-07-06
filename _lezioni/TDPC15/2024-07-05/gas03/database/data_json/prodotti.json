@@ -1,0 +1,37 @@
+[
+    {
+        "id":1,
+        "produttore_id":1,
+        "nome_prodotto":"Olio extravergine di oliva Bio"
+    },
+    {
+        "id":2,
+        "produttore_id":1,
+        "nome_prodotto":"Mele Golden"
+    },
+    {
+        "id":3,
+        "produttore_id":2,
+        "nome_prodotto":"Farina di grano tenero"
+    },
+    {
+        "id":4,
+        "produttore_id":2,
+        "nome_prodotto":"Miele di acacia Bio"
+    },
+    {
+        "id":5,
+        "produttore_id":3,
+        "nome_prodotto":"Riso Originario integrale"
+    },
+    {
+        "id":6,
+        "produttore_id":3,
+        "nome_prodotto":"Formaggio Toma"
+    },
+    {
+        "id":7,
+        "produttore_id":4,
+        "nome_prodotto":"Zucchine novelle"
+    }
+]
