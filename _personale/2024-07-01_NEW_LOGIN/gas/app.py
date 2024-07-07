@@ -59,19 +59,22 @@ def lotti_disponibili():
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     if request.method == "POST":
-        nickname = request.form.get("surname")
-        username = request.form.get("username")
+        cognome = request.form.get("cognome")
+        nome = request.form.get("nome")
+        telefono = request.form.get("telefono")
+        email = request.form.get("email")
         password = request.form.get("password")
-        if not nickname or not username or not password:
+        if not cognome or not nome or not telefono or not email or not password:
             flash("Tutti i campi sono obbligatori!", "danger")
             return redirect(url_for("signup"))
         if (
-            User.query.filter_by(username=username).first()
-            or User.query.filter_by(nickname=nickname).first()
+            User.query.filter_by(nome=nome).first()
+            or User.query.filter_by(cognome=cognome).first()
+            or User.query.filter_by(email=email).first()
         ):
-            flash("Il nickname o l'username sono già in uso!", "danger")
+            flash("Il nome o il cognome o l'email sono già in uso!", "danger")
             return redirect(url_for("signup"))
-        new_user = User(nickname=nickname, username=username, password=password)
+        new_user = User(cognome=cognome, nome=nome, telefono=telefono, email=email, password=password)
         db.session.add(new_user)
         db.session.commit()
         flash("Registrazione effettuata con successo!", "success")
@@ -82,9 +85,9 @@ def signup():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        nome = request.form.get("username")
+        email = request.form.get("email")
         password = request.form.get("password")
-        user = User.query.filter_by(nome=nome, password=password).first()
+        user = User.query.filter_by(email=email, password=password).first()
         if user:
             session["user_id"] = user.id
             flash("Login avvenuto correttamente!", "success")
