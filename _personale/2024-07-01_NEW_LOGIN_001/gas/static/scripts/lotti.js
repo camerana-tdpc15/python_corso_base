@@ -61,3 +61,6 @@ fetch("/api/lotti")
     });
 
     // <p>Prezzo: <b>${lotto.prezzo_unitario} €/${qta_unita_misura}</b></p>
+
+
+    
