@@ -27,6 +27,11 @@ class Produttore(db.Model,SerializerMixin):
     telefono = db.Column(db.String(), nullable=False)
     email = db.Column(db.String(), nullable=False)
 
+      # RELATIONSHIPS
+    rel_prodotti = db.relationship('Prodotto', back_populates='rel_produttore')
+
+    serialize_rules = ('-rel_prodotti.rel_produttore',)
+
 class Prodotto(db.Model,SerializerMixin):
     __tablename__ = 'prodotti'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -40,6 +45,10 @@ class Prodotto(db.Model,SerializerMixin):
      #back_populates = 'rel_prodotto' es el nombre de una relacion BIdireccional
      #se tuilza "PRODOTTO" en singular porque UN PROD va relacionado a MUCHOS lotti. Relacion de UNO a MUCHOS
     rel_lotti = db.relationship('Lotto',back_populates='rel_prodotto')
+    rel_produttore = db.relationship('Produttore', back_populates='rel_prodotti')
+
+
+    serialize_rules = ('-rel_lotti.rel_prodotto', '-rel_produttore.rel_prodotti')
    
 
 class Lotto(db.Model,SerializerMixin):
@@ -96,7 +105,7 @@ class Prenotazione(db.Model,SerializerMixin):
     #relacino BIdireccional donde  tomamos la clase lotto y que es UNA con Muchas prenotazioni
     rel_lotto= db.relationship('Lotto', back_populates='rel_prenotazioni')
 
-
+    serialize_rules = ('-rel_lotto.rel_prenotazioni',)
  
 
 def init_db():
