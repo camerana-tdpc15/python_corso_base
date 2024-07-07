@@ -73,8 +73,8 @@ def get_lotti():
         lotti_data.append(data)
     
 
-    # return lotti_data
-    return jsonify('lotti_disponibili.html')
+    return lotti_data
+    # return jsonify('lotti_disponibili.html')
     # return render_template("lotti_disponibili.html")
     
         
