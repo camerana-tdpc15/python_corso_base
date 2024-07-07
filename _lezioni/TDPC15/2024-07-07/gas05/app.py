@@ -37,6 +37,14 @@ def get_lotti():
     return jsonify(lotti_data)
 
 
+@app.route('/api/prenotazioni', methods=['GET'])
+def get_prenotazioni():
+    ...
+
+
+# @TODO: Implementare il login / logout
+...
+
 if __name__ == '__main__':
     with app.app_context():
         init_db()
