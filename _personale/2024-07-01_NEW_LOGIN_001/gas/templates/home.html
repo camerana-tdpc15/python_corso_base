@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<h1 class="display-4">Benvenuti sulla pagina dei Prodotti</h1>
+<!-- <p class="lead">Questa è la home page del sito.</p> -->
+{% if 'user_id' in session %}
+
+<div class="row">
+    <div class="col-md-6 mt-4">
+        <h6 class="display-6">Benvenuto, {{ utente.nome }} detto {{ utente.cognome }}</h6>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mt-4">
+        <h6=>Vai ai Prodotti</h6=>
+        <a class="btn btn-primary" href="{{ url_for('get_lotti') }}" role="button">LOTTI</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mt-4">
+        <h6=>Fai il Logout</h6=>
+        <a class="btn btn-primary" href="{{ url_for('logout') }}" role="button">LOGOUT</a>
+    </div>
+</div>
+
+
+
+{% else %}
+
+<div class="row">
+    <div class="col-md-6 mt-4">
+        <h6=>Per accedere fai il Login</h6=>
+        <a class="btn btn-primary" href="{{ url_for('login') }}" role="button">LOGIN</a>
+    </div>
+    
+</div>
+<div class="row">
+    
+    <div class="col-md-6 mt-4 mb-4">
+        <h6=>oppure, se non hai un account, fai il Sign Up</h6=>
+        <a class="btn btn-primary" href="{{ url_for('signup') }}" role="button">SIGN UP</a>
+    </div>
+</div>
+
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+
+<!-- Custom JavaScript -->
+<script src="{{ url_for('static', filename='scripts/script.js') }}"></script>
+
+{% endblock %}
+
+
