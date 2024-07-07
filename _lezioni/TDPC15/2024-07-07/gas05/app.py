@@ -1,5 +1,5 @@
 import locale
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 from models import db, init_db, Lotto, Prodotto, Produttore
 from settings import DATABASE_PATH
 
@@ -15,10 +15,20 @@ def home():
     return render_template('home.html')
 
 
+
 @app.route('/api/lotti', methods=['GET'])
 def get_lotti():
-    lotti = Lotto.query.all()
-    
+
+    # Leggo i parametri passati in query string
+    order = request.args.get('order', 'asc')
+
+    if order == 'asc':
+        lotti = Lotto.query.order_by(Lotto.data_consegna).all()
+    elif order == 'desc':
+        lotti = Lotto.query.order_by(Lotto.data_consegna.desc()).all()
+    else:
+        return 'Parametro order non valido. Utilizzare "asc" o "desc".'
+
     lotti_data = []
     for lotto in lotti:
         dict_lotto = lotto.to_dict()
