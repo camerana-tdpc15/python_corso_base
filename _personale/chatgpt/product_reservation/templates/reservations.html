@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>My Reservations</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Delivery Date</th>
+            <th>Quantity</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for reservation in reservations %}
+        <tr>
+            <td>{{ reservation.lotto.prodotto.nome_prodotto }}</td>
+            <td>{{ reservation.lotto.data_consegna }}</td>
+            <td>{{ reservation.qta }} {{ reservation.lotto.qta_unita_misura }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

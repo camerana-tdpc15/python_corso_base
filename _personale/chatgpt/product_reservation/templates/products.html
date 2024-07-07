@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Available Lots</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Delivery Date</th>
+            <th>Quantity</th>
+            <th>Unit Price</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for lotto in lotti %}
+        <tr>
+            <td>{{ lotto.prodotto.nome_prodotto }}</td>
+            <td>{{ lotto.data_consegna }}</td>
+            <td>{{ lotto.qta_lotto }} {{ lotto.qta_unita_misura }}</td>
+            <td>{{ lotto.prezzo_unitario }} €</td>
+            <td>
+                <a href="{{ url_for('reserve', lotto_id=lotto.id) }}" class="btn btn-primary">Reserve</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

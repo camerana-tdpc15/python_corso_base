@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Reserve Product</h2>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+        {{ form.qta.label }}<br>
+        {{ form.qta(class="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ form.submit(class="btn btn-primary") }}
+    </div>
+</form>
+{% endblock %}
