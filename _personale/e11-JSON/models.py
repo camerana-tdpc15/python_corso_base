@@ -17,19 +17,6 @@ class User(db.Model):
     email = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(30), nullable=False)
 
-#esempio come SI FA UN RECORD
-#new_user=User(
-    #nome='Pippo',
-   # cognome='Pluto',
-   # email='pipopluto@asd',
-   ## password='asd1234'
-   # )
-#db.session.add(new_user)
-#db.session.commit()
-    
-
-
-
 
 class Produttore(db.Model,SerializerMixin):
     __tablename__ = 'produttori'
@@ -47,6 +34,11 @@ class Prodotto(db.Model,SerializerMixin):
     nome_prodotto = db.Column(db.String(50), nullable=False)
 
     #RELATIONSHIPS
+     # aca estamos queriendo decir  creamos una relacionn entre lotti y prodotti, en el cual . db es sqlalchemy
+     #.relationship es la funcion interna de sqlalchemy
+     #'Lotto' hace referencia a un modelo CLASE que siempre va en cadena de texto
+     #back_populates = 'rel_prodotto' es el nombre de una relacion BIdireccional
+     #se tuilza "PRODOTTO" en singular porque UN PROD va relacionado a MUCHOS lotti. Relacion de UNO a MUCHOS
     rel_lotti = db.relationship('Lotto',back_populates='rel_prodotto')
    
 
@@ -61,7 +53,11 @@ class Lotto(db.Model,SerializerMixin):
     sospeso = db.Column(db.Boolean, default=False)
 
     #RELATIONSHIPS
+
+    #Esta es una relacion BIdireccional donde un prodotto puede tener muchos Lotti
     rel_prodotto = db.relationship('Prodotto',back_populates='rel_lotti')
+
+    #esta es una relacion Bidireccional donde un lotto puede tener muchas prenotazioni
     rel_prenotazioni= db.relationship('Prenotazione', back_populates='rel_lotto')
 
     serialize_rules = (' -rel.prodotto.rel_lotti','get_date','get_prezzo_str','get_qta_disponibile')
@@ -81,6 +77,12 @@ class Lotto(db.Model,SerializerMixin):
             qta_prenotata +=  prenot.qta
 
         return self.qta_lotto - qta_prenotata
+    
+
+    #ciclo for con list comprehension
+    #def get_qta_disponibile(self):
+    #qta_prenotata = sum(prenot.qta for prenot in self.rel_prenotazioni)
+    #return self.qta_lotto - qta_prenotata
 
 class Prenotazione(db.Model,SerializerMixin):
     __tablename__ = 'prenotazioni'
@@ -91,6 +93,7 @@ class Prenotazione(db.Model,SerializerMixin):
 
 
     #RELATIONSHIP
+    #relacino BIdireccional donde  tomamos la clase lotto y que es UNA con Muchas prenotazioni
     rel_lotto= db.relationship('Lotto', back_populates='rel_prenotazioni')
 
 
