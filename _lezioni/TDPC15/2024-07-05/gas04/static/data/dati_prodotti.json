@@ -1,0 +1,213 @@
+[
+    {
+        "id": 3,
+        "lotti": [
+            {
+                "data_consegna": "2024-07-27",
+                "get_date": "Sabato 27/07/2024",
+                "get_prezzo_str": "2.00 €/Kg",
+                "get_qta_disponibile": 99,
+                "id": 5,
+                "prezzo_unitario": 2.0,
+                "prodotto_id": 3,
+                "qta_lotto": 100,
+                "qta_unita_misura": "Kg",
+                "sospeso": false
+            },
+            {
+                "data_consegna": "2024-07-29",
+                "get_date": "Lunedì 29/07/2024",
+                "get_prezzo_str": "2.00 €/Kg",
+                "get_qta_disponibile": 48,
+                "id": 6,
+                "prezzo_unitario": 2.0,
+                "prodotto_id": 3,
+                "qta_lotto": 50,
+                "qta_unita_misura": "Kg",
+                "sospeso": false
+            }
+        ],
+        "nome": "Farina di grano tenero",
+        "produttore": {
+            "descrizione": "Prodotti biologici",
+            "email": "info@unibio.it",
+            "id": 2,
+            "indirizzo": "Via Garibaldi 2, Melle",
+            "nome": "Universo Bio",
+            "telefono": "011 9876543"
+        },
+        "produttore_id": 2
+    },
+    {
+        "id": 6,
+        "lotti": [],
+        "nome": "Formaggio Toma",
+        "produttore": {
+            "descrizione": "Prodotti tipici",
+            "email": "sole@gmail.com",
+            "id": 3,
+            "indirizzo": "Via Roma 1, Cuneo",
+            "nome": "Fattoria del Sole",
+            "telefono": "0171 987654"
+        },
+        "produttore_id": 3
+    },
+    {
+        "id": 2,
+        "lotti": [
+            {
+                "data_consegna": "2024-07-28",
+                "get_date": "Domenica 28/07/2024",
+                "get_prezzo_str": "2.50 €/Kg",
+                "get_qta_disponibile": 197,
+                "id": 3,
+                "prezzo_unitario": 2.5,
+                "prodotto_id": 2,
+                "qta_lotto": 200,
+                "qta_unita_misura": "Kg",
+                "sospeso": true
+            },
+            {
+                "data_consegna": "2024-07-30",
+                "get_date": "Martedì 30/07/2024",
+                "get_prezzo_str": "2.50 €/Kg",
+                "get_qta_disponibile": 98,
+                "id": 4,
+                "prezzo_unitario": 2.5,
+                "prodotto_id": 2,
+                "qta_lotto": 100,
+                "qta_unita_misura": "Kg",
+                "sospeso": false
+            }
+        ],
+        "nome": "Mele Golden",
+        "produttore": {
+            "descrizione": "Produttore di olio e frutta secca",
+            "email": "civetta@civetta.com",
+            "id": 1,
+            "indirizzo": "Via Cavour 12, Ugento (LE)",
+            "nome": "Cascina della Civetta",
+            "telefono": "0172 123456"
+        },
+        "produttore_id": 1
+    },
+    {
+        "id": 4,
+        "lotti": [
+            {
+                "data_consegna": "2024-07-28",
+                "get_date": "Domenica 28/07/2024",
+                "get_prezzo_str": "5.00 €/Kg",
+                "get_qta_disponibile": 199,
+                "id": 7,
+                "prezzo_unitario": 5.0,
+                "prodotto_id": 4,
+                "qta_lotto": 200,
+                "qta_unita_misura": "Kg",
+                "sospeso": true
+            },
+            {
+                "data_consegna": "2024-07-30",
+                "get_date": "Martedì 30/07/2024",
+                "get_prezzo_str": "5.00 €/Kg",
+                "get_qta_disponibile": 97,
+                "id": 8,
+                "prezzo_unitario": 5.0,
+                "prodotto_id": 4,
+                "qta_lotto": 100,
+                "qta_unita_misura": "Kg",
+                "sospeso": false
+            }
+        ],
+        "nome": "Miele di acacia Bio",
+        "produttore": {
+            "descrizione": "Prodotti biologici",
+            "email": "info@unibio.it",
+            "id": 2,
+            "indirizzo": "Via Garibaldi 2, Melle",
+            "nome": "Universo Bio",
+            "telefono": "011 9876543"
+        },
+        "produttore_id": 2
+    },
+    {
+        "id": 1,
+        "lotti": [
+            {
+                "data_consegna": "2024-06-27",
+                "get_date": "Giovedì 27/06/2024",
+                "get_prezzo_str": "8.50 €/L",
+                "get_qta_disponibile": 98,
+                "id": 1,
+                "prezzo_unitario": 8.5,
+                "prodotto_id": 1,
+                "qta_lotto": 100,
+                "qta_unita_misura": "L",
+                "sospeso": false
+            },
+            {
+                "data_consegna": "2024-07-29",
+                "get_date": "Lunedì 29/07/2024",
+                "get_prezzo_str": "8.50 €/L",
+                "get_qta_disponibile": 499,
+                "id": 2,
+                "prezzo_unitario": 8.5,
+                "prodotto_id": 1,
+                "qta_lotto": 500,
+                "qta_unita_misura": "L",
+                "sospeso": false
+            }
+        ],
+        "nome": "Olio extravergine di oliva Bio",
+        "produttore": {
+            "descrizione": "Produttore di olio e frutta secca",
+            "email": "civetta@civetta.com",
+            "id": 1,
+            "indirizzo": "Via Cavour 12, Ugento (LE)",
+            "nome": "Cascina della Civetta",
+            "telefono": "0172 123456"
+        },
+        "produttore_id": 1
+    },
+    {
+        "id": 5,
+        "lotti": [
+            {
+                "data_consegna": "2024-07-27",
+                "get_date": "Sabato 27/07/2024",
+                "get_prezzo_str": "3.00 €/Kg",
+                "get_qta_disponibile": 98,
+                "id": 9,
+                "prezzo_unitario": 3.0,
+                "prodotto_id": 5,
+                "qta_lotto": 100,
+                "qta_unita_misura": "Kg",
+                "sospeso": false
+            }
+        ],
+        "nome": "Riso Originario integrale",
+        "produttore": {
+            "descrizione": "Prodotti tipici",
+            "email": "sole@gmail.com",
+            "id": 3,
+            "indirizzo": "Via Roma 1, Cuneo",
+            "nome": "Fattoria del Sole",
+            "telefono": "0171 987654"
+        },
+        "produttore_id": 3
+    },
+    {
+        "id": 7,
+        "lotti": [],
+        "nome": "Zucchine novelle",
+        "produttore": {
+            "descrizione": "Frutta e verdura",
+            "email": "bioquiete@yahoo.it",
+            "id": 4,
+            "indirizzo": "Via Torino 3, Alba",
+            "nome": "Azienda Agricola La Quiete",
+            "telefono": "0173 987654"
+        },
+        "produttore_id": 4
+    }
+]
