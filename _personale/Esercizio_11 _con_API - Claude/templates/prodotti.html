@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Prodotti - GAS App{% endblock %}
+
+{% block content %}
+<h1>Prodotti disponibili</h1>
+<div class="row">
+    {% for lotto in lotti %}
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ lotto.prodotto.nome_prodotto }}</h5>
+                <p class="card-text">Quantità disponibile: {{ lotto.quantita_disponibile }} {{ lotto.qta_unita_misura }}</p>
+                <p class="card-text">Prezzo: €{{ lotto.prezzo_unitario }}/{{ lotto.qta_unita_misura }}</p>
+                <a href="{{ url_for('prodotto', id=lotto.id) }}" class="btn btn-primary">Dettagli</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

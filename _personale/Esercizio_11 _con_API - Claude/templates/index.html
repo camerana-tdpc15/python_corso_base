@@ -1,69 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flask App</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Navbar</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Features</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Pricing</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
+{% extends "base.html" %}
 
-    <div class="container mt-5">
-        <h1>Prodotti</h1>
-        <div id="prodotti-list" class="row">
-            <!-- I prodotti verranno caricati qui tramite JavaScript -->
-        </div>
-    </div>
+{% block title %}Home - GAS App{% endblock %}
 
-    <footer class="footer mt-auto py-3 bg-light">
-        <div class="container">
-            <span class="text-muted">Place sticky footer content here.</span>
-        </div>
-    </footer>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            fetch('/api/prodotti')
-                .then(response => response.json())
-                .then(data => {
-                    const prodottiList = document.getElementById('prodotti-list');
-                    data.forEach(prodotto => {
-                        const card = document.createElement('div');
-                        card.className = 'col-md-4';
-                        card.innerHTML = `
-                            <div class="card mb-4">
-                                <div class="card-body">
-                                    <h5 class="card-title">${prodotto.nome}</h5>
-                                    <p class="card-text">${prodotto.descrizione}</p>
-                                </div>
-                            </div>
-                        `;
-                        prodottiList.appendChild(card);
-                    });
-                });
-        });
-    </script>
-</body>
-</html>
+{% block content %}
+<h1>Benvenuto in GAS App</h1>
+<p>Qui puoi trovare i prodotti disponibili e gestire le tue prenotazioni.</p>
+<a href="{{ url_for('prodotti') }}" class="btn btn-primary">Vedi i prodotti disponibili</a>
+{% endblock %}

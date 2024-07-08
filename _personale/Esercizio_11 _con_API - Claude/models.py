@@ -1,47 +1,74 @@
+import hashlib
+import json                                 # moduli standard
+import os
+import sys
+from datetime import datetime               # moduli di terze parti
+from flask import app
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy_serializer import SerializerMixin
-from datetime import datetime
+from settings import (                      # moduli locali
+    LOTTI_TABLE_JSON,
+    LOTTI_TABLE_NAME,
+    PRENOTAZIONI_TABLE_JSON,
+    PRENOTAZIONI_TABLE_NAME,
+    PRODOTTI_TABLE_JSON,
+    PRODOTTI_TABLE_NAME,
+    PRODUTTORI_TABLE_JSON,
+    PRODUTTORI_TABLE_NAME,
+    USERS_TABLE_JSON,
+    USERS_TABLE_NAME,
+)
 
-db = SQLAlchemy()
+db = SQLAlchemy()  # creo istanza SQLAlchemy
 
-class User(db.Model, SerializerMixin):
-    __tablename__ = 'user'
+# creo la struttura delle tabelle
+class User(db.Model):  # nome della classe al singolare e iniziale maiuscola, nome della tabella plurale
+    __tablename__ = USERS_TABLE_NAME
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     cognome = db.Column(db.String(50), nullable=False)
     nome = db.Column(db.String(50), nullable=False)
     telefono = db.Column(db.String(20))
     email = db.Column(db.String(50), unique=True, nullable=False)
-    password = db.Column(db.String(255), nullable=False)
+    password = db.Column(db.String(30), nullable=False)
     ruolo = db.Column(db.String(10), default='user')
+
     prenotazioni = db.relationship("Prenotazione", back_populates="utente")
 
-    serialize_rules = ('-password', '-prenotazioni.utente')
+    serialize_rules = ('-password', '-prenotazioni')
 
-class Produttore(db.Model, SerializerMixin):
-    __tablename__ = 'produttore'
+    def set_password(self, password):
+        self.password = hashlib.sha256(password.encode()).hexdigest()
+
+    def check_password(self, password):
+        return self.password == hashlib.sha256(password.encode()).hexdigest()
+
+class Produttore(db.Model):
+    __tablename__ = PRODUTTORI_TABLE_NAME
     id = db.Column(db.Integer, primary_key=True)
     nome_produttore = db.Column(db.String(150), nullable=False)
     descrizione = db.Column(db.String(250))
     indirizzo = db.Column(db.String(250))
     telefono = db.Column(db.String(15))
     email = db.Column(db.String(150))
+
     prodotti = db.relationship("Prodotto", back_populates="produttore")
 
-    serialize_rules = ('-prodotti.produttore',)
+    serialize_rules = ('-prodotti',)
 
-class Prodotto(db.Model, SerializerMixin):
-    __tablename__ = 'prodotto'
+class Prodotto(db.Model):
+    __tablename__ = PRODOTTI_TABLE_NAME
     id = db.Column(db.Integer, primary_key=True)
     produttore_id = db.Column(db.Integer, db.ForeignKey("produttore.id"), nullable=False)
     nome_prodotto = db.Column(db.String(150), nullable=False)
-    image_url = db.Column(db.String(255))
+    image_url = db.Column(db.String(255))  # Nuovo campo per l'URL dell'immagine
+
     produttore = db.relationship("Produttore", back_populates="prodotti")
     lotti = db.relationship("Lotto", back_populates="prodotto")
 
-    serialize_rules = ('-produttore.prodotti', '-lotti.prodotto')
+    serialize_rules = ('-produttore', '-lotti')
 
-class Lotto(db.Model, SerializerMixin):
-    __tablename__ = 'lotto'
+class Lotto(db.Model):
+    __tablename__ = LOTTI_TABLE_NAME
     id = db.Column(db.Integer, primary_key=True)
     prodotto_id = db.Column(db.Integer, db.ForeignKey("prodotto.id"), nullable=False)
     data_consegna = db.Column(db.Date, nullable=False)
@@ -49,22 +76,62 @@ class Lotto(db.Model, SerializerMixin):
     qta_lotto = db.Column(db.Integer, nullable=False)
     prezzo_unitario = db.Column(db.Float, nullable=False)
     sospeso = db.Column(db.Boolean)
+
     prodotto = db.relationship("Prodotto", back_populates="lotti")
     prenotazioni = db.relationship("Prenotazione", back_populates="lotto")
 
-    serialize_rules = ('-prodotto.lotti', '-prenotazioni.lotto')
+    serialize_rules = ('-prodotto', '-prenotazioni')
 
-class Prenotazione(db.Model, SerializerMixin):
-    __tablename__ = 'prenotazione'
+    @property
+    def quantita_disponibile(self):
+        prenotata = sum(p.qta for p in self.prenotazioni)
+        return max(self.qta_lotto - prenotata, 0)
+
+class Prenotazione(db.Model):
+    __tablename__ = PRENOTAZIONI_TABLE_NAME
     id = db.Column(db.Integer, primary_key=True)
     utente_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     lotto_id = db.Column(db.Integer, db.ForeignKey("lotto.id"), nullable=False)
     qta = db.Column(db.Integer, nullable=False)
+
     utente = db.relationship("User", back_populates="prenotazioni")
     lotto = db.relationship("Lotto", back_populates="prenotazioni")
 
-    serialize_rules = ('-utente.prenotazioni', '-lotto.prenotazioni')
+    serialize_rules = ('-utente', '-lotto')
 
 def init_db(app):
-    with app.app_context():
-        db.create_all()
+    with app.app_context():  # Attivo il contesto dell'app
+        db.create_all()  # Crea tutte le tabelle
+
+        import_data(User, USERS_TABLE_JSON, app)
+        import_data(Produttore, PRODUTTORI_TABLE_JSON, app)
+        import_data(Prodotto, PRODOTTI_TABLE_JSON, app)
+        import_data(Lotto, LOTTI_TABLE_JSON, app, date_fields=["data_consegna"])
+        import_data(Prenotazione, PRENOTAZIONI_TABLE_JSON, app)
+
+def import_data(model, file_path, app, date_fields=[]):
+    if not model.query.first():
+        if os.path.exists(file_path):
+            try:
+                with open(file_path, "r") as file:
+                    data = json.load(file)
+                    for item in data:
+                        for field in date_fields:
+                            item[field] = datetime.strptime(item[field], "%Y-%m-%d")
+                        db.session.add(model(**item))
+                    db.session.commit()
+                    app.logger.info(
+                        f'Tabella "{model.__tablename__}" popolata correttamente.'
+                    )
+            except Exception as e:
+                app.logger.error(
+                    f'Errore durante la popolazione della tabella "{model.__tablename__}": {e}'
+                )
+                sys.exit(1)
+        else:
+            app.logger.error(
+                f'Il file "{file_path}" non esiste. Verifica il percorso e riprova.'
+            )
+            sys.exit(1)
+    else:
+        app.logger.info(f'Tabella "{model.__tablename__}" già popolata.')
