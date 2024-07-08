@@ -31,11 +31,11 @@ const rowLotti = document.querySelector('#row-lotti');
           <div class="col-lg-3 my-2">
                 <div class="card h-100">
                     <div class="card-header">
-                        <h4 class="card-title">${lotto.prodotto.nome}</h4>
+                        <h4 class="card-title">${lotto.prodotto.nome_prodotto}</h4>
                         <p class="text-end"><small>(cod. lotto: ${lotto.id})</small></p>
                     </div>
                     <div class="card-body">
-                        <p>Produttore: <b>${lotto.prodotto.produttore.nome}</b></p>
+                        <p>Produttore: <b>${lotto.prodotto.produttore.nome_produttore}</b></p>
                         <p>Data consegna: <b>${lotto.data_consegna}</b></p>
                         <p>Qtà Tot: <b>${lotto.qta_lotto}</b></p>
                         <p>Qtà Disp: <b>${lotto.get_qta_disponibile}</b></p>
@@ -50,3 +50,5 @@ const rowLotti = document.querySelector('#row-lotti');
 
   
   });
+
+  
