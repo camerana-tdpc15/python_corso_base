@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %}Home - GAS App{% endblock %}
+
+{% block content %}
+<h1>Benvenuto in GAS App</h1>
+<p>Qui puoi trovare i prodotti disponibili e gestire le tue prenotazioni.</p>
+<a href="{{ url_for('prodotti') }}" class="btn btn-primary">Vedi i prodotti disponibili</a>
+{% endblock %}
