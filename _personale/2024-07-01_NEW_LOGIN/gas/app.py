@@ -1,6 +1,6 @@
 import locale
 from flask import Flask, render_template, jsonify, request, session, redirect, flash, url_for
-from models import db, init_db, Lotto, Prodotto, Produttore
+from models import db, init_db, Lotto, Prodotto, Produttore, User
 from settings import DATABASE_PATH
 
 locale.setlocale(locale.LC_TIME, 'it_IT')
@@ -92,7 +92,7 @@ def login():
         if user:
             session["user_id"] = user.id
             flash("Login avvenuto correttamente!", "success")
-            return redirect(url_for("lotti_disponibili"))
+            return redirect(url_for("get_lotti"))
         else:
             flash("Username o password non validi.", "danger")
             return redirect(url_for("login"))
