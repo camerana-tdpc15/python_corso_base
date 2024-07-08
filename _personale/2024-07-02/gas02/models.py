@@ -3,9 +3,10 @@ from settings import BASE_DIR_PATH
 import os , json
 from pprint import pprint
 from datetime import date 
+from sqlalchemy_serializer import SerializerMixin
 db = SQLAlchemy()
 
-class User(db.Model):
+class User(db.Model,SerializerMixin):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nome = db.Column(db.String(50), nullable=False)
@@ -14,7 +15,7 @@ class User(db.Model):
     email = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(30), nullable=False)
 
-class Produttore(db.Model):
+class Produttore(db.Model,SerializerMixin):
     __tablename__ = 'produttori'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nome_produttore = db.Column(db.String(), unique=True, nullable=False)
@@ -23,13 +24,15 @@ class Produttore(db.Model):
     telefono = db.Column(db.String(), nullable=False)
     email = db.Column(db.String(), nullable=False)
 
-class Prodotto(db.Model):
+class Prodotto(db.Model,SerializerMixin):
     __tablename__ = 'prodotti'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     produttore_id = db.Column(db.Integer, db.ForeignKey('produttori.id'), nullable=False)
     nome_prodotto = db.Column(db.String(50), nullable=False)
+ # relazioni
+    rel_lotti= db.relationship('Lotto',back_populates= 'rel_prodotto')
 
-class Lotto(db.Model):
+class Lotto(db.Model,SerializerMixin):
     __tablename__ = 'lotti'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     prodotto_id = db.Column(db.Integer, db.ForeignKey('prodotti.id'), nullable=False)
@@ -38,14 +41,36 @@ class Lotto(db.Model):
     qta_lotto = db.Column(db.Integer, nullable=False)
     prezzo_unitario = db.Column(db.Float, nullable=False)
     sospeso = db.Column(db.Boolean, default=False)
+    # relazioni
+    rel_prodotto = db.relationship('Prodotto', back_populates='rel_lotti' )
+    rel_prenotazioni = db.relationship('Prenotazione', back_populates='rel_lotto' )
+
+    serialize_rules= ('-rel_prodotto.rel_lotti','get_date','get_prezzo_str','get_qta_disponibile')
+
+    def get_date(self):
+        return_data= self.data_consegna.strftime('%A %d/%m/%Y')
+        return return_data
+    
+    def get_prezzo_str(self):
+        return f'{self.prezzo_unitario} €/{self.qta_unita_misura}'
+    
+    def get_qta_disponibile(self):
+        qta_prenotate= 0
+        for prenot in self.rel_prenotazioni:
+            qta_prenotate += prenot.qta
+        qta_disponibile = self.qta_lotto - qta_prenotate
+        return qta_disponibile
 
 
-class Prenotazione(db.Model):
+class Prenotazione(db.Model,SerializerMixin):
     __tablename__ = 'prenotazioni'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     lotto_id = db.Column(db.Integer, db.ForeignKey('lotti.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     qta = db.Column(db.Integer, nullable=False)
+    #relazioni
+
+    rel_lotto= db.relationship('Lotto', back_populates='rel_prenotazioni' )
 
     # @TODO: Da implementare l'unique constraint per la coppia lotto_id e user_id
     # ...
