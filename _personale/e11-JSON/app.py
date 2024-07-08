@@ -1,6 +1,6 @@
 import locale
 from flask import Flask, render_template, jsonify, request,session,flash,redirect,url_for
-from models import db, init_db, Lotto, Prodotto, Produttore,User
+from models import db, init_db, Lotto, Prodotto, Produttore,User,Prenotazione
 from settings import DATABASE_PATH
 
 locale.setlocale(locale.LC_TIME, 'it_IT')
@@ -47,23 +47,42 @@ def get_lotti():
     return jsonify(lotti_data)
 
 
-@app.route('/lotto/<id_lotto>')
+@app.route('/lotto/<int:id_lotto>')
 def mostra_lotto(id_lotto): #possiamo usare show_lotto
-    # @TODO:  CONTROLLARE CHE L'UTENTE SIA LOGGATO
-   # if 'user_id' in session:
-    #    user = db.session.query(User).get(session['user_id'])
-     #   return render_template('home.html', user=user)
-    #else:
-    #    return render_template('login.html')
+    # CONTROLLARE CHE L'UTENTE SIA LOGGATO
+    if 'user_id' not in session:
+        return redirect(url_for('login')) # usiamo il negativo cosi facciamo una sola volta  senza else
 
+
+    #Ottengo il record del lotto a partire dal suo ID
     lotto = db.session.get(Lotto, id_lotto)
 
-    return lotto.prodotto.nome_prodotto
+    if not lotto:
+        return 'Lotto non trovato!',404
+    
+    #user = db.session.get(User,session['user_id'])
+    # prenotazioni = user.rel_prenotazioni 
+    #se utiliza filter_by para controlar chiave valore
+    prenot_utente = Prenotazione.query.filter_by(
+        user_id=session['user_id'],
+          lotto_id=id_lotto)
+
+    # se l'utente ha delle prenotazioni su questo specifico lotto
+    if prenot_utente:
+        return render_template('modifica_prenotazione.html')
+    # se l'utente non ha delle prenotazioni su questo specifico lotto
+    else:
+        return render_template('nuova_prenotazione.html')
+
+
+    
 
 
 @app.route('/api/prenotazioni', methods=['GET'])
 def get_prenotazioni():
     ...
+
+
 
 
 # @TODO: Implementare il login / logout
@@ -81,13 +100,14 @@ def login():
         else:
             flash('Credenziali non valide!')
             return redirect(url_for('login'))
-    return render_template('login.html')
+    elif request.method == 'GET':
+        return render_template('login.html')
 
 
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
-    flash('Logout effettuato con successo!')
+    #flash('Logout effettuato con successo!')
     return redirect(url_for('login'))
 
 if __name__ == '__main__':
