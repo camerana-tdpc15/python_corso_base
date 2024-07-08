@@ -1,18 +1,10 @@
-import os
-from flask import (
-    Flask,
-    render_template,
-    request,
-    session,
-    redirect,
-    flash,
-    url_for,
-    jsonify,
-)
-from flask_sqlalchemy import SQLAlchemy
-from markupsafe import escape
-from models import db, init_db, User, Produttore, Prodotto, Lotto, Prenotazione
+import locale
+from flask import Flask, render_template, jsonify, request, session, redirect, flash, url_for
+from models import db, init_db, Lotto, Prodotto, Produttore
 from settings import DATABASE_PATH
+
+locale.setlocale(locale.LC_TIME, 'it_IT')
+
 
 app = Flask(__name__)
 
@@ -26,34 +18,43 @@ app.config.update(
 db.init_app(app)  # Inizializza l'istanza di SQLAlchemy con l'app Flask
 
 
-
-
-
-@app.route("/")
+@app.route('/')
 def home():
-    if "user_id" in session:
-        user = db.session.query(User).get(session["user_id"])
-        return render_template("home.html", utente=user)
-    return render_template("home.html")
+    return render_template('home.html')
 
 
-@app.route("/lotti_disponibili")
-def lotti_disponibili():
-    if "user_id" in session:
 
-        lotti_disp = Lotto.query.all()
+@app.route('/api/lotti', methods=['GET'])
+def get_lotti():
 
-        response = []
+    # Leggo i parametri passati in query string
+    order = request.args.get('order', 'asc')
 
-        for lotto in lotti_disp:
-            lotto_dict = {
-                'qta_disponibile': lotto.qta_disponibile,
-            }
-
-        return jsonify(lotti_disp), 201
-            
+    if order == 'asc':
+        lotti = Lotto.query.order_by(Lotto.data_consegna).all()
+    elif order == 'desc':
+        lotti = Lotto.query.order_by(Lotto.data_consegna.desc()).all()
     else:
-        return redirect(url_for("login"))
+        return 'Parametro order non valido. Utilizzare "asc" o "desc".'
+
+    lotti_data = []
+    for lotto in lotti:
+        dict_lotto = lotto.to_dict()
+        lotti_data.append(dict_lotto)
+
+    return jsonify(lotti_data)
+
+
+@app.route('/api/prenotazioni', methods=['GET'])
+def get_prenotazioni():
+    ...
+
+
+# @TODO: Implementare il login / logout
+...
+
+
+
 
 
 @app.route("/signup", methods=["GET", "POST"])

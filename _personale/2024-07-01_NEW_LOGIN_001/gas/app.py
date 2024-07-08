@@ -1,18 +1,10 @@
-import os
-from flask import (
-    Flask,
-    render_template,
-    request,
-    session,
-    redirect,
-    flash,
-    url_for,
-    jsonify,
-)
-from flask_sqlalchemy import SQLAlchemy
-from markupsafe import escape
-from models import db, init_db, User, Produttore, Prodotto, Lotto, Prenotazione
+import locale
+from flask import Flask, render_template, jsonify, request, session, redirect, flash, url_for
+from models import db, init_db, Lotto, Prodotto, Produttore, User
 from settings import DATABASE_PATH
+
+locale.setlocale(locale.LC_TIME, 'it_IT')
+
 
 app = Flask(__name__)
 
@@ -26,20 +18,14 @@ app.config.update(
 db.init_app(app)  # Inizializza l'istanza di SQLAlchemy con l'app Flask
 
 
-
-
-
-@app.route("/")
+@app.route('/')
 def home():
-    if "user_id" in session:
-        user = db.session.query(User).get(session["user_id"])
-        return render_template("home.html", utente=user)
-    return render_template("home.html")
+    return render_template('home.html')
+
 
 
 @app.route('/api/lotti', methods=['GET'])
 def get_lotti():
-
     lotti = Lotto.query.all()
 
     lotti_data = []
@@ -50,9 +36,9 @@ def get_lotti():
         data = {
             'id': lotto.id,
             'data_consegna': lotto.data_consegna,
-            'get_date': lotto.get_date(),
-            'get_prezzo_str': lotto.get_prezzo_str(),
-            'get_qta_disponibile': lotto.get_qta_disponibile(),
+            'get_date': lotto.get_date(),  # es. "Giovedì 27/06/2024"
+            'get_prezzo_str': lotto.get_prezzo_str(),  # es. "8.50 €/L"
+            'get_qta_disponibile': lotto.get_qta_disponibile(), # es. 94
             'qta_unita_misura': lotto.qta_unita_misura,
             'qta_lotto': lotto.qta_lotto,
             'prezzo_unitario': lotto.prezzo_unitario,
@@ -66,18 +52,20 @@ def get_lotti():
             }
         }
 
-        # "get_date": "Giovedì 27/06/2024",
-        # "get_prezzo_str": "8.50 €/L",
-        # "get_qta_disponibile": 94,
-
         lotti_data.append(data)
     
+    return jsonify(lotti_data)
 
-    return lotti_data
-    # return jsonify('lotti_disponibili.html')
-    # return render_template("lotti_disponibili.html")
-    
-        
+
+@app.route('/api/prenotazioni', methods=['GET'])
+def get_prenotazioni():
+    ...
+
+
+# @TODO: Implementare il login / logout
+...
+
+
 
 
 

@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<h1 class="display-4">Benvenuti sulla pagina dei Prodotti</h1>
+<h1 class="display-4">Benvenuti sulla pagina dei Lotti</h1>
 <!-- <p class="lead">Questa è la home page del sito.</p> -->
 {% if 'user_id' in session %}
 
@@ -14,7 +14,7 @@
     </div>
 </div>
 
-<div class="row">
+<!-- <div class="row">
     <div class="col-md-6 mt-4">
         <h6=>Vai ai Prodotti</h6=>
         <a class="btn btn-primary" href="{{ url_for('lotti_disponibili') }}" role="button">LOTTI</a>
@@ -26,13 +26,58 @@
         <h6=>Fai il Logout</h6=>
         <a class="btn btn-primary" href="{{ url_for('logout') }}" role="button">LOGOUT</a>
     </div>
+</div> -->
+
+<div class="container">
+
+    <div class="row">
+
+        <div class="col-lg-12">
+
+            <h2>Lotti disponibili</h2>
+            <h1 class="text-center my-4">Lotti disponibili</h1>
+
+            <div class="row" id="row-lotti">
+                <!-- popolato dinamicamente nel js -->
+            </div>
+        
+
+        </div>
+
+    
+
+
+    </div>
 </div>
 
 
 
 {% else %}
 
-<div class="row">
+
+<div class="container">
+
+    <div class="row">
+
+        <div class="col-lg-12">
+
+            <h2>Lotti disponibili</h2>
+            <h1 class="text-center my-4">Lotti disponibili</h1>
+
+            <div class="row" id="row-lotti">
+                <!-- popolato dinamicamente nel js -->
+            </div>
+        
+
+        </div>
+
+    
+
+
+    </div>
+</div>
+
+<!-- <div class="row">
     <div class="col-md-6 mt-4">
         <h6=>Per accedere fai il Login</h6=>
         <a class="btn btn-primary" href="{{ url_for('login') }}" role="button">LOGIN</a>
@@ -45,7 +90,7 @@
         <h6=>oppure, se non hai un account, fai il Sign Up</h6=>
         <a class="btn btn-primary" href="{{ url_for('signup') }}" role="button">SIGN UP</a>
     </div>
-</div>
+</div> -->
 
 {% endif %}
 
@@ -54,7 +99,7 @@
 {% block scripts %}
 
 <!-- Custom JavaScript -->
-<script src="{{ url_for('static', filename='scripts/script.js') }}"></script>
+<script src="{{ url_for('static', filename='scripts/lotti.js') }}"></script>
 
 {% endblock %}
 

@@ -1,9 +1,14 @@
 
+
+
+
+
 import json
 import os
 from datetime import date
 from pprint import pprint
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy_serializer import SerializerMixin
 from settings import BASE_DIR
 
 
@@ -29,15 +34,17 @@ class Produttore(db.Model):
     indirizzo = db.Column(db.Text, nullable=False)
     telefono = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
+     # RELATIONSHIPS
+    rel_prodotti = db.relationship('Prodotto', back_populates='rel_produttore')
 
 class Prodotto(db.Model):
     __tablename__ = 'prodotti'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     produttore_id = db.Column(db.Integer, db.ForeignKey('produttori.id'), nullable=False)
     nome_prodotto = db.Column(db.String(50), nullable=False)
-
-     # RELATIONSHIPS
+    # RELATIONSHIPS
     rel_lotti = db.relationship('Lotto', back_populates='rel_prodotto')
+    rel_produttore = db.relationship('Produttore', back_populates='rel_prodotti')
     
 class Lotto(db.Model):
     __tablename__ = 'lotti'
@@ -48,17 +55,16 @@ class Lotto(db.Model):
     qta_lotto = db.Column(db.Integer, nullable=False)
     prezzo_unitario = db.Column(db.Float, nullable=False)
     sospeso = db.Column(db.Boolean, default=False)
-
     # RELATIONSHIPS
     rel_prodotto = db.relationship('Prodotto', back_populates='rel_lotti')
     rel_prenotazioni = db.relationship('Prenotazione', back_populates='rel_lotto')
 
     def get_date(self):
         res_data = self.data_consegna.strftime('%A %d/%m/%Y')
-        return res_data
+        return res_data  # es. "Giovedì 27/06/2024"
 
     def get_prezzo_str(self):
-        return f'{self.prezzo_unitario} €/{self.qta_unita_misura}'
+        return f'{self.prezzo_unitario} €/{self.qta_unita_misura}'  # es. "8.50 €/L"
 
     def get_qta_disponibile(self):
         qta_prenotata = 0
@@ -73,8 +79,7 @@ class Prenotazione(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     lotto_id = db.Column(db.Integer, db.ForeignKey('lotti.id'), nullable=False)
     qta = db.Column(db.Integer, nullable=False)
-
-     # RELATIONSHIPS
+    # RELATIONSHIPS
     rel_lotto = db.relationship('Lotto', back_populates='rel_prenotazioni')
 
 def init_db():

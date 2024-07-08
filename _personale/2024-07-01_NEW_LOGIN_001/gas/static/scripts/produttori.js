@@ -1,13 +1,13 @@
 // alert('ok');
 
-const rowLotti = document.querySelector('#row-lotti');
+const rowProduttori = document.querySelector('#row-produttori');
 
 
 // Fa fetch di un file JSON e lo stampa in console
-  fetch('/lotti_disponibili')
+  fetch("../static/data/dati_produttori.json")
   .then(response => response.json())
   .then(data => {
-      for (lotto of data){
+      for (produttore of data){
           //console.log(lotto);
 
         //   let displayButton = '';
@@ -26,21 +26,20 @@ const rowLotti = document.querySelector('#row-lotti');
         
         
 
-          rowLotti.innerHTML += `
+          rowProduttori.innerHTML += `
           
           <div class="col-lg-3 my-2">
                 <div class="card h-100">
                     <div class="card-header">
-                        <h4 class="card-title">${lotto.prodotto.nome}</h4>
-                        <p class="text-end"><small>(cod. lotto: ${lotto.id})</small></p>
+                        <h4 class="card-title">${produttore.nome}</h4>
+                        <p class="text-end"><small>(cod. lotto: ${produttore.id})</small></p>
                     </div>
                     <div class="card-body">
-                        <p>Produttore: <b>${lotto.prodotto.produttore.nome}</b></p>
-                        <p>Data consegna: <b>${lotto.data_consegna}</b></p>
-                        <p>Qtà Tot: <b>${lotto.qta_lotto}</b></p>
-                        <p>Qtà Disp: <b>${lotto.get_qta_disponibile}</b></p>
-                        <p>Prezzo: <b>${lotto.get_prezzo_str}</b></p>
-                        ${displayButton}
+                        <p>Descrizione: <b>${produttore.descrizione}</b></p>
+                        <p>Indirizzo: <b>${produttore.indirizzo}</b></p>
+                        <p>Email: <b>${produttore.email}</b></p>
+                        <p>Telefono: <b>${produttore.telefono}</b></p>
+                        <button class="btn btn-primary w-100">Prodotti</button>
                     </div>
                 </div>          
           </div>
