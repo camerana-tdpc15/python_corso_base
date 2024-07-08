@@ -110,10 +110,10 @@ def mostra_lotto(lotto_id):
         lotto_id=lotto_id
         )
     if prenot_utente:
-        return ...
+        return render_template('mod_prenotazione.html')
     
     else:
-        return ...
+        return render_template('nuova_prenotazione.html')
     
     if request.method == 'POST':
         qta = int(request.form['qta'])
