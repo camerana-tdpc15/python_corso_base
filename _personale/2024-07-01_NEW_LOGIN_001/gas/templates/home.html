@@ -10,23 +10,11 @@
 
 <div class="row">
     <div class="col-md-6 mt-4">
-        <h6 class="display-6">Benvenuto, {{ user_id.nome }} detto {{ user_id.cognome }}</h6>
+        <h6 class="display-6">Benvenuto, {{ 'user_id' }}</h6>
     </div>
 </div>
 
-<!-- <div class="row">
-    <div class="col-md-6 mt-4">
-        <h6=>Vai ai Prodotti</h6=>
-        <a class="btn btn-primary" href="{{ url_for('lotti_disponibili') }}" role="button">LOTTI</a>
-    </div>
-</div>
 
-<div class="row">
-    <div class="col-md-6 mt-4">
-        <h6=>Fai il Logout</h6=>
-        <a class="btn btn-primary" href="{{ url_for('logout') }}" role="button">LOGOUT</a>
-    </div>
-</div> -->
 
 <div class="container">
 
@@ -61,7 +49,7 @@
 
         <div class="col-lg-12">
 
-            <h2>Lotti disponibili</h2>
+            <h2>Devi fare il LOGIN</h2>
             <h1 class="text-center my-4">Lotti disponibili</h1>
 
             <div class="row" id="row-lotti">
@@ -77,20 +65,7 @@
     </div>
 </div>
 
-<!-- <div class="row">
-    <div class="col-md-6 mt-4">
-        <h6=>Per accedere fai il Login</h6=>
-        <a class="btn btn-primary" href="{{ url_for('login') }}" role="button">LOGIN</a>
-    </div>
-    
-</div>
-<div class="row">
-    
-    <div class="col-md-6 mt-4 mb-4">
-        <h6=>oppure, se non hai un account, fai il Sign Up</h6=>
-        <a class="btn btn-primary" href="{{ url_for('signup') }}" role="button">SIGN UP</a>
-    </div>
-</div> -->
+
 
 {% endif %}
 

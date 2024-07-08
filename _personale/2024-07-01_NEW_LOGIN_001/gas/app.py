@@ -104,7 +104,7 @@ def login():
         if user:
             session["user_id"] = user.id
             flash("Login avvenuto correttamente!", "success")
-            return redirect(url_for("get_lotti"))
+            return redirect(url_for("home"))
         else:
             flash("Username o password non validi.", "danger")
             return redirect(url_for("login"))
