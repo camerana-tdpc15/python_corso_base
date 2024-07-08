@@ -16,6 +16,7 @@ app.config.update(
 
 db.init_app(app)  # Inizializza l'istanza di SQLAlchemy con l'app Flask
 
+# mostra l'elenco dei lotti
 @app.route('/')
 def home():
     logged_in = 'user_id' in session
@@ -40,6 +41,29 @@ def logout():
     flash('Logout effettuato con successo', 'success')
     return redirect(url_for('home'))
 
+@app.route('/registrazione', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        nome = request.form['nome']
+        cognome = request.form['cognome']
+        telefono = request.form['telefono']
+        email = request.form['email']
+        password = request.form['password']
+        
+        # Verifica se l'email esiste già
+        user_exists = User.query.filter_by(email=email).first()
+        if user_exists:
+            flash('Email già registrata. Utilizza un\'altra email.', 'danger')
+            return render_template('registrazione.html')
+        
+        new_user = User(nome=nome, cognome=cognome, telefono=telefono, email=email, password=password)
+        db.session.add(new_user)
+        db.session.commit()
+        flash('Registrazione effettuata con successo. Puoi effettuare il login.', 'success')
+        return redirect(url_for('login'))
+    return render_template('registrazione.html')
+
+# Restituisce i dati dei lotti disponibili in formato Json
 @app.route('/api/lotti', methods=['GET'])
 def get_lotti():
 
@@ -69,12 +93,27 @@ def get_prenotazioni():
     prenotazioni_data = [prenotazione.to_dict() for prenotazione in prenotazioni]
     return jsonify(prenotazioni_data)
 
-@app.route('/prenota/<int:lotto_id>', methods=['GET', 'POST'])
-def prenota(lotto_id):
+@app.route('/lotto/<int:lotto_id>', methods=['GET', 'POST'])
+def mostra_lotto(lotto_id):
     if 'user_id' not in session:
         return redirect(url_for('login'))
     
-    lotto = Lotto.query.get_or_404(lotto_id)
+    # ottengo il record del lotto a partire dal suo ID
+    lotto = db.session.get(Lotto, lotto_id)
+    if not lotto:
+        return 'Lotto non trovato', 404 # codice della risposta di errore in console
+    
+    # user = db.session.get(User. session{'user.id'})
+    # prenotazioni = user.rel_prenotazioni
+    prenot_utente = Prenotazione.query.filter_by(
+        user_id=session['user_id'],
+        lotto_id=lotto_id
+        )
+    if prenot_utente:
+        return ...
+    
+    else:
+        return ...
     
     if request.method == 'POST':
         qta = int(request.form['qta'])

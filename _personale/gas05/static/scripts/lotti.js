@@ -24,6 +24,7 @@ fetch("/api/lotti?order=desc")
             } 
             else {
                 // button blu
+                // devo usare il backtic alt+96
                 displayButton = `<a href="/prenota/${lotto.id}" class="btn btn-primary w-100">Prenota</a>`;
             }
 
