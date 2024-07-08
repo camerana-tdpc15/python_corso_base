@@ -24,7 +24,7 @@ fetch("/api/lotti?order=desc")
             } 
             else {
                 // button blu
-                displayButton = '<button class="btn btn-primary w-100">Prenota</button>';
+                displayButton = `<a class="btn btn-primary w-100" href="/lotto/${lotto.id}">Prenota</a>`;
             }
 
             // if(lotto.sospeso) {

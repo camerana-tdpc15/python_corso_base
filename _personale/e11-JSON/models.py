@@ -17,6 +17,7 @@ class User(db.Model, SerializerMixin):
     email = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(30), nullable=False)
 
+    serialize_rules = ('-password')
 
 class Produttore(db.Model, SerializerMixin):
     __tablename__ = 'produttori'
@@ -82,8 +83,14 @@ class Prenotazione(db.Model, SerializerMixin):
 
     serialize_rules = ('-rel_lotto.rel_prenotazioni',)
 
-    # @TODO: Da implementare l'unique constraint per la coppia lotto_id e user_id
-    # ...
+ # @Definisco un unique constraint per la coppia lotto_id e user_id
+# in modo que non sia possibile creare una prenotazione con i medesimi
+#utent_id e lotto_id
+    
+__table_args__=(
+    db.UniqueConstraint('lotto_id','user_id', name='lotto_user_unique',)
+)
+
 
 def init_db():
     # Crea le tabelle solo se non esistono già

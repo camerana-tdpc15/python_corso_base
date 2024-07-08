@@ -11,21 +11,21 @@ app.config['SECRET_KEY'] = 'mysecretkey'
 
 db.init_app(app)  # Inizializza l'istanza di SQLAlchemy con l'app Flask
 
+#Mostra l'elenco dei lotti disponibili
 @app.route('/')
 def home():
 
     if 'user_id' in session:
         user = db.session.query(User).get(session['user_id'])
         return render_template('home.html', user=user)
-    return render_template('home.html')
-
-
-@app.route('/home')
-def index():
-    return render_template('home.html')
+    else:
+        return render_template('login.html')
+    
 
 
 
+
+# restituisce i datti dei lotti disponibili in formato JSON
 @app.route('/api/lotti', methods=['GET'])
 def get_lotti():
 
@@ -47,14 +47,26 @@ def get_lotti():
     return jsonify(lotti_data)
 
 
+@app.route('/lotto/<id_lotto>')
+def mostra_lotto(id_lotto): #possiamo usare show_lotto
+    # @TODO:  CONTROLLARE CHE L'UTENTE SIA LOGGATO
+   # if 'user_id' in session:
+    #    user = db.session.query(User).get(session['user_id'])
+     #   return render_template('home.html', user=user)
+    #else:
+    #    return render_template('login.html')
+
+    lotto = db.session.get(Lotto, id_lotto)
+
+    return lotto.prodotto.nome_prodotto
+
+
 @app.route('/api/prenotazioni', methods=['GET'])
 def get_prenotazioni():
     ...
 
 
 # @TODO: Implementare il login / logout
-
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -76,7 +88,7 @@ def login():
 def logout():
     session.pop('user_id', None)
     flash('Logout effettuato con successo!')
-    return redirect(url_for('home'))
+    return redirect(url_for('login'))
 
 if __name__ == '__main__':
     with app.app_context():
