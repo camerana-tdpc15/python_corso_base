@@ -11,7 +11,7 @@ from settings import BASE_DIR
 
 db = SQLAlchemy()
 
-class User(db.Model):
+class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nome = db.Column(db.String(50), nullable=False)
@@ -29,7 +29,7 @@ class User(db.Model):
 
 
 
-class Produttore(db.Model):
+class Produttore(db.Model, SerializerMixin):
     __tablename__ = 'produttori'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nome_produttore = db.Column(db.String(), unique=True, nullable=False)
@@ -38,7 +38,7 @@ class Produttore(db.Model):
     telefono = db.Column(db.String(), nullable=False)
     email = db.Column(db.String(), nullable=False)
 
-class Prodotto(db.Model):
+class Prodotto(db.Model, SerializerMixin):
     __tablename__ = 'prodotti'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     produttore_id = db.Column(db.Integer, db.ForeignKey('produttori.id'), nullable=False)
@@ -48,7 +48,7 @@ class Prodotto(db.Model):
 
     rel_lotti = db.relationship('Lotto', back_populates='rel_prodotto')
 
-class Lotto(db.Model):
+class Lotto(db.Model, SerializerMixin):
     __tablename__ = 'lotti'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     prodotto_id = db.Column(db.Integer, db.ForeignKey('prodotti.id'), nullable=False)
@@ -76,12 +76,14 @@ class Lotto(db.Model):
         for prenot in self.rel_prenotazioni:
             qta_prenotate += prenot.qta
         return f'{self.qta_lotto - qta_prenotate}'
+    
+    serialize_rules = ('-rep_prodotto.rel.lotti', 'get_date', 'get_prezzo_str', 'get_qta_disponibile')
 
         
 
 
 
-class Prenotazione(db.Model):
+class Prenotazione(db.Model, SerializerMixin):
     __tablename__ = 'prenotazioni'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     lotto_id = db.Column(db.Integer, db.ForeignKey('lotti.id'), nullable=False)

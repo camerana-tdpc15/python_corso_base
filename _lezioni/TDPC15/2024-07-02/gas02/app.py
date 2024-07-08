@@ -23,30 +23,36 @@ def home():
 def get_lotti():
     lotti = Lotto.query.all()
 
+    # lotti_data = []
+
+    # for lotto in lotti:
+        
+    #     prodotto = db.session.get(Prodotto, lotto.prodotto_id)
+    #     produttore = db.session.get(Produttore, prodotto.produttore_id)
+    #     data = { 
+    #         'id': lotto.id,
+    #         'get_prezzo_str': lotto.get_prezzo_str(),
+    #         'get_qta_disponibile': lotto.get_qta_disponibile(),
+    #         'data_consegna': lotto.data_consegna, 
+    #         'get_date': lotto.get_date(),
+    #         'qta_unita_misura': lotto.qta_unita_misura,
+    #         'qta_lotto': lotto.qta_lotto,
+    #         'prezzo_unitario': lotto.prezzo_unitario,
+    #         'sospeso': lotto.sospeso,
+    #         'prodotto': {
+    #             'nome_prodotto': prodotto.nome_prodotto,
+    #             'produttore': {
+    #                 'nome_produttore': produttore.nome_produttore
+    #                            }
+    #         }
+    #     }
+    #     lotti_data.append(data)
+
     lotti_data = []
 
     for lotto in lotti:
-        
-        prodotto = db.session.get(Prodotto, lotto.prodotto_id)
-        produttore = db.session.get(Produttore, prodotto.produttore_id)
-        data = { 
-            'id': lotto.id,
-            'get_prezzo_str': lotto.get_prezzo_str(),
-            'get_qta_disponibile': lotto.get_qta_disponibile(),
-            'data_consegna': lotto.data_consegna, 
-            'get_date': lotto.get_date(),
-            'qta_unita_misura': lotto.qta_unita_misura,
-            'qta_lotto': lotto.qta_lotto,
-            'prezzo_unitario': lotto.prezzo_unitario,
-            'sospeso': lotto.sospeso,
-            'prodotto': {
-                'nome_prodotto': prodotto.nome_prodotto,
-                'produttore': {
-                    'nome_produttore': produttore.nome_produttore
-                               }
-            }
-        }
-        lotti_data.append(data)
+        dict_lotto = lotto.to_dict()
+        lotti_data.appned()
 
 
 
