@@ -1,14 +1,14 @@
 import os
 import json
-from flask_sqlalchemy import SQLAlchemy
 from datetime import date
 from pprint import pprint
-from  sqlalchemy_serializer import SerializerMixin
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy_serializer import SerializerMixin
 from settings import BASE_DIR
 
 db = SQLAlchemy()
 
-class User(db.Model):
+class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nome = db.Column(db.String(50), nullable=False)
@@ -18,7 +18,7 @@ class User(db.Model):
     password = db.Column(db.String(30), nullable=False)
 
 
-class Produttore(db.Model,SerializerMixin):
+class Produttore(db.Model, SerializerMixin):
     __tablename__ = 'produttori'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nome_produttore = db.Column(db.String(), unique=True, nullable=False)
@@ -26,32 +26,23 @@ class Produttore(db.Model,SerializerMixin):
     indirizzo = db.Column(db.Text(), nullable=False)
     telefono = db.Column(db.String(), nullable=False)
     email = db.Column(db.String(), nullable=False)
-
-      # RELATIONSHIPS
+    # RELATIONSHIPS
     rel_prodotti = db.relationship('Prodotto', back_populates='rel_produttore')
 
     serialize_rules = ('-rel_prodotti.rel_produttore',)
 
-class Prodotto(db.Model,SerializerMixin):
+class Prodotto(db.Model, SerializerMixin):
     __tablename__ = 'prodotti'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     produttore_id = db.Column(db.Integer, db.ForeignKey('produttori.id'), nullable=False)
     nome_prodotto = db.Column(db.String(50), nullable=False)
-
-    #RELATIONSHIPS
-     # aca estamos queriendo decir  creamos una relacionn entre lotti y prodotti, en el cual . db es sqlalchemy
-     #.relationship es la funcion interna de sqlalchemy
-     #'Lotto' hace referencia a un modelo CLASE que siempre va en cadena de texto
-     #back_populates = 'rel_prodotto' es el nombre de una relacion BIdireccional
-     #se tuilza "PRODOTTO" en singular porque UN PROD va relacionado a MUCHOS lotti. Relacion de UNO a MUCHOS
-    rel_lotti = db.relationship('Lotto',back_populates='rel_prodotto')
+    # RELATIONSHIPS
+    rel_lotti = db.relationship('Lotto', back_populates='rel_prodotto')
     rel_produttore = db.relationship('Produttore', back_populates='rel_prodotti')
 
-
     serialize_rules = ('-rel_lotti.rel_prodotto', '-rel_produttore.rel_prodotti')
-   
 
-class Lotto(db.Model,SerializerMixin):
+class Lotto(db.Model, SerializerMixin):
     __tablename__ = 'lotti'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     prodotto_id = db.Column(db.Integer, db.ForeignKey('prodotti.id'), nullable=False)
@@ -60,91 +51,79 @@ class Lotto(db.Model,SerializerMixin):
     qta_lotto = db.Column(db.Integer, nullable=False)
     prezzo_unitario = db.Column(db.Float, nullable=False)
     sospeso = db.Column(db.Boolean, default=False)
+    # RELATIONSHIPS
+    rel_prodotto = db.relationship('Prodotto', back_populates='rel_lotti')
+    rel_prenotazioni = db.relationship('Prenotazione', back_populates='rel_lotto')
 
-    #RELATIONSHIPS
+    serialize_rules = ('-rel_prodotto.rel_lotti', '-rel_prenotazioni.rel_lotto', 'get_date', 'get_prezzo_str', 'get_qta_disponibile')
 
-    #Esta es una relacion BIdireccional donde un prodotto puede tener muchos Lotti
-    rel_prodotto = db.relationship('Prodotto',back_populates='rel_lotti')
+    def get_date(self):
+        res_data = self.data_consegna.strftime('%A %d/%m/%Y')
+        return res_data  # es. "Giovedì 27/06/2024"
 
-    #esta es una relacion Bidireccional donde un lotto puede tener muchas prenotazioni
-    rel_prenotazioni= db.relationship('Prenotazione', back_populates='rel_lotto')
-
-    serialize_rules = (' -rel.prodotto.rel_lotti','get_date','get_prezzo_str','get_qta_disponibile')
-    
-    def get_date(self): #quando siamo dentro una clase e definiamo una funzione d'istanza, devono avere self, rapresenta il record reale da manipolare
-       res_data = self.data_consegna.strftime('%A %d/%m/%Y')
-       return res_data
-    
     def get_prezzo_str(self):
-        return f'{self.prezzo_unitario} €/  {self.qta_unita_misura}'
-    
+        return f'{self.prezzo_unitario} €/{self.qta_unita_misura}'  # es. "8.50 €/L"
 
     def get_qta_disponibile(self):
         qta_prenotata = 0
-
-        for prenot in  self.rel_prenotazioni:
-            qta_prenotata +=  prenot.qta
-
+        for prenot in self.rel_prenotazioni:
+            qta_prenotata += prenot.qta
+        
         return self.qta_lotto - qta_prenotata
-    
 
-    #ciclo for con list comprehension
-    #def get_qta_disponibile(self):
-    #qta_prenotata = sum(prenot.qta for prenot in self.rel_prenotazioni)
-    #return self.qta_lotto - qta_prenotata
-
-class Prenotazione(db.Model,SerializerMixin):
+class Prenotazione(db.Model, SerializerMixin):
     __tablename__ = 'prenotazioni'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     lotto_id = db.Column(db.Integer, db.ForeignKey('lotti.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     qta = db.Column(db.Integer, nullable=False)
-
-
-    #RELATIONSHIP
-    #relacino BIdireccional donde  tomamos la clase lotto y que es UNA con Muchas prenotazioni
-    rel_lotto= db.relationship('Lotto', back_populates='rel_prenotazioni')
+    # RELATIONSHIPS
+    rel_lotto = db.relationship('Lotto', back_populates='rel_prenotazioni')
 
     serialize_rules = ('-rel_lotto.rel_prenotazioni',)
- 
+
+    # @TODO: Da implementare l'unique constraint per la coppia lotto_id e user_id
+    # ...
 
 def init_db():
-    # Crea le tabelle se non esistono già
+    # Crea le tabelle solo se non esistono già
     db.create_all()
 
- # CON FIRST NON SI BLOCCA, CON .ONE SI BLOCCA, si non esiste un record in User(en vez de usar not usamos el as None)
-    if  User.query.first() is None:
-
-         json_files = [
-            ('lotti.json',Lotto), 
-            ('prenotazioni.json',Prenotazione),
-            ('prodotti.json',Prodotto),
-            ('produttori.json',Produttore), 
-            ('users.json',User),
-
-
+    # Popolo le tabelle con i dati se non esiste un record in User
+    if User.query.first() is None:
+        # Creo una lista con i nomi dei file json e i modelli corrispondenti
+        # in modo da sapere in quale tabella devono essere inseriti i dati di
+        # ciascun file json
+        json_files = [
+            ('lotti.json', Lotto),
+            ('prenotazioni.json', Prenotazione),
+            ('prodotti.json', Prodotto),
+            ('produttori.json', Produttore),
+            ('users.json', User),
         ]
 
-         for filename,model in json_files:
+        # Itero a coppie il nome del file json e il modello corrispondente
+        for filename, model in json_files:
+            # Compone il path al file json
+            file_path = os.path.join(BASE_DIR, 'database', 'data', filename)
 
-            file_path= os.path.join(BASE_DIR,'database','data',filename)
-            print(file_path)
+            # Apro il file json in lettura
+            with open(file_path, 'r') as file:
+                # Leggo il contenuto del file json e ottengo una lista di dizionari
+                lista_record = json.load(file)
 
-            with open(file_path, 'r') as json_file:
-    
-                lista_record = json.load(json_file)
-
+            # Itero la lista di dizionari
             for record_dict in lista_record:
-
+                # Se la chiave 'data_consegna' è presente nel dizionario
                 if 'data_consegna' in record_dict:
-                    data_consegna = date.fromisoformat(record_dict['data_consegna'])
-                    record_dict['data_consegna']= data_consegna
+                    # Converto il valore della 'data_consegna' in un oggetto date
+                    var_data_consegna = date.fromisoformat(record_dict['data_consegna'])
+                    record_dict['data_consegna'] = var_data_consegna
 
-                new_user = model(**record_dict) # solo en json se usa el doble asterisco, para la llave y valor  
-
-
-                db.session.add(new_user)
-
-
-         db.session.commit()
-            
+                # Creo un nuovo record del modello corrispondente
+                new_record = model(**record_dict)
+                # Aggiungo il record alla sessione
+                db.session.add(new_record)
+        
+        # Eseguo il commit della sessione per scrivere i dati nel database
+        db.session.commit()
