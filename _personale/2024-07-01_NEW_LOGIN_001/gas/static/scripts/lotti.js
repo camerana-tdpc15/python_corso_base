@@ -4,7 +4,7 @@ const rowLotti = document.querySelector('#row-lotti');
 
 
 // Fa fetch di un file JSON e lo stampa in console
-  fetch('/api/lotti')
+  fetch('/api/lotti?order=desc')
   .then(response => response.json())
   .then(data => {
       for (lotto of data){
@@ -36,9 +36,9 @@ const rowLotti = document.querySelector('#row-lotti');
                     </div>
                     <div class="card-body">
                         <p>Produttore: <b>${lotto.prodotto.produttore.nome_produttore}</b></p>
-                        <p>Data consegna: <b>${lotto.data_consegna}</b></p>
-                        <p>Qtà Tot: <b>${lotto.qta_lotto}</b></p>
-                        <p>Qtà Disp: <b>${lotto.get_qta_disponibile}</b></p>
+                        <p>Data consegna: <b>${lotto.get_date}</b></p>
+                        <p>Qtà Tot: <b>${lotto.qta_lotto} ${lotto.qta_unita_misura}</b></p>
+                        <p>Qtà Disp: <b>${lotto.get_qta_disponibile} ${lotto.qta_unita_misura}</b></p>
                         <p>Prezzo: <b>${lotto.get_prezzo_str}</b></p>
                         ${displayButton}
                     </div>
@@ -51,4 +51,4 @@ const rowLotti = document.querySelector('#row-lotti');
   
   });
 
-  
+ 

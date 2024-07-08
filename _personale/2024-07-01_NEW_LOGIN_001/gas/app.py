@@ -26,7 +26,18 @@ def home():
 
 @app.route('/api/lotti', methods=['GET'])
 def get_lotti():
-    lotti = Lotto.query.all()
+
+    # Leggo i parametri passati in query string
+    order = request.args.get('order', 'asc')
+
+    if order == 'asc':
+        lotti = Lotto.query.order_by(Lotto.data_consegna).all()
+    elif order == 'desc':
+        lotti = Lotto.query.order_by(Lotto.data_consegna.desc()).all()
+    else:
+        return 'Parametro order non valido. Utilizzare "asc" o "desc".'
+    
+    # lotti = Lotto.query.all()
 
     lotti_data = []
 
