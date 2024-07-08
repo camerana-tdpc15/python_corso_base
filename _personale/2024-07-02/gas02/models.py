@@ -23,15 +23,21 @@ class Produttore(db.Model,SerializerMixin):
     indirizzo = db.Column(db.Text(), nullable=False)
     telefono = db.Column(db.String(), nullable=False)
     email = db.Column(db.String(), nullable=False)
+# RELATIONSHIPS
+    rel_prodotti = db.relationship('Prodotto', back_populates='rel_produttore')
+
+    serialize_rules = ('-rel_prodotti.rel_produttore',)
 
 class Prodotto(db.Model,SerializerMixin):
     __tablename__ = 'prodotti'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     produttore_id = db.Column(db.Integer, db.ForeignKey('produttori.id'), nullable=False)
     nome_prodotto = db.Column(db.String(50), nullable=False)
- # relazioni
-    rel_lotti= db.relationship('Lotto',back_populates= 'rel_prodotto')
+  # RELATIONSHIPS
+    rel_lotti = db.relationship('Lotto', back_populates='rel_prodotto')
+    rel_produttore = db.relationship('Produttore', back_populates='rel_prodotti')
 
+    serialize_rules = ('-rel_lotti.rel_prodotto', '-rel_produttore.rel_prodotti')
 class Lotto(db.Model,SerializerMixin):
     __tablename__ = 'lotti'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -41,11 +47,12 @@ class Lotto(db.Model,SerializerMixin):
     qta_lotto = db.Column(db.Integer, nullable=False)
     prezzo_unitario = db.Column(db.Float, nullable=False)
     sospeso = db.Column(db.Boolean, default=False)
-    # relazioni
-    rel_prodotto = db.relationship('Prodotto', back_populates='rel_lotti' )
-    rel_prenotazioni = db.relationship('Prenotazione', back_populates='rel_lotto' )
+      # RELATIONSHIPS
+    rel_prodotto = db.relationship('Prodotto', back_populates='rel_lotti')
+    rel_prenotazioni = db.relationship('Prenotazione', back_populates='rel_lotto')
 
-    serialize_rules= ('-rel_prodotto.rel_lotti','get_date','get_prezzo_str','get_qta_disponibile')
+    serialize_rules = ('-rel_prodotto.rel_lotti', '-rel_prenotazioni.rel_lotto', 'get_date', 'get_prezzo_str', 'get_qta_disponibile')
+
 
     def get_date(self):
         return_data= self.data_consegna.strftime('%A %d/%m/%Y')
@@ -68,12 +75,17 @@ class Prenotazione(db.Model,SerializerMixin):
     lotto_id = db.Column(db.Integer, db.ForeignKey('lotti.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     qta = db.Column(db.Integer, nullable=False)
-    #relazioni
+     # RELATIONSHIPS
+    rel_lotto = db.relationship('Lotto', back_populates='rel_prenotazioni')
 
-    rel_lotto= db.relationship('Lotto', back_populates='rel_prenotazioni' )
+    serialize_rules = ('-rel_lotto.rel_prenotazioni',)
 
-    # @TODO: Da implementare l'unique constraint per la coppia lotto_id e user_id
-    # ...
+    # Da implementare l'unique constraint per la coppia lotto_id e user_id
+    
+    __table_args__ = (
+        db.UniqueConstraint('lotto_id', 'user_id', name='unica_prenotazione'),
+    )
+
 
 def init_db():
     # Crea le tabelle se non esistono già

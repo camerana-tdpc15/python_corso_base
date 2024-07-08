@@ -1,6 +1,6 @@
 import locale
-from flask import Flask, render_template, jsonify, request
-from models import db, init_db, Lotto, Prodotto, Produttore
+from flask import Flask, redirect, render_template, jsonify, request, session, url_for
+from models import User, db, init_db, Lotto, Prodotto, Produttore
 from settings import DATABASE_PATH
 
 locale.setlocale(locale.LC_TIME, 'it_IT')
@@ -41,6 +41,34 @@ def get_lotti():
 def get_prenotazioni():
     ...
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        user = User.query.filter_by(email=email, password=password).first()
+        if user:
+            session['user_id'] = user.id
+            #flash('Login riuscito!')
+            return redirect(url_for('guestbook'))
+        else:
+           # flash('Credenziali non valide!')
+            return redirect(url_for('login'))
+        
+    elif request.method == 'GET':
+        return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('user_id', None)
+    #flash('Logout effettuato con successo!')
+    return redirect(url_for('home'))
+
+
+if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
+    app.run(debug=True)
 
 # @TODO: Implementare il login / logout
 ...
