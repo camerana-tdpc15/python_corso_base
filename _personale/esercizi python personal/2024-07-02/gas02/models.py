@@ -48,6 +48,8 @@ class Lotto(db.Model):
     rel_prodotto = db.relationship('Prodotto', back_populates = 'rel_lotti')
     rel_prenotazioniì= db.relationship('Prenotazione', back_papulates = 'rel_lotto')
 
+    serialize_rules = ('-rel_prodotto.rel_lotti', 'get_date', 'get_prezzo_str', 'get_qta_disponibile')
+
 
     def get_date(self):
         res_data = self.data_consegna.strftime('%A %d/%m/%Y')
@@ -73,8 +75,12 @@ class Prenotazione(db.Model):
 #RELATIONSHIPS
     
     rel_lotto = db.relationship('Lotto',back_populates = 'rel_prenotazioni')
-    # @TODO: Da implementare l'unique constraint per la coppia lotto_id e user_id
-    # ...
+    # Definisco un unique constraint per la coppia lotto_id e user_idin modo che 
+    #   non sia possibile creare una prenotazione con i medesimi user_id e lotto_id
+    
+    __table_args__ = (
+        db.UniqueConstraint('lotto_id', 'user_id', name = 'lotto_user_unique'),
+    )
 
 def init_db():
     # Crea le tabelle se non esistono già
