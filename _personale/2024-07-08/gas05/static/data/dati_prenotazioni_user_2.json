@@ -1,0 +1,80 @@
+[
+    {
+        "get_prezzo_totale_str": "€ 5.00",
+        "id": 7,
+        "lotto": {
+            "data_consegna": "2024-07-28",
+            "get_date": "Domenica 28/07/2024",
+            "get_prezzo_str": "5.00 €/Kg",
+            "get_qta_disponibile": 199,
+            "id": 7,
+            "prezzo_unitario": 5.0,
+            "prodotto": {
+                "id": 4,
+                "nome": "Miele di acacia Bio",
+                "produttore": {
+                    "descrizione": "Prodotti biologici",
+                    "email": "info@unibio.it",
+                    "id": 2,
+                    "indirizzo": "Via Garibaldi 2, Melle",
+                    "nome": "Universo Bio",
+                    "telefono": "011 9876543"
+                },
+                "produttore_id": 2
+            },
+            "prodotto_id": 4,
+            "qta_lotto": 200,
+            "qta_unita_misura": "Kg",
+            "sospeso": true
+        },
+        "lotto_id": 7,
+        "qta": 1,
+        "user": {
+            "cognome": "Bianchi",
+            "email": "jhonb@ymail.yyy",
+            "id": 2,
+            "nome": "John",
+            "telefono": "3245903845"
+        },
+        "user_id": 2
+    },
+    {
+        "get_prezzo_totale_str": "€ 8.50",
+        "id": 2,
+        "lotto": {
+            "data_consegna": "2024-07-29",
+            "get_date": "Lunedì 29/07/2024",
+            "get_prezzo_str": "8.50 €/L",
+            "get_qta_disponibile": 499,
+            "id": 2,
+            "prezzo_unitario": 8.5,
+            "prodotto": {
+                "id": 1,
+                "nome": "Olio extravergine di oliva Bio",
+                "produttore": {
+                    "descrizione": "Produttore di olio e frutta secca",
+                    "email": "civetta@civetta.com",
+                    "id": 1,
+                    "indirizzo": "Via Cavour 12, Ugento (LE)",
+                    "nome": "Cascina della Civetta",
+                    "telefono": "0172 123456"
+                },
+                "produttore_id": 1
+            },
+            "prodotto_id": 1,
+            "qta_lotto": 500,
+            "qta_unita_misura": "L",
+            "sospeso": false
+        },
+        "lotto_id": 2,
+        "qta": 1,
+        "user": {
+            "cognome": "Bianchi",
+            "email": "jhonb@ymail.yyy",
+            "id": 2,
+            "nome": "John",
+            "telefono": "3245903845"
+        },
+        "user_id": 2
+    }
+]
