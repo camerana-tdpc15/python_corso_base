@@ -1,6 +1,9 @@
+import locale
 from flask import Flask, render_template, jsonify,request, session, redirect, url_for
 from models import db, init_db,Lotto, Prodotto, Produttore, User, Prenotazione
 from settings import DATABASE_PATH
+
+locale.setlocale(locale.LC_TIME, 'it_IT')
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+DATABASE_PATH
@@ -18,34 +21,15 @@ def home():
 
 @app.route('/api/lotti',methods =['GET'])
 def get_lotti():
-    # lotti = Lotto.query.all()
-    # lotti_data = []
+    
+    order =request.args.get('order', 'asc')
+    if order =='asc':
+        lotti =Lotto.query.order_by(Lotto.data_consegna).all()
+    elif  order == 'desc':
+        lotti = Lotto.query.order_by(Lotto.data_consegna.desc()).all()
+    else:
+        return 'Parametro order non valido. Ytilisare"asc" o "desc".'
 
-    # for lotto in lotti:
-    #     prodotto_id = lotto.prodotto_id
-    #     prodotto = db.session.get(Prodotto,prodotto_id)
-    #     produttore = db.session.get(Produttore, prodotto.produttore_id)
-    #     data = {
-    #         'id':lotto.id,
-    #         'data_consegna':lotto.data_consegna,
-    #         'get_prezzo_str':lotto.get_prezzo_str(),   
-    #         ' get_qta_disponibile' : lotto.get_qta_disponibile(),
-    #         'get_date':lotto.get_date(),
-    #         'qta_unita_misura':lotto.qta_unita_misura, 
-    #         'qta_lotto':lotto.qta_lotto,
-    #         'prezzo_unitario':lotto.prezzo_unitario,
-    #         'sospeso':lotto.sospeso,
-    #         'prodotto':{
-    #             'nome_prodotto': prodotto.nome_prodotto,
-    #             'produttore':{'nome_produttore': produttore.nome_produttore}
-    #             }
-            
-    #    }
-
-
-    #     lotti_data.append(data)
-
-    # return jsonify(lotti_data)
     lotti_data = []
     for lotto in lotti:
         dict_lotto = lotto.to_dict()
@@ -65,49 +49,43 @@ def mostra_lotto(id_lotto):
     # user = db,session.get(User, session['user_id'])
     # prenotazioni = user.rel_prenotazioni
 
-    prenot_utente = Prenotazione.query.filter_by(user_id = session['user_id'],
-                                                 lotto_id = id_lotto)
+    prenot_utente = Prenotazione.query.filter_by(
+        user_id = session['user_id'],
+        lotto_id = id_lotto)
     
     if prenot_utente: 
         return redirect('modifica_prenotazione.html')
     else:
         return render_template('nuova_prnotazione.html')
+    
+@app.route('/api/prenotazioni', methods =['GET'])
+def get_prenotazioni():    
 
 
     
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
+ @app.route('/login', methods=['GET', 'POST'])
+ def login():
     if request.method == 'POST':
-        username = request.form.get('username')
+        email = request.form.get('email')
         password = request.form.get('password')
-        user = User.query.filter_by(email= email, password=password).first()
+        user = User.query.filter_by(email=email, password=password).first()
         if user:
             session['user_id'] = user.id
             # flash('Login riuscito!')
-            return redirect(url_for('home.html'))
+            return redirect(url_for('home'))
         else:
             # flash('Credenziali non valide!')
             return redirect(url_for('login'))
         
     elif request.method == 'GET':
-        return redirect(url_for('login'))
+        return redirect(url_for('login.html'))
     
-
-    return render_template('login.html')
-
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
     # flash('Logout effettuato con successo!')
     return redirect(url_for('home'))
-
-
-@app.route('/api/prenotazioni', method=['GET'])
-def get_prenotazioni():
-            # @TODO: controlare cho l'utente sia loggato
-            # Ottengo il record del lotto a partire dal suo ID
-     lotto = db.session.get(Lotto, id_lotto)
 
 
 if __name__ == '__main__':

@@ -3,11 +3,12 @@ import json
 from datetime import date
 from pprint import pprint
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy_serializer import SerializerMixim
 from settings import BASE_DIR
 
 db = SQLAlchemy()
 
-class User(db.Model):
+class User(db.Model, SerializerMixim):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nome = db.Column(db.String(50), nullable=False)
@@ -16,7 +17,9 @@ class User(db.Model):
     email = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(30), nullable=False)
 
-class Produttore(db.Model):
+    serializer_rules = ('-password',)
+
+class Produttore(db.Model, SerializerMixim):
     __tablename__ = 'produttori'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nome_produttore = db.Column(db.String(), unique=True, nullable=False)
@@ -25,7 +28,12 @@ class Produttore(db.Model):
     telefono = db.Column(db.String(), nullable=False)
     email = db.Column(db.String(), nullable=False)
 
-class Prodotto(db.Model):
+    rel_prodotti = db.relationship('Prodotto', back_populates = 'rel_produttore')
+
+    les = ('-rel_prodotti.rel_produttore',)
+
+
+class Prodotto(db.Model, SerializerMixim):
     __tablename__ = 'prodotti'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     produttore_id = db.Column(db.Integer, db.ForeignKey('produttori.id'), nullable=False)
@@ -33,8 +41,11 @@ class Prodotto(db.Model):
 
 #RELATIONSHIPS
     rel_lotti = db.relationship('Lotto', back_populates = 'rel_prodotti')
+    rel_produttore = db.relationship('Produttore', back_populates=' rel_prodotti ')
 
-class Lotto(db.Model):
+    serialize_rules = ('-rel_lotti.rel_prodotto', '-rel_produttore.rel_prodotti')
+
+class Lotto(db.Model, SerializerMixim):
     __tablename__ = 'lotti'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     prodotto_id = db.Column(db.Integer, db.ForeignKey('prodotti.id'), nullable=False)
@@ -66,7 +77,7 @@ class Lotto(db.Model):
         return self.qta_lotto - qta_prenotate
 
 
-class Prenotazione(db.Model):
+class Prenotazione(db.Model, SerializerMixim):
     __tablename__ = 'prenotazioni'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     lotto_id = db.Column(db.Integer, db.ForeignKey('lotti.id'), nullable=False)
@@ -75,6 +86,8 @@ class Prenotazione(db.Model):
 #RELATIONSHIPS
     
     rel_lotto = db.relationship('Lotto',back_populates = 'rel_prenotazioni')
+
+    serialize_rules = ('-rel_lotto.rel_prenotazioni',)
     # Definisco un unique constraint per la coppia lotto_id e user_idin modo che 
     #   non sia possibile creare una prenotazione con i medesimi user_id e lotto_id
     
@@ -100,7 +113,7 @@ def init_db():
 
         for filename, model in json_files:
             file_path = os.path.join(BASE_DIR, 'database', 'data_json',filename )
-            print(file_path)
+            
             
 
             with open(file_path, 'r') as file:
