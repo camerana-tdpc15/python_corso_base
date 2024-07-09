@@ -1,126 +1,114 @@
+import json                                 # moduli standard
 import os
-import json
-from datetime import date
-from pprint import pprint
+import sys
+from datetime import datetime               # moduli di terze parti
+from flask import app
 from flask_sqlalchemy import SQLAlchemy
-from settings import BASE_DIR
 from sqlalchemy_serializer import SerializerMixin
+from settings import (                      # moduli locali
+    LOTTI_TABLE_JSON,
+    LOTTI_TABLE_NAME,
+    PRENOTAZIONI_TABLE_JSON,
+    PRENOTAZIONI_TABLE_NAME,
+    PRODOTTI_TABLE_JSON,
+    PRODOTTI_TABLE_NAME,
+    PRODUTTORI_TABLE_JSON,
+    PRODUTTORI_TABLE_NAME,
+    USERS_TABLE_JSON,
+    USERS_TABLE_NAME,
+)
 
-db = SQLAlchemy()
+db = SQLAlchemy()  # creo istanza SQLAlchemy
 
-class User(db.Model, SerializerMixin):
-    __tablename__ = 'users'
+
+# creo la struttura delle tabelle
+class User(db.Model, SerializerMixin):  # nome della classe al singolare e iniziale maiuscola, nome della tabella plurale
+    __tablename__ = USERS_TABLE_NAME
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    nome = db.Column(db.String(50), nullable=False)
     cognome = db.Column(db.String(50), nullable=False)
+    nome = db.Column(db.String(50), nullable=False)
     telefono = db.Column(db.String(20))
     email = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(30), nullable=False)
-    # relazioni
-    rel_prenotazioni = db.relationship("Prenotazione", back_populates="rel_utente")
+    prenotazioni = db.relationship("Prenotazione", back_populates="utente")
 
 
 class Produttore(db.Model, SerializerMixin):
-    __tablename__ = 'produttori'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    nome_produttore = db.Column(db.String(), unique=True, nullable=False)
-    descrizione = db.Column(db.Text(), nullable=False)
-    indirizzo = db.Column(db.Text(), nullable=False)
-    telefono = db.Column(db.String(), nullable=False)
-    email = db.Column(db.String(), nullable=False)
-    # relazioni
-    rel_prodotti = db.relationship("Prodotto", back_populates="rel_produttore")
+    __tablename__ = PRODUTTORI_TABLE_NAME
+    id = db.Column(db.Integer, primary_key=True)
+    nome_produttore = db.Column(db.String(150), nullable=False)
+    descrizione = db.Column(db.String(250))
+    indirizzo = db.Column(db.String(250))
+    telefono = db.Column(db.String(15))
+    email = db.Column(db.String(150))
+    prodotti = db.relationship("Prodotto", back_populates="produttore")
 
-    serialize_only = ('id', 'nome_produttore')
 
 class Prodotto(db.Model, SerializerMixin):
-    __tablename__ = 'prodotti'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    produttore_id = db.Column(db.Integer, db.ForeignKey('produttori.id'), nullable=False)
-    nome_prodotto = db.Column(db.String(50), nullable=False)
-    # relazioni
-    rel_lotti = db.relationship("Lotto", back_populates="rel_prodotto")
-    rel_produttore = db.relationship("Produttore", back_populates="rel_prodotti")
+    __tablename__ = PRODOTTI_TABLE_NAME
+    id = db.Column(db.Integer, primary_key=True)
+    produttore_id = db.Column(db.Integer, db.ForeignKey("produttore.id"), nullable=False)
+    nome_prodotto = db.Column(db.String(150), nullable=False)
+    image_url = db.Column(db.String(255))  # Nuovo campo per l'URL dell'immagine
+    produttore = db.relationship("Produttore", back_populates="prodotti")
+    lotti = db.relationship("Lotto", back_populates="prodotto")
 
-    serialize_only = ('id', 'nome_prodotto', 'produttore.nome_produttore')
 
 class Lotto(db.Model, SerializerMixin):
-    __tablename__ = 'lotti'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    prodotto_id = db.Column(db.Integer, db.ForeignKey('prodotti.id'), nullable=False)
+    __tablename__ = LOTTI_TABLE_NAME
+    id = db.Column(db.Integer, primary_key=True)
+    prodotto_id = db.Column(db.Integer, db.ForeignKey("prodotto.id"), nullable=False)
     data_consegna = db.Column(db.Date, nullable=False)
     qta_unita_misura = db.Column(db.String(10), nullable=False)
     qta_lotto = db.Column(db.Integer, nullable=False)
     prezzo_unitario = db.Column(db.Float, nullable=False)
-    sospeso = db.Column(db.Boolean, default=False)
-    # relazioni
-    rel_prodotto = db.relationship("Prodotto", back_populates="rel_lotti")
-    rel_prenotazioni = db.relationship("Prenotazione", back_populates="rel_lotto")
+    sospeso = db.Column(db.Boolean)
+    prodotto = db.relationship("Prodotto", back_populates="lotti")
+    prenotazioni = db.relationship("Prenotazione", back_populates="lotto")
 
-    serialize_only = ('id', 'prodotto.nome_prodotto', 'qta_lotto', 'qta_unita_misura', 'get_qta_disponibile', 'prezzo_unitario', 'sospeso', 'get_date')
-
-    def get_date(self):
-        res_data = self.data_consegna.strftime('%A %d/%m/%Y')
-        return res_data
-    
-    def get_qta_disponibile(self):
-        qta_prenotata = 0
-        for prenot in self.rel_prenotazioni:
-            qta_prenotata += prenot.qta
-        
-        return self.qta_lotto - qta_prenotata
 
 class Prenotazione(db.Model, SerializerMixin):
-    __tablename__ = 'prenotazioni'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    lotto_id = db.Column(db.Integer, db.ForeignKey('lotti.id'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    __tablename__ = PRENOTAZIONI_TABLE_NAME
+    id = db.Column(db.Integer, primary_key=True)
+    utente_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    lotto_id = db.Column(db.Integer, db.ForeignKey("lotto.id"), nullable=False)
     qta = db.Column(db.Integer, nullable=False)
-    # relazioni
-    rel_utente = db.relationship("User", back_populates="rel_prenotazioni")
-    rel_lotto = db.relationship("Lotto", back_populates="rel_prenotazioni")
+    utente = db.relationship("User", back_populates="prenotazioni")
+    lotto = db.relationship("Lotto", back_populates="prenotazioni")
 
-    serialize_only = ('id', 'rel_lotto', 'qta')
+def init_db(app):
+    with app.app_context():  # Attivo il contesto dell'app
+        db.create_all()  # Crea tutte le tabelle
 
-def init_db():
-    # Crea le tabelle solo se non esistono già
-    db.create_all()
+        import_data(User, USERS_TABLE_JSON, app)
+        import_data(Produttore, PRODUTTORI_TABLE_JSON, app)
+        import_data(Prodotto, PRODOTTI_TABLE_JSON, app)
+        import_data(Lotto, LOTTI_TABLE_JSON, app, date_fields=["data_consegna"])
+        import_data(Prenotazione, PRENOTAZIONI_TABLE_JSON, app)
 
-    # Popolo le tabelle con i dati se non esiste un record in User
-    if User.query.first() is None:
-        # Creo una lista con i nomi dei file json e i modelli corrispondenti
-        # in modo da sapere in quale tabella devono essere inseriti i dati di
-        # ciascun file json
-        json_files = [
-            ('lotti.json', Lotto),
-            ('prenotazioni.json', Prenotazione),
-            ('prodotti.json', Prodotto),
-            ('produttori.json', Produttore),
-            ('users.json', User),
-        ]
-
-        # Itero a coppie il nome del file json e il modello corrispondente
-        for filename, model in json_files:
-            # Compone il path al file json
-            file_path = os.path.join(BASE_DIR, 'database', 'data_json', filename)
-
-            # Apro il file json in lettura
-            with open(file_path, 'r') as file:
-                # Leggo il contenuto del file json e ottengo una lista di dizionari
-                lista_record = json.load(file)
-
-            # Itero la lista di dizionari
-            for record_dict in lista_record:
-                # Se la chiave 'data_consegna' è presente nel dizionario
-                if 'data_consegna' in record_dict:
-                    # Converto il valore della 'data_consegna' in un oggetto date
-                    var_data_consegna = date.fromisoformat(record_dict['data_consegna'])
-                    record_dict['data_consegna'] = var_data_consegna
-
-                # Creo un nuovo record del modello corrispondente
-                new_record = model(**record_dict)
-                # Aggiungo il record alla sessione
-                db.session.add(new_record)
-        
-        # Eseguo il commit della sessione per scrivere i dati nel database
-        db.session.commit()
+def import_data(model, file_path, app, date_fields=[]):
+    if not model.query.first():
+        if os.path.exists(file_path):
+            try:
+                with open(file_path, "r") as file:
+                    data = json.load(file)
+                    for item in data:
+                        for field in date_fields:
+                            item[field] = datetime.strptime(item[field], "%Y-%m-%d")
+                        db.session.add(model(**item))
+                    db.session.commit()
+                    app.logger.info(
+                        f'Tabella "{model.__tablename__}" popolata correttamente.'
+                    )
+            except Exception as e:
+                app.logger.error(
+                    f'Errore durante la popolazione della tabella "{model.__tablename__}": {e}'
+                )
+                sys.exit(1)
+        else:
+            app.logger.error(
+                f'Il file "{file_path}" non esiste. Verifica il percorso e riprova.'
+            )
+            sys.exit(1)
+    else:
+        app.logger.info(f'Tabella "{model.__tablename__}" già popolata.')

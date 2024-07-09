@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Nuova Prenotazione{% endblock %}
+
+{% block content %}
+    <h2 class="my-4">Nuova Prenotazione per Lotto {{ lotto.id }}</h2>
+    <form method="POST">
+        <div class="mb-3">
+            <label for="qta" class="form-label">Quantità</label>
+            <input type="number" class="form-control" id="qta" name="qta" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Prenota</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Modifica Prenotazione{% endblock %}
+
+{% block content %}
+    <h2 class="my-4">Modifica Prenotazione {{ prenotazione.id }}</h2>
+    <form method="POST">
+        <div class="mb-3">
+            <label for="qta" class="form-label">Quantità</label>
+            <input type="number" class="form-control" id="qta" name="qta" value="{{ prenotazione.qta }}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Modifica</button>
+    </form>
+{% endblock %}
