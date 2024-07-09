@@ -9,8 +9,10 @@
 
 <body>
 
-    {% include 'navbar.html' %}
-    
+    <header>
+        {% include 'includes/navbar.html' %}
+    </header>
+
 
 
     <div class="container">
@@ -19,7 +21,7 @@
 
 
 
-        <h1 class="text-center my-4">Lotti disponibili</h1>
+        <h1 class="text-center m-5">Lotti disponibili</h1>
 
         <div class="row" id="row-lotti">
             <!-- popolato dinamicamente da js -->
@@ -31,7 +33,9 @@
 
 
 
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+    {% include 'includes/footer.html' %}
+    <script src="{{ url_for('static', filename='scripts/lotti.js') }}"></script>
 </body>
 
 </html>

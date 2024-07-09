@@ -12,10 +12,14 @@
 
     <body >
 
-        {% include 'navbar.html' %}
+        {% include 'includes/navbar.html' %}
 
+
+        <div>
+            {% include 'includes/flash.html' %}
+        </div>
         <h2 class="jumbotron text-center my-5">Login</h2>
-
+        
 
 
         <form method="POST" action="/login" class="container">
@@ -29,6 +33,10 @@
         </form>
 
 
+
+        <div class="mt-5">
+            {% include 'includes/footer.html' %}
+        </div>
     </body>
 
     </html>
