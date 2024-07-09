@@ -17,7 +17,7 @@ fetch('/api/lotti')
                 displayButton = '<button class="btn btn-danger w-100" disabled>Esaurito</button>'
             }
             else {
-                displayButton = '<button class="btn btn-primary w-100">Prenota</button>'
+                displayButton = '<a class="btn btn-primary w-100" href="/lotto/${loto_id}">Prenota</button>'
             }
 
 
