@@ -1,6 +1,9 @@
-from flask import Flask, render_template,jsonify
-from models import db, init_db, Lotto, Prodotto, Produttore
+import locale
+from flask import Flask, render_template, jsonify, request,session, redirect  
+from models import db, init_db, Lotto, Prodotto, Produttore , User, Prenotazione
 from settings import DATABASE_PATH
+
+locale.setlocale(locale.LC_TIME, 'it_IT')
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+DATABASE_PATH
@@ -12,41 +15,62 @@ def home():
     return render_template('home.html')
 
 
-# @TODO: Qua ci vanno le routes
-# ...
 
-@app.route('/api/lotti',methods=['GET'])
+@app.route('/api/lotti', methods=['GET'])
 def get_lotti():
-    lotti = Lotto.query.all()
-    # lotti_data=[]
-    
-    # for lotto in lotti:
-    #     prodotto_id = lotto.prodotto_id
-    #     prodotto = db.session.get(Prodotto,prodotto_id)
-    #     produttore = db.session.get(Produttore,prodotto.produttore_id)
-    #     data = {
-    #         'id': lotto.id,
-    #         'data_consegna': lotto.data_consegna,
-    #         'get_date': lotto.get_date(),
-    #         'get_prezzo_str': lotto.get_prezzo_str(),
-    #         'get_qta_disponibile' : lotto.get_qta_disponibile(),
-    #         'qta_unita_misura': lotto.qta_unita_misura,
-    #         'qta_lotto': lotto.qta_lotto,
-    #         'prezzo_unitario': lotto.prezzo_unitario,
-    #         'sospeso': lotto.sospeso,
-    #         'prodotto':{
-    #                'nome_prodotti': prodotto.nome_prodotto,
-    #                'produttore': {
-    #                 'nome_produttore': produttore.nome_produttore
-    #                 }
-    #         }
-    #     }
 
-    #     lotti_data.append(data)
-    
+    # Leggo i parametri passati in query string
+    order = request.args.get('order', 'asc')
+
+    if order == 'asc':
+        lotti = Lotto.query.order_by(Lotto.data_consegna).all()
+    elif order == 'desc':
+        lotti = Lotto.query.order_by(Lotto.data_consegna.desc()).all()
+    else:
+        return 'Parametro order non valido. Utilizzare "asc" o "desc".'
+
+    lotti_data = []
+    for lotto in lotti:
+        dict_lotto = lotto.to_dict()
+        lotti_data.append(dict_lotto)
+
     return jsonify(lotti_data)
 
+@app.route('/lotto/<id_lotto>')
+def mostra_lotto(id_lotto):
+    #  controllare che l'utente sia loggato
+    if 'user_id' in session:
+        return redirect(url_for('login'))
 
+    # Ottengo il record del lotto a partire dal suo ID
+    lotto = db.session.get(lotto, id_lotto)
+    if not lotto:
+        return 'lotto non trovato!', 404
+    user = db.session.get(User, session['user_id'])
+    # prenotazioni = user.real_prenotazioni
+
+    prenot_utente = Prenotazione. query.filter_by(
+        user_id=session['user_id']
+        lotto_id=id_lotto
+    )
+    
+    # se l'utente ha delle prenotazioni
+    if prenot_utente:
+        return render_template('modifica_prenotazione.html')
+    # se l'utente non ha delle prenotazioni
+    else:
+        return render_template('nuova_prenotazione.html')
+    
+    @app.route('/prenotazione/<int:id_prenorazione>', methods=['GET'])
+    DEF aggiorna_prenotazioni(id_prenotazione);
+
+@app.route('/api/prenotazioni', methods=['GET'])
+def get_prenotazioni():
+    ...
+
+
+# @TODO: Implementare il login / logout
+...
 
 if __name__ == '__main__':
     with app.app_context():
