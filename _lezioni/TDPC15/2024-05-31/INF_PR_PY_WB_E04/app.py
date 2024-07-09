@@ -4,6 +4,9 @@ app = Flask(__name__)
 
 # Funzione per calcolare il risultato
 def _calcola(number1, number2, operation):
+    '''
+    QUA CI DOVREBBE ESSERE LA DOCSTRING
+    '''
     # Controlla che i parametri passati siano numeri validi
     try:
         number1 = float(number1)
@@ -50,19 +53,20 @@ def calculator_js_client():
         # Se la richiesta è in formato JSON,
         # (form inviato tramite oggetto JSON creato manualmente)
         if request.is_json:
-            data = request.get_json()
+            # data = request.get_json()
+            data = request.json
         # Altrimenti, dà per scontato che la richiesta sia in formato "form"
         # (form inviato tramite FormData)
         else:
             data = request.form
         app.logger.info('Request form: %s', data)
-        operation = data.get('operation')
         result = _calcola(
             data.get('number1'),
             data.get('number2'),
-            operation
+            data.get('operation')
         )
         return str(result)
+    # Altrimenti è per forza GET
     else:
         return send_from_directory('static', 'calculator_js_client.html')
 
@@ -70,7 +74,7 @@ def calculator_js_client():
 def calculator_template():
     TEMPLATE = 'calculator_template.html'
     # TEMPLATE = 'calculator_template_base.html'
-    app.logger.info('Request form: %s', request.form)
+    app.logger.debug('Request form: %s', request.form)
     app.logger.info('Request args: %s', request.args)
     result = ''
     if request.method == 'POST':

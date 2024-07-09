@@ -1,4 +1,9 @@
+import os
+import json
+from datetime import date
+from pprint import pprint
 from flask_sqlalchemy import SQLAlchemy
+from settings import BASE_DIR
 
 db = SQLAlchemy()
 
@@ -10,6 +15,7 @@ class User(db.Model):
     telefono = db.Column(db.String(20))
     email = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(30), nullable=False)
+
 
 class Produttore(db.Model):
     __tablename__ = 'produttori'
