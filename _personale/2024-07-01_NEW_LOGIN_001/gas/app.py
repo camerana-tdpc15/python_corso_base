@@ -20,7 +20,10 @@ db.init_app(app)  # Inizializza l'istanza di SQLAlchemy con l'app Flask
 
 @app.route('/')
 def home():
-    return render_template('home.html', )
+    if 'user_id' in session:
+        user = db.session.query(User).get(session['user_id'])
+        return render_template('home.html', utente=user)
+    return render_template('home.html')
 
 
 
