@@ -1,5 +1,5 @@
 import locale
-from flask import Flask, render_template, jsonify,request, session, redirect, url_for
+from flask import Flask,flash,  render_template, jsonify,request, session, redirect, url_for
 from models import db, init_db,Lotto, Prodotto, Produttore, User, Prenotazione
 from settings import DATABASE_PATH
 
@@ -17,12 +17,15 @@ def home():
 
 
 # @TODO: Qua ci vanno le routes
-# ...
+@app.route('/prenotazioni')
+def mostra_prenotazioni():
+    return render_template('prenotazioni.html')
+
 
 @app.route('/api/lotti',methods =['GET'])
 def get_lotti():
     
-    order =request.args.get('order', 'asc')
+    order =request.args.get('order', 'asc')    
     if order =='asc':
         lotti =Lotto.query.order_by(Lotto.data_consegna).all()
     elif  order == 'desc':
@@ -37,7 +40,7 @@ def get_lotti():
 
     return jsonify(lotti_data)
 
-@app.route('/lotto/<int:id_lotto>')
+@app.route('/lotto/<int:id_lotto>',methods=['GET'])
 def mostra_lotto(id_lotto):
     if 'user_id' not in session:
         return redirect(url_for('login'))
@@ -51,12 +54,29 @@ def mostra_lotto(id_lotto):
 
     prenot_utente = Prenotazione.query.filter_by(
         user_id = session['user_id'],
-        lotto_id = id_lotto)
+        lotto_id = id_lotto).fiRST()
     
     if prenot_utente: 
-        return redirect('modifica_prenotazione.html')
+        return redirect(url_for('aggiorna_prenotazione',id_prenotazione=prenot_utente.id))
     else:
-        return render_template('nuova_prnotazione.html')
+        return render_template('lotto.html', lotto=lotto)
+    
+@app.route('/lotto/<int:id_lotto>',method=['POST'])
+def nuova_prenotazione(id_lotto):
+    if 'user_id' not in session:
+        return'Non sei autorizato', 401
+    quantita = int(request.form.get('quantita'))
+
+    if quantita < 1:
+
+        flash('La quantita deve essere maggiore di zero!', 'warning')
+        return redirect(url_for('mostra_lotto', id_lotto=id_lotto))
+    
+    if...:
+        ...
+
+    
+    
     
 @app.route('/api/prenotazioni', methods =['GET'])
 def get_prenotazioni():    

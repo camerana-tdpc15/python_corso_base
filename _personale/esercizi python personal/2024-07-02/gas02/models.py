@@ -3,12 +3,12 @@ import json
 from datetime import date
 from pprint import pprint
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy_serializer import SerializerMixim
+from sqlalchemy_serializer import SerializerMixin
 from settings import BASE_DIR
 
 db = SQLAlchemy()
 
-class User(db.Model, SerializerMixim):
+class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nome = db.Column(db.String(50), nullable=False)
@@ -19,7 +19,7 @@ class User(db.Model, SerializerMixim):
 
     serializer_rules = ('-password',)
 
-class Produttore(db.Model, SerializerMixim):
+class Produttore(db.Model, SerializerMixin):
     __tablename__ = 'produttori'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nome_produttore = db.Column(db.String(), unique=True, nullable=False)
@@ -33,7 +33,7 @@ class Produttore(db.Model, SerializerMixim):
     les = ('-rel_prodotti.rel_produttore',)
 
 
-class Prodotto(db.Model, SerializerMixim):
+class Prodotto(db.Model, SerializerMixin):
     __tablename__ = 'prodotti'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     produttore_id = db.Column(db.Integer, db.ForeignKey('produttori.id'), nullable=False)
@@ -45,7 +45,7 @@ class Prodotto(db.Model, SerializerMixim):
 
     serialize_rules = ('-rel_lotti.rel_prodotto', '-rel_produttore.rel_prodotti')
 
-class Lotto(db.Model, SerializerMixim):
+class Lotto(db.Model, SerializerMixin):
     __tablename__ = 'lotti'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     prodotto_id = db.Column(db.Integer, db.ForeignKey('prodotti.id'), nullable=False)
@@ -57,7 +57,7 @@ class Lotto(db.Model, SerializerMixim):
 
 #RELATIONSHIPS
     rel_prodotto = db.relationship('Prodotto', back_populates = 'rel_lotti')
-    rel_prenotazioniì= db.relationship('Prenotazione', back_papulates = 'rel_lotto')
+    rel_prenotazioniì= db.relationship('Prenotazione', back_populates = 'rel_lotto')
 
     serialize_rules = ('-rel_prodotto.rel_lotti', 'get_date', 'get_prezzo_str', 'get_qta_disponibile')
 
@@ -77,7 +77,7 @@ class Lotto(db.Model, SerializerMixim):
         return self.qta_lotto - qta_prenotate
 
 
-class Prenotazione(db.Model, SerializerMixim):
+class Prenotazione(db.Model, SerializerMixin):
     __tablename__ = 'prenotazioni'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     lotto_id = db.Column(db.Integer, db.ForeignKey('lotti.id'), nullable=False)
