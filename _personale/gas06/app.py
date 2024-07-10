@@ -14,11 +14,10 @@ db.init_app(app)  # Inizializza l'istanza di SQLAlchemy con l'app Flask
 # Mostra l'elenco dei lotti disponibili
 @app.route('/')
 def home():
-    return render_template('home.html')
-
-@app.route('/prenotazioni')
-def mostra_prenotazioni():
-    return render_template('prenotazioni.html')
+    user = None
+    if 'user_id' in session:
+        user = db.session.get(User, session['user_id'])
+    return render_template('home.html', user=user)
 
 # Restituisce i dati dei lotti disponibili in formato JSON
 @app.route('/api/lotti', methods=['GET'])
@@ -65,7 +64,7 @@ def mostra_lotto(id_lotto): #endpoint
     # Se l'utente ha delle prenotazioni su qusto specifico lotto
     if prenot_utente:
         return redirect(url_for('aggiorna_prenotazione', id_prenotazione=prenot_utente.id))
-    # Se l'utente non ha delle prenotazioni su qusto specifico lotto
+    # Se l'utente non ha delle prenotazioni su questo specifico lotto
     else:
         return render_template('lotto.html', lotto=lotto)
     
@@ -77,6 +76,16 @@ def nuova_prenotazione(id_lotto):
         pass
     
     quantita = int(request.form.get('quantita'))
+     # Ottieni l'oggetto Lotto dal database
+     
+    lotto = db.session.get(Lotto, id_lotto)
+    if not lotto:
+        flash('Lotto non trovato!', 'danger')
+        return redirect(url_for('home'))
+
+    # Ottieni la quantità disponibile dal metodo dell'oggetto Lotto
+    quantita_disp = lotto.get_qta_disponibile()
+
     # verifica che la quantità sia 
     #   - minore o uguale alla quantità disponibile
     #   - che sia un valore > o = a 1
@@ -85,8 +94,9 @@ def nuova_prenotazione(id_lotto):
         flash('La quantità deve essere maggiore di 0', 'warning')
         return redirect(url_for('mostra_lotto', id_lotto=id_lotto))
     
-    if ...:
-        ...
+    if quantita > quantita_disp:
+        flash('La quantità deve essere minore o uguale a quella disponibile', 'warning')
+        return redirect(url_for('mostra_lotto', id_lotto=id_lotto))
 
     new_prenotazione = Prenotazione(qta=quantita, lotto_id=id_lotto, user_id=session['user_id'])
     db.session.add(new_prenotazione)
@@ -102,17 +112,76 @@ def aggiorna_prenotazione(id_prenotazione):
 
     return render_template('prenotazione.html')
     
-
+@app.route('/prenotazioni')
+def mostra_prenotazioni():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    return render_template('prenotazioni.html')
 
 @app.route('/api/prenotazioni', methods=['GET'])
 def get_prenotazioni():
-    ...
+    if 'user_id' not in session:
+        return jsonify({"error": "Non sei autorizzato"}), 401
+    
+    # fetch alle prenotazioni dell'utente
+    user_id = session['user_id']
+    prenotazioni = Prenotazione.query.filter_by(user_id=user_id).all()
 
+    # Check if there are any reservations
+    if not prenotazioni:
+        return jsonify([]), 200
+    
+    # Serialize the reservations using SerializerMixin
+    prenotazioni_list = [prenotazione.to_dict() for prenotazione in prenotazioni]
+    
+    return jsonify(prenotazioni_list), 200
 
-# @TODO: Implementare il login / logout
-...
+@app.route('/api/prenotazione/modifica', methods=['POST'])
+def modifica_prenotazione():
+    if 'user_id' not in session:
+        return jsonify({"error": "Non sei autorizzato"}), 401
+    
+    data = request.json
+    prenotazione_id = data.get('id')
+    try:
+        nuova_quantita = int(data.get('quantita'))
+    except ValueError:
+        return jsonify({"error": "La quantità deve essere un numero intero"}), 400
+    
+    prenotazione = Prenotazione.query.get(prenotazione_id)
+    if not prenotazione or prenotazione.user_id != session['user_id']:
+        return jsonify({"error": "Prenotazione non trovata"}), 404
+    
+    lotto = prenotazione.rel_lotto
+    quantita_disponibile = lotto.get_qta_disponibile() + prenotazione.qta
+    
+    if nuova_quantita > quantita_disponibile:
+        return jsonify({"error": f"Quantità non disponibile. Massimo disponibile: {quantita_disponibile}"}), 400
+    
+    if nuova_quantita <= 0:
+        return jsonify({"error": "La quantità deve essere maggiore di zero"}), 400
+    
+    prenotazione.qta = nuova_quantita
+    db.session.commit()
+    
+    return jsonify({"success": True, "message": "Quantità aggiornata con successo"})
 
-
+@app.route('/api/prenotazione/elimina', methods=['POST'])
+def elimina_prenotazione():
+    if 'user_id' not in session:
+        return jsonify({"error": "Non sei autorizzato"}), 401
+    
+    data = request.json
+    prenotazione_id = data.get('id')
+    
+    prenotazione = Prenotazione.query.get(prenotazione_id)
+    if not prenotazione or prenotazione.user_id != session['user_id']:
+        return jsonify({"error": "Prenotazione non trovata"}), 404
+    
+    db.session.delete(prenotazione)
+    db.session.commit()
+    
+    return jsonify({"success": True, "message": "Prenotazione eliminata con successo"})
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -132,6 +201,28 @@ def login():
     
     elif request.method == 'GET':
         return render_template('login.html')
+    
+@app.route('/registrazione', methods=['GET', 'POST'])
+def registrazione():
+    if request.method == 'POST':
+        nome = request.form['nome']
+        cognome = request.form['cognome']
+        telefono = request.form['telefono']
+        email = request.form['email']
+        password = request.form['password']
+        
+        # Verifica se l'email esiste già
+        user_exists = User.query.filter_by(email=email).first()
+        if user_exists:
+            flash('Email già registrata. Utilizza un\'altra email.', 'danger')
+            return render_template('registrazione.html')
+        
+        new_user = User(nome=nome, cognome=cognome, telefono=telefono, email=email, password=password)
+        db.session.add(new_user)
+        db.session.commit()
+        flash('Registrazione effettuata con successo. Puoi effettuare il login.', 'success')
+        return redirect(url_for('login'))
+    return render_template('registrazione.html')
 
 @app.route('/logout')
 def logout():

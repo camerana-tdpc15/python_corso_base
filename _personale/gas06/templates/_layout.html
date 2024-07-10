@@ -26,5 +26,16 @@
 
     {% include 'includes/footer.html' %}
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+        var toastList = toastElList.map(function (toastEl) {
+            return new bootstrap.Toast(toastEl, { delay: 5000 });
+        });
+        toastList.forEach(toast => toast.show());
+    });
+</script>
 </body>
+
+
 </html>

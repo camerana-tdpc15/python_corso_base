@@ -20,7 +20,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('home') }}">Home</a>
                 </li>
-                {% if 'username' in session %}
+                {% if 'user_id' in session %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('mostra_prenotazioni') }}">Le mie prenotazioni</a>
                 </li>
@@ -30,6 +30,9 @@
                 {% else %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('registrazione') }}">Registrazione</a>
                 </li>
                 {% endif %}
             </ul>

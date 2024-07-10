@@ -19,7 +19,8 @@
                     <p>Q.tà Disp: <b>{{ lotto.get_qta_disponibile() }} {{ lotto.qta_unita_misura }}</b></p>
                     <p>Prezzo: <b>{{ lotto.get_prezzo_str() }}</b></p>
 
-                    <form method="POST">
+                    <form method="POST"  action="{{ url_for('nuova_prenotazione') }}">
+                        <input type="hidden" name="id_lotto" value="{{ lotto.id }}">
                         <label for="quantita">Quantità:</label>
                         <input type="number" name="quantita" id="'quantita" value="1"/>
                         <button type="submit" class='btn-primary'>Prenota</button>

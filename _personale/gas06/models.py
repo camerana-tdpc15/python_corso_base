@@ -17,7 +17,9 @@ class User(db.Model, SerializerMixin):
     email = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(30), nullable=False)
 
-    serialize_rules = ('-password',)
+    rel_prenotazioni = db.relationship('Prenotazione', back_populates='rel_user')
+
+    serialize_rules = ('-password', '-rel_prenotazioni.rel_user')
 
 class Produttore(db.Model, SerializerMixin):
     __tablename__ = 'produttori'
@@ -100,8 +102,9 @@ class Prenotazione(db.Model, SerializerMixin):
     qta = db.Column(db.Integer, nullable=False)
     # RELATIONSHIPS
     rel_lotto = db.relationship('Lotto', back_populates='rel_prenotazioni')
+    rel_user = db.relationship('User', back_populates='rel_prenotazioni')
 
-    serialize_rules = ('-rel_lotto.rel_prenotazioni',)
+    serialize_rules = ('-rel_lotto.rel_prenotazioni', '-rel_user.rel_prenotazioni')
 
     # Definisco un unique constraint per la coppia lotto_id e user_id
     # in modo che non sia possibile creare una prenotazione con i medesimi
