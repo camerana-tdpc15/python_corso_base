@@ -1,0 +1,32 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+
+    <!-- includo la head -->
+    {% include 'includes/head.html' %}
+</head>
+
+<body>
+
+    <div class="container">
+        <h1 class="text-center my-4">Lotti disponibili</h1>
+        
+        <div class="row " id="row-lotti">
+            <!-- qui è popolato dinamicamente da js -->
+        </div>
+    </div>
+
+    
+    
+    
+    
+    <script src="{{ url_for('static', filename='scripts/lotti.js') }}"></script>
+    
+    
+
+</body>
+
+</html>
+
