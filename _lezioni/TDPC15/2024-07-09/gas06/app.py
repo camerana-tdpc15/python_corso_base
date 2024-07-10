@@ -1,5 +1,5 @@
 import locale
-from flask import Flask, render_template, jsonify, request, session, redirect, url_for
+from flask import Flask, flash, render_template, jsonify, request, session, redirect, url_for
 from models import db, init_db, Lotto, Prodotto, Produttore, User, Prenotazione
 from settings import DATABASE_PATH
 
@@ -15,6 +15,11 @@ db.init_app(app)  # Inizializza l'istanza di SQLAlchemy con l'app Flask
 @app.route('/')
 def home():
     return render_template('home.html')
+
+
+@app.route('/prenotazioni')
+def mostra_prenotazioni():
+    return render_template('prenotazioni.html')
 
 
 # Restituisce i dati dei lotti disponibili in formato JSON
@@ -39,7 +44,7 @@ def get_lotti():
     return jsonify(lotti_data)
 
 
-@app.route('/lotto/<int:id_lotto>')
+@app.route('/lotto/<int:id_lotto>', methods=['GET'])
 def mostra_lotto(id_lotto):
     # Controllare che l'utente sia loggato
     if 'user_id' not in session:
@@ -57,15 +62,49 @@ def mostra_lotto(id_lotto):
     prenot_utente = Prenotazione.query.filter_by(
         user_id=session['user_id'],
         lotto_id=id_lotto
-    )
+    ).first()
 
     # Se l'utente ha delle prenotazioni su qusto specifico lotto
     if prenot_utente:
-        return render_template('modifica_prenotazione.html')
+        return redirect(url_for('aggiorna_prenotazione', id_prenotazione=prenot_utente.id))
     # Se l'utente non ha delle prenotazioni su qusto specifico lotto
     else:
-        return render_template('nuova_prenotazione.html')
+        return render_template('lotto.html', lotto=lotto)
 
+
+@app.route('/lotto/<int:id_lotto>', methods=['POST'])
+def nuova_prenotazione(id_lotto):
+    # Controllare che l'utente sia loggato
+    if 'user_id' not in session:
+        return 'Non sei autorizzato', 401
+
+    quantita = int(request.form.get('quantita'))
+
+    # Controllo che sia una quantità >= 1
+    if quantita < 1:
+        # @TODO: fix flask messages
+        flash('La quantità deve essere mggiore di zero!', 'warning')
+        return redirect(url_for('mostra_lotto', id_lotto=id_lotto))
+    
+    # Controllo che la quantità sia minore o uguale alla qta disponibile
+    if ...:
+        ...
+
+    new_prenotazione = Prenotazione(qta=quantita, lotto_id=id_lotto, user_id=session['user_id'])
+    db.session.add(new_prenotazione)
+    db.session.commit()
+    flash('Prenotazione effettuata con successo!', 'success')
+
+    return redirect(url_for('mostra_prenotazioni'))
+
+
+@app.route('/prenotazione/<int:id_prenotazione>', methods=['GET'])
+def aggiorna_prenotazione(id_prenotazione):
+    
+    ...
+
+    return render_template('prenotazione.html')
+    
 
 @app.route('/api/prenotazioni', methods=['GET'])
 def get_prenotazioni():

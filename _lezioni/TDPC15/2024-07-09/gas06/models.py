@@ -64,7 +64,11 @@ class Lotto(db.Model, SerializerMixin):
     rel_prodotto = db.relationship('Prodotto', back_populates='rel_lotti')
     rel_prenotazioni = db.relationship('Prenotazione', back_populates='rel_lotto')
 
-    serialize_rules = ('-rel_prodotto.rel_lotti', '-rel_prenotazioni.rel_lotto', 'get_date', 'get_prezzo_str', 'get_qta_disponibile')
+    serialize_rules = ('-rel_prodotto.rel_lotti',
+                       '-rel_prenotazioni.rel_lotto',
+                       'get_date',
+                       'get_prezzo_str',
+                       'get_qta_disponibile')
 
     # serialize_only = (
     #     'data_consegna',
