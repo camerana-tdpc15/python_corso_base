@@ -3,7 +3,7 @@ const rowLotti = document.querySelector('#row-lotti');
 
 
 // Fa fetch di un file JSON e lo stampa in console
-fetch("/api/lotti?order=desc")
+fetch("/api/lotti?order=asc")
     // ......... QUI FLASK STA LAVORANDO PER PREPARARCI LA RISPOSTA
     // ......... E ALLA FINE CE LA INVIA
     .then(response => response.json())
