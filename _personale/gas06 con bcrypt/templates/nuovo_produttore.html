@@ -1,0 +1,34 @@
+{% extends "_layout.html" %}
+
+{% block title %}Nuovo Produttore{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h2>Nuovo Produttore</h2>
+        <form method="POST">
+            <div class="mb-2">
+                <label for="nome_produttore" class="form-label">Nome Produttore</label>
+                <input type="text" class="form-control" id="nome_produttore" name="nome_produttore" required>
+            </div>
+            <div class="mb-2">
+                <label for="descrizione" class="form-label">Descrizione</label>
+                <input type="text" class="form-control" id="descrizione" name="descrizione">
+            </div>
+            <div class="mb-2">
+                <label for="indirizzo" class="form-label">Indirizzo</label>
+                <input type="text" class="form-control" id="indirizzo" name="indirizzo">
+            </div>
+            <div class="mb-2">
+                <label for="telefono" class="form-label">Telefono</label>
+                <input type="text" class="form-control" id="telefono" name="telefono">
+            </div>
+            <div class="mb-2">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email">
+            </div>
+            <button type="submit" class="btn btn-primary">Aggiungi Produttore</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

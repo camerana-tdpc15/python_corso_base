@@ -20,13 +20,14 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('home') }}">Home</a>
                 </li>
-                {% if 'user_id' in session %}
+                {% if g.user %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('mostra_prenotazioni') }}">Le mie prenotazioni</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
                 </li>
+
                 {% else %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('login') }}">Login</a>
@@ -35,6 +36,21 @@
                     <a class="nav-link" href="{{ url_for('registrazione') }}">Registrazione</a>
                 </li>
                 {% endif %}
+                {% if g.user and g.user.ruolo == 'admin' %}
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('nuovo_produttore') }}">Nuovo produttore</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('nuovo_prodotto') }}">Nuovo prodotto</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('nuovo_lotto') }}">Nuovo lotto</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('gestisci_utenti') }}">Gestisci Utenti</a>
+            </li>
+            {% endif %}
             </ul>
         </div>
 

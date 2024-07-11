@@ -15,7 +15,8 @@ class User(db.Model, SerializerMixin):
     cognome = db.Column(db.String(50), nullable=False)
     telefono = db.Column(db.String(20))
     email = db.Column(db.String(50), unique=True, nullable=False)
-    password = db.Column(db.String(30), nullable=False)
+    password = db.Column(db.String(150), nullable=False)
+    ruolo = db.Column(db.String(10), default='utente')  # Nuovo campo per il ruolo dell'utente (admin o utente)
 
     rel_prenotazioni = db.relationship('Prenotazione', back_populates='rel_user')
 
