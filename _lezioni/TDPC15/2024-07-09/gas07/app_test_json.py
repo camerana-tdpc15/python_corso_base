@@ -17,15 +17,27 @@ def home():
 
 @app.route('/api/lotti', methods=['GET'])
 def get_lotti():
-    lotti = Lotto.query.all()
+
+    lotti = db.session.query(Lotto, Prodotto, Produttore) \
+        .join(Prodotto, Lotto.prodotto_id == Prodotto.id) \
+        .join(Produttore, Prodotto.produttore_id == Produttore.id) \
+        .order_by(Lotto.data_consegna) \
+        .all()
+    
+    print(lotti)  # [(<Lotto 1>, <Prodotto 1>, <Produttore 1>), 
+                  #  (<Lotto 2>, <Prodotto 4>, <Produttore 7>), ... ]
 
     lotti_data = []
 
-    for lotto in lotti:
+    for tupla_risp in lotti:
         # Se vogliamo sfruttare le relationship che abbiamo creato
         # possiamo sfruttare la notazione a punti!
         prodotto = lotto.rel_prodotto
         produttore = prodotto.rel_produttore
+
+        lotto = tupla_risp[0]
+        prodotto = tupla_risp[1]
+        produttore = tupla_risp[2]
 
         # Se non abbiamo le relazioni oppure vogliamo usare eplicitamente
         # il .get() per ottenere il record:
