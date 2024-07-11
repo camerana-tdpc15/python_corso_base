@@ -30,7 +30,7 @@ def get_lotti():
     order = request.args.get('order', 'asc')
 
     if order == 'asc':
-        lotti = Lotto.query.order_by(Lotto.data_consegna).all()
+        lotti = Lotto.query.order_by(Lotto.data_consegna).all()  # -> list es. [<Lotto 1>, <Lotto 2>, ...]
     elif order == 'desc':
         lotti = Lotto.query.order_by(Lotto.data_consegna.desc()).all()
     else:
