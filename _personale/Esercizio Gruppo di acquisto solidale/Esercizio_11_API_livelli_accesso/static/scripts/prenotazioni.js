@@ -8,7 +8,7 @@ function fetchPrenotazioni() {
         .then(data => {
             console.log('Fetched data:', data);
             const container = document.getElementById('prenotazioni-container');
-            container.innerHTML = ''; // Clear existing content
+            container.innerHTML = ''; // Cancella il contenuto esistente
             let totalPrice = 0;
 
             if (data.error) {
@@ -89,11 +89,11 @@ function showEditForm(id, currentQuantity) {
     const quantitySpan = card.querySelector(`#quantity-${id}`);
     const buttonGroup = card.querySelector('.btn-group');
 
-    // Hide the current quantity and buttons
+    // Nascondi la corrente quantità e pulsanti
     quantitySpan.style.display = 'none';
     buttonGroup.style.display = 'none';
 
-    // Create and show the edit form
+    // Creare il form
     const editForm = document.createElement('div');
     editForm.innerHTML = `
         <input type="number" id="edit-quantity-${id}" value="${currentQuantity}" min="1" class="form-control mb-2">
@@ -110,11 +110,11 @@ function cancelEdit(id) {
     const buttonGroup = card.querySelector('.btn-group');
     const editForm = card.querySelector('div:last-child');
 
-    // Show the current quantity and buttons
+    // Mostra la quantità corrente e i pulsanti
     quantitySpan.style.display = 'inline';
     buttonGroup.style.display = 'block';
 
-    // Remove the edit form
+    // Rimuovi il form per l'edit
     editForm.remove();
 }
 
@@ -137,7 +137,7 @@ function updateQuantity(id) {
             alert(data.error);
         } else {
             alert(data.message);
-            fetchPrenotazioni(); // Refresh the list
+            fetchPrenotazioni(); // Aggiorna la lista
         }
     })
     .catch(error => {
@@ -160,7 +160,7 @@ function deletePrenotazione(id) {
                 alert(data.error);
             } else {
                 alert(data.message);
-                fetchPrenotazioni(); // Refresh the list
+                fetchPrenotazioni(); // Aggiorna la lista
             }
         })
         .catch(error => {
