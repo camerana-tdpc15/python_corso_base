@@ -62,7 +62,7 @@ def mostra_lotto(id_lotto):
         return render_template('nuova_prenotazione.html')
     
     @app.route('/prenotazione/<int:id_prenorazione>', methods=['GET'])
-    DEF aggiorna_prenotazioni(id_prenotazione);
+    DEF aggiorna_prenotazioni(id_prenotazione),
 
 @app.route('/api/prenotazioni', methods=['GET'])
 def get_prenotazioni():
