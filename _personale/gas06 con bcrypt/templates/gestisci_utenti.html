@@ -1,0 +1,46 @@
+{% extends "_layout.html" %}
+
+{% block title %}Gestisci Utenti{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Gestisci Utenti</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Cognome</th>
+                    <th>Email</th>
+                    <th>Ruolo</th>
+                    <th>Azione</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for utente in utenti %}
+                <tr>
+                    <td>{{ utente.id }}</td>
+                    <td>{{ utente.nome }}</td>
+                    <td>{{ utente.cognome }}</td>
+                    <td>{{ utente.email }}</td>
+                    <td>{{ utente.ruolo }}</td>
+                    <td>
+                        <form method="POST" action="{{ url_for('gestisci_utenti') }}">
+                            <input type="hidden" name="user_id" value="{{ utente.id }}">
+                            <select name="ruolo" class="form-select">
+                                <option value="user" {% if utente.ruolo == 'user' %}selected{% endif %}>User</option>
+                                <option value="admin" {% if utente.ruolo == 'admin' %}selected{% endif %}>Admin</option>
+                            </select>
+                            <button type="submit" name="action" value="update" class="btn btn-primary mt-2">Aggiorna</button>
+                            <button type="submit" name="action" value="delete" class="btn btn-danger mt-2">Elimina</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
