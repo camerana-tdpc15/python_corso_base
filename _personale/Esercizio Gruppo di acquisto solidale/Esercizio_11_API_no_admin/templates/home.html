@@ -1,0 +1,19 @@
+{% extends "_layout.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        {% if user %}
+        <h2 class="mb-3"><b>Ciao {{ user.nome }}, ecco i prodotti disponibili:</b></h2>
+        {% else %}
+        <h2 class="mb-3"><b>Benvenuti, ecco i prodotti disponibili</b></h2>
+        {% endif %}
+        <div class="row" id="row-lotti">
+            <!-- popolato dinamicamente da js -->
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='scripts/lotti.js') }}"></script>
+    {% endblock %}

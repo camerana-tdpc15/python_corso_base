@@ -1,0 +1,41 @@
+<!doctype html>
+<html class="h-100">
+<head>
+    <!-- BLOCCO DEL TITOLO -->
+    <title>{% block title %}- Sito GAS{% endblock %}</title>
+
+    {% include 'includes/head.html' %}
+
+</head>
+<body class="d-flex flex-column h-100 bg-gas-sfondo">
+
+    <header>
+        {% include 'includes/navbar.html' %}
+    </header>
+    
+    <main class="flex-shrink-0">
+        <div class="container mt-4">
+    
+        {% include 'includes/flash.html' %}
+
+        <!-- BLOCCO DEL CONTENUTO -->
+        {% block content %}{% endblock %}
+    
+        </div>
+    </main>
+
+    {% include 'includes/footer.html' %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+        var toastList = toastElList.map(function (toastEl) {
+            return new bootstrap.Toast(toastEl, { delay: 5000 });
+        });
+        toastList.forEach(toast => toast.show());
+    });
+</script>
+</body>
+
+
+</html>
