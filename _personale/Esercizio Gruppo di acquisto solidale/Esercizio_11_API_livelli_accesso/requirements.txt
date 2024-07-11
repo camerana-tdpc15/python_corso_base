@@ -5,3 +5,7 @@ flask-bcrypt
 flask-limiter
 
 # admin admin@admin.com Ciotola_1
+
+# se si cancella e ricrea il db, dopo che app ha creato nuovamente il db occorre 
+# avviare rehash_passwords.py, per hashare le password, in caso contrario
+# non si riesce ad effettuare il login
