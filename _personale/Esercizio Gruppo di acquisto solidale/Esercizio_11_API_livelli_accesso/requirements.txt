@@ -4,5 +4,4 @@ sqlalchemy-serializer
 flask-bcrypt
 flask-limiter
 
-utente io@io.io pwd Ciotola_1
-utente chiara@io.io Ciotola<1
+# admin admin@admin.com Ciotola_1
