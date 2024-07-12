@@ -1,0 +1,21 @@
+h1,h2 { text-align: center;
+    color: rgb(61, 61, 146);
+    
+  }
+  body {background-color: rgb(240, 229, 128);}
+
+  form button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    }
+
+
+  #msg-form{
+      background-color: yellow;
+      text-align: center;
+    }
