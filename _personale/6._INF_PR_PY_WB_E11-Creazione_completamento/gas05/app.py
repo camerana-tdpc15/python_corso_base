@@ -97,11 +97,16 @@ def nuova_prenotazione(id_lotto):
     # maggiore o uguale a 1
     if quantita < 1 :
         flash("La quantità dev'essere maggiore di 0", "warning")
-
         return redirect(url_for('mostra_lotto', id_lotto=id_lotto))
+    
     # minore o uguale alla qta_disponibile
-    if ...:
-        ...
+    lotto=db.session.get(Lotto,id_lotto)
+
+    if quantita > lotto.get_qta_disponibile():        
+        flash("Hai prenotato di più della quantità disponibile", "warning")
+        return redirect(url_for('mostra_lotto', id_lotto=id_lotto))
+
+      
 
     new_prenotazione = Prenotazione(qta=quantita, lotto_id=id_lotto, user_id=session['user_id'])
 
@@ -121,7 +126,19 @@ def aggiorna_prenotazione(id_prenotazione):
 
 @app.route('/api/prenotazioni', methods=['GET'])
 def get_prenotazioni():
-    ...
+    prenotazioni = Prenotazione.query \
+        .filter_by(user_id=session['user_id']) \
+        .order_by(Prenotazione.data_consegna) \
+            .all()
+    
+    # converto in dizionario 
+    prenot_data = []
+    for prenot in prenotazioni:
+        dict_prenot = prenot.to_dict()
+        prenot_data.append(dict_prenot)
+
+    return jsonify(prenot_data)
+   
 
 
 @app.route('/login', methods=['GET', 'POST'])
