@@ -1,0 +1,15 @@
+{% extends "_layout.html" %}
+
+{% block title %}Le mie prenotazioni - GAS{% endblock %}
+
+{% block content %}
+
+    <h1 class="text-center my-4">Prenotazioni effettuate</h1>
+
+    <div class="row" id="row-prenotazioni">
+        <!-- popolato dinamicamente da js -->
+    </div>
+
+    <script src="{{ url_for('static', filename='scripts/prenotazioni.js') }}"></script>
+
+{% endblock %}
