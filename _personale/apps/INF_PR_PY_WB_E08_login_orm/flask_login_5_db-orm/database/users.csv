@@ -1,0 +1,6 @@
+ID,LOGIN,PASSWORD,NOME,COGNOME,INDIRIZZO,CITTA,TEL1,TEL2,EMAIL,DATANASCITA,DATAREG
+1,user1,password1,Nome1,Cognome1,Indirizzo1,Città1,1234567890,0987654321,email1@example.com,1990-01-01,2023-01-01
+2,user2,password2,Nome2,Cognome2,Indirizzo2,Città2,1234567891,0987654322,email2@example.com,1991-02-02,2023-01-02
+3,user3,password3,Nome3,Cognome3,Indirizzo3,Città3,1234567892,0987654323,email3@example.com,1992-03-03,2023-01-03
+4,user4,password4,Nome4,Cognome4,Indirizzo4,Città4,1234567893,0987654324,email4@example.com,1993-04-04,2023-01-04
+5,user5,password5,Nome5,Cognome5,Indirizzo5,Città5,1234567894,0987654325,email5@example.com,1994-05-05,2023-01-05

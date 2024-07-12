@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calcolatrice</title>
+    <meta charset="UTF-8">
+    <style>
+        .calculator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .calc-section {
+            margin: 5px;
+        }
+        .calc-operation {
+            display: flex;
+            flex-direction: column;
+        }
+        button {
+            margin: 2px;
+            width: 30px;
+            height: 30px;
+        }
+        input, .result {
+            width: 100px;
+            text-align: center;
+        }
+        input, button, .calc-section {
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+        }
+        .result {
+            border: 1px solid #000;
+            border-radius: 3px;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Calcolatrice Flask - Template</h1>
+    <form action="/calculator_template" method="post" class="calculator" accept-charset="UTF-8">
+        <div class="calc-section">
+            <input type="text" name="number1" onclick="this.select()" required
+                   value="{{ request.form.number1 if request.form.number1 else 0 }}">
+        </div>
+        <div class="calc-section calc-operation">
+            <button type="submit" name="operation" value="add">+</button>
+            <button type="submit" name="operation" value="subtract">–</button>
+            <button type="submit" name="operation" value="multiply">*</button>
+            <button type="submit" name="operation" value="divide">/</button>
+        </div>
+        <div class="calc-section">
+            <input type="text" name="number2" onclick="this.select()" required
+                   value="{{ request.form.number2 if request.form.number2 else 0 }}">
+        </div>
+        <div class="calc-section">
+            =
+        </div>
+        <div class="calc-section">
+            {% if result or result == 0 %}
+            <div class="result">{{ result }}</div>
+            {% else %}
+            <div class="result"></div>
+            {% endif %}
+        </div>
+    </form>
+    
+</body>
+</html>

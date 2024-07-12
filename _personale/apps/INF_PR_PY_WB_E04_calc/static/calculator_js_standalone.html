@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calcolatrice</title>
+    <meta charset="UTF-8">
+    <style>
+        .calculator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .calc-section {
+            margin: 5px;
+        }
+        .calc-operation {
+            display: flex;
+            flex-direction: column;
+        }
+        button {
+            margin: 2px;
+            width: 30px;
+            height: 30px;
+        }
+        input, .result {
+            width: 100px;
+            text-align: center;
+        }
+        input, button, .calc-section {
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+        }
+        .result {
+            border: 1px solid #000;
+            border-radius: 3px;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Calcolatrice Flask - Stand-alone JavaScript Web-App</h1>
+    <div class="calculator">
+        <div class="calc-section">
+            <input type="text" id="number1" value="0" onclick="this.select()">
+        </div>
+        <div class="calc-section calc-operation">
+            <button onclick="calculate('add')">+</button>
+            <button onclick="calculate('subtract')">–</button>
+            <button onclick="calculate('multiply')">*</button>
+            <button onclick="calculate('divide')">/</button>
+        </div>
+        <div class="calc-section">
+            <input type="text" id="number2" value="0" onclick="this.select()">
+        </div>
+        <div class="calc-section">
+            =
+        </div>
+        <div class="calc-section">
+            <div class="result" id="result"></div>
+        </div>
+    </div>
+    <script>
+        function calculate(operation) {
+            var num1 = parseFloat(document.getElementById('number1').value);
+            var num2 = parseFloat(document.getElementById('number2').value);
+            var result;
+            switch (operation) {
+                case 'add':
+                    result = num1 + num2;
+                    break;
+                case 'subtract':
+                    result = num1 - num2;
+                    break;
+                case 'multiply':
+                    result = num1 * num2;
+                    break;
+                case 'divide':
+                    if (num2 != 0) {
+                        result = num1 / num2;
+                    } else {
+                        result = 'Errore: Divisione per zero';
+                    }
+                    break;
+                default:
+                    result = 'Errore: Operazione non riconosciuta: ' + operation;
+            }
+            document.getElementById('result').innerText = result;
+        }
+    </script>
+</body>
+</html>

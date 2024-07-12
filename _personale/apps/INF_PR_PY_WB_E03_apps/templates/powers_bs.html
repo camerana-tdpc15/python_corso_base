@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista potenze</title>
+    {% include 'template_head.html' %}
+</head>
+<body>
+    <div class="container mt-3">
+        <h1>Lista potenze</h1>
+        <form method="post">
+            <div class="mb-3">
+                <label for="number" class="form-label">Numero:</label>
+                <input type="number" class="form-control" id="number" name="number" value="{{ base_number }}">
+            </div>
+            <button type="submit" class="btn btn-primary" name="submit_powers">Genera potenze</button>
+        </form>
+        {% if powers %}
+        <table class="table table-hover mt-3">
+            <thead class="table-light">
+                <tr>
+                    <th>Potenza</th>
+                    <th>Descrizione</th>
+                    <th>Risultato</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for power, result in powers.items() %}
+                <tr>
+                    <td>{{ base_number }}<sup>{{ power }}</sup></td>
+                    <td>{{ base_number }} elevato a {{ power }}</td>
+                    <td>{{ result }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

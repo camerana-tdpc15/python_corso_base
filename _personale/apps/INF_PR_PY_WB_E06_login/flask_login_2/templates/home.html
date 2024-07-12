@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html class="h-100">
+<head>
+    <title>Home - Sito Film</title>
+    {% include 'includes/head.html' %}
+</head>
+<body class="d-flex flex-column h-100">
+
+    <header>
+        {% include 'includes/navbar.html' %}
+    </header>
+    
+    <main class="flex-shrink-0">
+        <div class="container mt-4">
+
+            <h1 class="display-4">Benventuti su Sito Film!</h1>
+            <p class="lead">Questa è la home page del sito.</p>
+            {% if 'username' in session %}
+            <p>Vai alla <a href="{{ url_for('films') }}">pagina dei film</a>;</p>
+            <p>oppure <a href="{{ url_for('logout') }}">fai il logout</a></p>
+            {% else %}
+            <p>Fai il <a href="{{ url_for('login') }}">login</a> per accedere.</p>
+            {% endif %}
+        
+            {% include 'includes/flash.html' %}
+
+        </div>
+    </main>
+
+    {% include 'includes/footer.html' %}
+
+</body>
+</html>
