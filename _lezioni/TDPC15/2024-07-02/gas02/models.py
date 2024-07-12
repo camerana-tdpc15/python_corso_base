@@ -3,7 +3,6 @@ import json
 from datetime import date
 from pprint import pprint
 from flask_sqlalchemy import SQLAlchemy
-from settings import BASE_DIR
 
 db = SQLAlchemy()
 
