@@ -86,9 +86,12 @@ def nuova_prenotazione(id_lotto):
         flash('La quantità deve essere mggiore di zero!', 'warning')
         return redirect(url_for('mostra_lotto', id_lotto=id_lotto))
     
+
     # Controllo che la quantità sia minore o uguale alla qta disponibile
-    if ...:
-        ...
+    lotto = db.session.get(Lotto, id_lotto)
+    if quantita > lotto.get_qta_disponibile():
+        flash('Hai prenotato di più della quantità disponibile.', 'warning')
+        return redirect(url_for('mostra_lotto', id_lotto=id_lotto))
 
     new_prenotazione = Prenotazione(qta=quantita, lotto_id=id_lotto, user_id=session['user_id'])
     db.session.add(new_prenotazione)
@@ -108,8 +111,19 @@ def aggiorna_prenotazione(id_prenotazione):
 
 @app.route('/api/prenotazioni', methods=['GET'])
 def get_prenotazioni():
-    ...
+    
+    prenotazioni = Prenotazione.query \
+        .filter_by(user_id=session['user_id']) \
+        .join(Lotto, Lotto.id == Prenotazione.lotto_id) \
+        .order_by(Lotto.data_consegna) \
+        .all()  # -> list es. [<Prenotazione 1>, <Prenotazione 2>, ...]
 
+    prenot_data = []
+    for prenot in prenotazioni:
+        dict_prenot = prenot.to_dict()
+        prenot_data.append(dict_prenot)
+
+    return jsonify(prenot_data)
 
 # @TODO: Implementare il login / logout
 ...
