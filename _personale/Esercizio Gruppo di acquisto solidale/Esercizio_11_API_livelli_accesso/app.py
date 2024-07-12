@@ -9,22 +9,21 @@ from flask_limiter.util import get_remote_address
 from settings import DATABASE_PATH
 from models import db, init_db, Lotto, Prodotto, Produttore, User, Prenotazione
 
+# Imposta la localizzazione italiana per le date
 locale.setlocale(locale.LC_TIME, 'it_IT')
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 
+# Configurazione dell'URI del database e della chiave segreta per l'app Flask
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+DATABASE_PATH
 app.config['SECRET_KEY'] = 'mysecretkey'
 
-db.init_app(app)  # Inizializza l'istanza di SQLAlchemy con l'app Flask
+# Inizializza l'istanza di SQLAlchemy con l'app Flask
+db.init_app(app)  
 
-# Configurazione di Flask-Limiter
-limiter = Limiter(
-    get_remote_address,
-    app=app,
-    default_limits=["200 per day", "50 per hour"]
-)
+# Configurazione di Flask-Limiter per limitare il numero di richieste
+limiter = Limiter(get_remote_address, app=app, default_limits=["200 per day", "50 per hour"])
 
 # Funzione per convalidare la password
 def is_password_strong(password):
@@ -41,16 +40,19 @@ def is_password_strong(password):
         return False
     return True
 
-# Listener per l'evento first_request per creare l'admin di default
+# Listener per l'evento before_request per caricare l'utente loggato
 @app.before_request
-def before_request():
-    if not hasattr(g, 'initialized'):
+def load_logged_in_user():
+    user_id = session.get('user_id')
+    g.user = User.query.get(user_id) if user_id else None
+    if not getattr(g, 'initialized', False):
         create_default_admin()
         g.initialized = True
 
+# Funzione per creare un admin di default se non esiste
 def create_default_admin():
     if not User.query.filter_by(email='admin@admin.com').first():
-        hashed_password = bcrypt.generate_password_hash('Ciotola_1').decode('utf-8')
+        hashed_password = bcrypt.generate_password_hash('Ciotola<1').decode('utf-8')
         default_admin = User(
             nome='Admin',
             cognome='Default',
@@ -62,8 +64,9 @@ def create_default_admin():
         db.session.add(default_admin)
         db.session.commit()
 
-# Funzioni per il controllo dei ruoli
+# Funzioni per il controllo dell'autenticazione come admin
 def admin_required(f):
+    #  preserviamo le informazioni originali della funzione che viene decorata
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not g.user or g.user.ruolo != 'admin':
@@ -71,7 +74,7 @@ def admin_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-# Decoratore per proteggere le rotte che richiedono autenticazione
+# Funzione per il controllo dell'autenticazione
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -81,15 +84,19 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-@app.before_request
-def load_logged_in_user():
-    user_id = session.get('user_id')
-    if user_id is None:
-        g.user = None
-    else:
-        g.user = User.query.get(user_id)
+# # funzione che deve essere eseguita prima di ogni richiesta
+# @app.before_request
+# def load_logged_in_user():
+#     # recupero l'ID Utente della sessione
+#     user_id = session.get('user_id')
+#     # se l'utente non è autenticato
+#     if user_id is None:
+#         g.user = None
+#     # se l'utente è loggato
+#     else:
+#         g.user = User.query.get(user_id)
 
-# Mostra l'elenco dei lotti disponibili
+# Mostra l'elenco dei lotti disponibili (homepage)
 @app.route('/')
 def home():
     user = None
@@ -234,26 +241,27 @@ def aggiorna_prenotazione(id_prenotazione):
         return redirect(url_for('mostra_prenotazioni'))
 
     return render_template('prenotazione.html', prenotazione=prenotazione, user=g.user)
-
-    
+   
 @app.route('/prenotazioni')
 @login_required
 def mostra_prenotazioni():
     if 'user_id' not in session:
         return redirect(url_for('login'))
-    user = None                                               # ho aggiunto g. vedere se da dei problemi
+    user = None                                               
     if 'user_id' in session:
-        user = db.session.get(User, session['user_id'])       # ho aggiunto g. vedere se da dei problemi
-    return render_template('prenotazioni.html', user=g.user)    # qui g. c'era già
+        user = db.session.get(User, session['user_id'])       
+    return render_template('prenotazioni.html', user=g.user)    
 
+# API per recuperare le prenotazioni
 @app.route('/api/prenotazioni', methods=['GET'])
+@login_required
 def get_prenotazioni():
-    if 'user_id' not in session:
-        return jsonify({"error": "Non sei autorizzato"}), 401
+    # if 'user_id' not in session:
+    #     return jsonify({"error": "Non sei autorizzato"}), 401
     
-    # fetch alle prenotazioni dell'utente
-    user_id = session['user_id']
-    prenotazioni = Prenotazione.query.filter_by(user_id=user_id).all()
+    # # fetch alle prenotazioni dell'utente
+    # user_id = session['user_id']
+    prenotazioni = Prenotazione.query.filter_by(user_id=session['user_id']).all()
 
     # controllo se ci sono altre prenotazioni
     if not prenotazioni:
@@ -264,10 +272,12 @@ def get_prenotazioni():
     
     return jsonify(prenotazioni_list), 200
 
+# API per modificare una prenotazione con controllo della quantità disponibile
 @app.route('/api/prenotazione/modifica', methods=['POST'])
+@login_required
 def modifica_prenotazione():
-    if 'user_id' not in session:
-        return jsonify({"error": "Non sei autorizzato"}), 401
+    # if 'user_id' not in session:
+    #     return jsonify({"error": "Non sei autorizzato"}), 401
     
     data = request.json
     prenotazione_id = data.get('id')
@@ -294,10 +304,12 @@ def modifica_prenotazione():
     
     return jsonify({"success": True, "message": "Quantità aggiornata con successo"})
 
+# API per eliminare una prenotazione
 @app.route('/api/prenotazione/elimina', methods=['POST'])
+@login_required
 def elimina_prenotazione():
-    if 'user_id' not in session:
-        return jsonify({"error": "Non sei autorizzato"}), 401
+    # if 'user_id' not in session:
+    #     return jsonify({"error": "Non sei autorizzato"}), 401
     
     data = request.json
     prenotazione_id = data.get('id')
@@ -311,14 +323,15 @@ def elimina_prenotazione():
     
     return jsonify({"success": True, "message": "Prenotazione eliminata con successo"})
 
+# Route per la pagina di login
 @app.route('/login', methods=['GET', 'POST'])
 @limiter.limit("10 per minute")
 def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-       
         user = User.query.filter_by(email=email).first()
+        # verifico che la password sia hashata
         if user and bcrypt.check_password_hash(user.password, password):
             session['user_id'] = user.id
             flash('Login riuscito!', 'success')
@@ -329,7 +342,8 @@ def login():
     
     elif request.method == 'GET':
         return render_template('login.html')
-    
+
+# Route per la pagina di registrazione    
 @app.route('/registrazione', methods=['GET', 'POST'])
 @limiter.limit("5 per minute")
 def registrazione():
@@ -360,6 +374,7 @@ def registrazione():
         return redirect(url_for('login'))
     return render_template('registrazione.html')
 
+# Route per la pagina di logout
 @app.route('/logout')
 @login_required
 def logout():
@@ -368,6 +383,7 @@ def logout():
     return redirect(url_for('home'))
 
 # funzioni per amministratore
+# route per l'inserimento di un nuovo produttore (admin)
 @app.route('/nuovo_produttore', methods=['GET', 'POST'])
 @admin_required
 def nuovo_produttore():
@@ -389,6 +405,7 @@ def nuovo_produttore():
         return redirect(url_for('home'))
     return render_template('nuovo_produttore.html')
 
+# route per l'inserimento di un nuovo prodotto (admin)
 @app.route('/nuovo_prodotto', methods=['GET', 'POST'])
 @admin_required
 def nuovo_prodotto():
@@ -407,6 +424,7 @@ def nuovo_prodotto():
         return redirect(url_for('home'))
     return render_template('nuovo_prodotto.html', produttori=produttori)
 
+# route per l'inserimento di un nuovo lotto (admin)
 @app.route('/nuovo_lotto', methods=['GET', 'POST'])
 @admin_required
 def nuovo_lotto():
@@ -431,6 +449,7 @@ def nuovo_lotto():
         return redirect(url_for('home'))
     return render_template('nuovo_lotto.html', prodotti=prodotti)
 
+# route per gestire gli utenti (admin)
 @app.route('/gestisci_utenti', methods=['GET', 'POST'])
 @admin_required
 def gestisci_utenti():
