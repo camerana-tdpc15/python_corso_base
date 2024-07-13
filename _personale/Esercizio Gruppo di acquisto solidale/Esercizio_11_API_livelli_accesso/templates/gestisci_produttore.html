@@ -1,0 +1,56 @@
+{% extends "_layout.html" %}
+{% block content %}
+<h2>Gestisci Produttore</h2>
+
+<div class="mb-3">
+    <label for="seleziona_produttore">Seleziona un produttore esistente da modificare:</label>
+    <select id="seleziona_produttore" class="form-control">
+        <option value="">Nuovo produttore</option>
+        {% for p in produttori %}
+        <option value="{{ p.id }}" {% if produttore and produttore.id == p.id %}selected{% endif %}>
+            {{ p.nome_produttore }}
+        </option>
+        {% endfor %}
+    </select>
+</div>
+
+<form method="POST" id="form_produttore">
+    <input type="hidden" id="produttore_id" name="produttore_id" value="{{ produttore.id if produttore else '' }}">
+    <div class="form-group">
+        <label for="nome_produttore">Nome Produttore</label>
+        <input type="text" class="form-control" id="nome_produttore" name="nome_produttore" 
+               value="{{ produttore.nome_produttore if produttore else '' }}" required>
+    </div>
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" id="email" name="email" 
+               value="{{ produttore.email if produttore else '' }}" required>
+    </div>
+    <div class="form-group">
+        <label for="descrizione">Descrizione</label>
+        <textarea class="form-control" id="descrizione" name="descrizione" required>{{ produttore.descrizione if produttore else '' }}</textarea>
+    </div>
+    <div class="form-group">
+        <label for="indirizzo">Indirizzo</label>
+        <input type="text" class="form-control" id="indirizzo" name="indirizzo" 
+               value="{{ produttore.indirizzo if produttore else '' }}" required>
+    </div>
+    <div class="form-group">
+        <label for="telefono">Telefono</label>
+        <input type="tel" class="form-control" id="telefono" name="telefono" 
+               value="{{ produttore.telefono if produttore else '' }}" required>
+    </div>
+    <button type="submit" class="btn btn-primary">{{ 'Aggiorna' if produttore else 'Aggiungi' }} Produttore</button>
+</form>
+
+<script>
+document.getElementById('seleziona_produttore').addEventListener('change', function() {
+    var selectedId = this.value;
+    if (selectedId) {
+        window.location.href = "{{ url_for('gestisci_produttore', id=0) }}".replace('0', selectedId);
+    } else {
+        window.location.href = "{{ url_for('gestisci_produttore') }}";
+    }
+});
+</script>
+{% endblock %}

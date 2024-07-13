@@ -1,0 +1,27 @@
+{% extends "_layout.html" %}
+{% block content %}
+<h2>Lista Produttori</h2>
+<a href="{{ url_for('gestisci_produttore') }}" class="btn btn-success mb-3">Aggiungi/Modifica Produttore</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Telefono</th>
+            <th>Azioni</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for produttore in produttori %}
+        <tr>
+            <td>{{ produttore.nome_produttore }}</td>
+            <td>{{ produttore.email }}</td>
+            <td>{{ produttore.telefono }}</td>
+            <td>
+                <a href="{{ url_for('gestisci_produttore', id=produttore.id) }}" class="btn btn-sm btn-primary">Modifica</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

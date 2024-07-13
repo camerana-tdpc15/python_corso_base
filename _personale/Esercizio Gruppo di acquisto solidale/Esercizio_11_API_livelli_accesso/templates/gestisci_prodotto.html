@@ -1,0 +1,52 @@
+{% extends "_layout.html" %}
+{% block content %}
+<h2>Gestisci Prodotto</h2>
+
+<div class="mb-3">
+    <label for="seleziona_prodotto">Seleziona un prodotto esistente da modificare:</label>
+    <select id="seleziona_prodotto" class="form-control">
+        <option value="">Nuovo prodotto</option>
+        {% for p in prodotti %}
+        <option value="{{ p.id }}" {% if prodotto and prodotto.id == p.id %}selected{% endif %}>
+            {{ p.nome_prodotto }}
+        </option>
+        {% endfor %}
+    </select>
+</div>
+
+<form method="POST" id="form_prodotto">
+    <input type="hidden" id="prodotto_id" name="prodotto_id" value="{{ prodotto.id if prodotto else '' }}">
+    <div class="form-group">
+        <label for="produttore_id">Produttore</label>
+        <select class="form-control" id="produttore_id" name="produttore_id" required>
+            {% for produttore in produttori %}
+            <option value="{{ produttore.id }}" {% if prodotto and prodotto.produttore_id == produttore.id %}selected{% endif %}>
+                {{ produttore.nome_produttore }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="nome_prodotto">Nome Prodotto</label>
+        <input type="text" class="form-control" id="nome_prodotto" name="nome_prodotto" 
+               value="{{ prodotto.nome_prodotto if prodotto else '' }}" required>
+    </div>
+    <div class="form-group">
+        <label for="immagine">URL Immagine</label>
+        <input type="text" class="form-control" id="immagine" name="immagine" 
+               value="{{ prodotto.immagine if prodotto else '' }}">
+    </div>
+    <button type="submit" class="btn btn-primary">{{ 'Aggiorna' if prodotto else 'Aggiungi' }} Prodotto</button>
+</form>
+
+<script>
+document.getElementById('seleziona_prodotto').addEventListener('change', function() {
+    var selectedId = this.value;
+    if (selectedId) {
+        window.location.href = "{{ url_for('gestisci_prodotto', id=0) }}".replace('0', selectedId);
+    } else {
+        window.location.href = "{{ url_for('gestisci_prodotto') }}";
+    }
+});
+</script>
+{% endblock %}
