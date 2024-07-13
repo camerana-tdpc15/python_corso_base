@@ -26,19 +26,25 @@ db.init_app(app)
 limiter = Limiter(get_remote_address, app=app, default_limits=["200 per day", "50 per hour"])
 
 # Funzione per convalidare la password
+# def is_password_strong(password):
+#     """Controlla se la password soddisfa i criteri di sicurezza."""
+#     if len(password) < 8:
+#         return False
+#     if not re.search("[a-z]", password):
+#         return False
+#     if not re.search("[A-Z]", password):
+#         return False
+#     if not re.search("[0-9]", password):
+#         return False
+#     if not re.search("[!@#$%^&*(),.?\":{}|<>]", password):
+#         return False
+#     return True
 def is_password_strong(password):
-    """Controlla se la password soddisfa i criteri di sicurezza."""
-    if len(password) < 8:
-        return False
-    if not re.search("[a-z]", password):
-        return False
-    if not re.search("[A-Z]", password):
-        return False
-    if not re.search("[0-9]", password):
-        return False
-    if not re.search("[!@#$%^&*(),.?\":{}|<>]", password):
-        return False
-    return True
+    return (len(password) >= 8 and
+            re.search("[a-z]", password) and
+            re.search("[A-Z]", password) and
+            re.search("[0-9]", password) and
+            re.search("[!@#$%^&*(),.?\":{}|<>]", password))
 
 # Listener per l'evento before_request per caricare l'utente loggato
 @app.before_request
@@ -99,9 +105,10 @@ def login_required(f):
 # Mostra l'elenco dei lotti disponibili (homepage)
 @app.route('/')
 def home():
-    user = None
-    if 'user_id' in session:
-        user = db.session.get(User, session['user_id'])
+    # user = None
+    # if 'user_id' in session:
+    #     user = db.session.get(User, session['user_id'])
+    user = db.session.get(User, session.get('user_id')) if 'user_id' in session else None
     return render_template('home.html', user=user)
 
 # Restituisce i dati dei lotti disponibili in formato JSON
@@ -201,20 +208,24 @@ def nuova_prenotazione(id_lotto):
 @login_required
 @limiter.limit("5 per minute")
 def aggiorna_prenotazione(id_prenotazione):
-    # Check if the user is logged in
-    if 'user_id' not in session:
-        flash('Non sei autorizzato', 'danger')
-        return redirect(url_for('login'))
+    # # Controlla se l'utente è loggato
+    # if 'user_id' not in session:
+    #     flash('Non sei autorizzato', 'danger')
+    #     return redirect(url_for('login'))
 
-    # Fetch dei dettagli della prenotazione
+    # # Fetch dei dettagli della prenotazione
+    # prenotazione = db.session.get(Prenotazione, id_prenotazione)
+    # if not prenotazione:
+    #     flash('Prenotazione non trovata!', 'danger')
+    #     return redirect(url_for('mostra_prenotazioni'))
+
+    # # Verificare che l'utente loggato è autorizzato a modificare la prenotazione
+    # if prenotazione.user_id != session['user_id']:
+    #     flash('Non sei autorizzato a modificare questa prenotazione', 'danger')
+    #     return redirect(url_for('mostra_prenotazioni'))
     prenotazione = db.session.get(Prenotazione, id_prenotazione)
-    if not prenotazione:
-        flash('Prenotazione non trovata!', 'danger')
-        return redirect(url_for('mostra_prenotazioni'))
-
-    # Verificare che l'utente loggato è autorizzato a modificare la prenotazione
-    if prenotazione.user_id != session['user_id']:
-        flash('Non sei autorizzato a modificare questa prenotazione', 'danger')
+    if not prenotazione or prenotazione.user_id != session['user_id']:
+        flash('Prenotazione non trovata o non autorizzata!', 'danger')
         return redirect(url_for('mostra_prenotazioni'))
 
     if request.method == 'POST':
@@ -245,11 +256,11 @@ def aggiorna_prenotazione(id_prenotazione):
 @app.route('/prenotazioni')
 @login_required
 def mostra_prenotazioni():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-    user = None                                               
-    if 'user_id' in session:
-        user = db.session.get(User, session['user_id'])       
+    # if 'user_id' not in session:
+    #     return redirect(url_for('login'))
+    # user = None                                               
+    # if 'user_id' in session:
+    #     user = db.session.get(User, session['user_id'])       
     return render_template('prenotazioni.html', user=g.user)    
 
 # API per recuperare le prenotazioni
