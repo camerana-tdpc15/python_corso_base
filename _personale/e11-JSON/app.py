@@ -112,6 +112,15 @@ def aggiorna_prenotazione(id_prenotazione):
     return render_template('prenotazioni.html')
 
 
+#GET prenotazione card individuale:
+
+@app.route('/modif_prenot')
+def modif_prenot():
+    ...
+
+    return render_template('modif_prenot.html')
+
+
 
 @app.route('/api/prenotazioni', methods=['GET'])
 def get_prenotazioni():
