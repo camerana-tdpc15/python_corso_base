@@ -14,13 +14,11 @@ db.init_app(app)  # Inizializza l'istanza di SQLAlchemy con l'app Flask
 #Mostra l'elenco dei lotti disponibili
 @app.route('/')
 def home():
-
-    if 'user_id' in session:
-        user = db.session.query(User).get(session['user_id'])
-        return render_template('home.html', user=user)
-    else:
-        return render_template('login.html')
+   return render_template('home.html')
     
+@app.route('/prenotazioni')
+def mostra_prenotazioni():
+    return render_template('prenotazioni.html')
 
 
 
@@ -92,8 +90,11 @@ def nuova_prenotazione(id_lotto):
         flash('La quantita deve essere maggiore di zero!', 'warning')
         return redirect(url_for('mostra_lotto',id_lotto=id_lotto))
     # - minore o uguale alla quantita disponibile
-    if ...:
-        ...
+    lotto =db.session.get(Lotto, id_lotto)
+
+    if quantita > lotto.get_qta_disponibile():
+        flash('Hai prenotato di più della quantità disponibile.', 'warning')
+        return redirect(url_for('mostra_lotto', id_lotto=id_lotto))
 
     new_prenotazione = Prenotazione(qta=quantita,lotto_id = id_lotto, user_id = session['user_id'])
     db.session.add(new_prenotazione)
@@ -102,19 +103,31 @@ def nuova_prenotazione(id_lotto):
     return redirect(url_for('mostra_prenotazioni'))
 
 
-@app.route('/prenotazione/>int:id_prenotazione>', methods = ['GET'])
-
-def aggiorna_prenotazione(id_prenotazione,):
+#GET PRENOTAzioni
+@app.route('/prenotazione/<int:id_prenotazione>', methods=['GET'])
+def aggiorna_prenotazione(id_prenotazione):
+    
     ...
 
-    return render_template('prenotazione.html')
+    return render_template('prenotazioni.html')
+
+
 
 @app.route('/api/prenotazioni', methods=['GET'])
 def get_prenotazioni():
-    ...
+    
+    prenotazioni = Prenotazione.query \
+        .filter_by(user_id=session['user_id']) \
+        .join(Lotto, Lotto.id == Prenotazione.lotto_id) \
+        .order_by(Lotto.data_consegna) \
+        .all()  # -> list es. [<Prenotazione 1>, <Prenotazione 2>, ...]
+    
+    prenot_data = []
 
-
-
+    for prenot in prenotazioni:
+        dict_prenot = prenot.to_dict()
+        prenot_data.append(dict_prenot)
+    return jsonify(prenot_data)
 
 # @TODO: Implementare il login / logout
 
