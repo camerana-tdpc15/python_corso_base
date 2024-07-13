@@ -1,106 +1,124 @@
-// Aggiunge un listener all'evento 'DOMContentLoaded' per chiamare la funzione fetchPrenotazioni
+// Esegue fetchPrenotazioni quando il DOM è completamente caricato
 document.addEventListener('DOMContentLoaded', fetchPrenotazioni);
 
-// Funzione per recuperare le prenotazioni dall'API
+// Oggetto contenente gli endpoint API per le operazioni sulle prenotazioni
+const API_ENDPOINTS = {
+    GET_PRENOTAZIONI: '/api/prenotazioni',
+    UPDATE_PRENOTAZIONE: '/api/prenotazione/modifica',
+    DELETE_PRENOTAZIONE: '/api/prenotazione/elimina'
+};
+
+/**
+ * Recupera le prenotazioni dal server e le renderizza nella pagina.
+ * Gestisce anche gli errori in caso di problemi con la richiesta.
+ */
 function fetchPrenotazioni() {
-    fetch("/api/prenotazioni")
-        .then(response => response.json())
-        .then(data => {
-            // Se c'è un errore, mostra un avviso e termina
-            if (data.error) {
-                alert(data.error);
-                return;
-            }
-
-            // Seleziona il container dove verranno aggiunte le prenotazioni
-            const container = document.getElementById('prenotazioni-container');
-            container.innerHTML = ''; // Cancella il contenuto esistente
-            let totalPrice = 0;
-
-            // Se non ci sono prenotazioni, mostra il messaggio appropriato e termina
-            if (data.length === 0) {
-                document.getElementById('no-prenotazioni-message').style.display = 'block';
-                return;
-            }
-
-            // Per ogni prenotazione, crea una card e aggiungila al container
-            data.forEach(prenotazione => {
-                container.appendChild(createPrenotazioneCard(prenotazione));
-                // Calcola il totale complessivo
-                totalPrice += prenotazione.qta * prenotazione.rel_lotto.prezzo_unitario;
-            });
-
-            // Aggiorna il totale complessivo visualizzato
-            document.getElementById('total-price').textContent = `Totale complessivo: ${totalPrice.toFixed(2)} €`;
+    fetch(API_ENDPOINTS.GET_PRENOTAZIONI)
+        .then(response => {
+            if (!response.ok) throw new Error('Errore nel recupero delle prenotazioni');
+            return response.json();
         })
-        .catch(error => console.error('Error fetching prenotazioni:', error)); // Gestione degli errori
+        .then(data => renderPrenotazioni(data))
+        .catch(error => {
+            console.error('Errore nel recupero delle prenotazioni:', error);
+            alert('Si è verificato un errore nel recupero delle prenotazioni. Riprova più tardi.');
+        });
 }
 
-// Funzione per creare una card per ciascuna prenotazione
+/**
+ * Renderizza le prenotazioni nella pagina.
+ * Se non ci sono prenotazioni, mostra un messaggio appropriato.
+ * Calcola e visualizza anche il prezzo totale di tutte le prenotazioni.
+ * @param {Array} prenotazioni - Array di oggetti prenotazione
+ */
+function renderPrenotazioni(prenotazioni) {
+    const container = document.getElementById('prenotazioni-container');
+    const noPrenotazioniMessage = document.getElementById('no-prenotazioni-message');
+    container.innerHTML = ''; // Pulisce il contenitore prima di aggiungere nuove prenotazioni
+    
+    if (prenotazioni.length === 0) {
+        noPrenotazioniMessage.style.display = 'block';
+        return;
+    }
+    
+    noPrenotazioniMessage.style.display = 'none';
+    const totalPrice = prenotazioni.reduce((total, prenotazione) => {
+        container.appendChild(createPrenotazioneCard(prenotazione));
+        return total + prenotazione.qta * prenotazione.rel_lotto.prezzo_unitario;
+    }, 0);
+
+    document.getElementById('total-price').textContent = `Totale complessivo: ${totalPrice.toFixed(2)} €`;
+}
+
+/**
+ * Crea una card HTML per una singola prenotazione.
+ * @param {Object} prenotazione - Oggetto contenente i dettagli della prenotazione
+ * @returns {HTMLElement} - Elemento div rappresentante la card della prenotazione
+ */
 function createPrenotazioneCard(prenotazione) {
+    const { id, qta, rel_lotto } = prenotazione;
+    const { rel_prodotto, data_consegna, prezzo_unitario } = rel_lotto;
+    
     const card = document.createElement('div');
     card.className = 'card mb-3';
-    card.id = `prenotazione-${prenotazione.id}`;
+    card.id = `prenotazione-${id}`;
 
-    const cardBody = document.createElement('div');
-    cardBody.className = 'card-body';
-
-    // HTML per il corpo della card
-    cardBody.innerHTML = `
-        <h5 class="card-title">${prenotazione.rel_lotto.rel_prodotto.nome_prodotto}</h5>
-        <p class="card-text">
-            Data Consegna: ${formatDate(prenotazione.rel_lotto.data_consegna)}<br>
-            Prezzo per Unità: ${prenotazione.rel_lotto.prezzo_unitario} €<br>
-            Quantità: <span id="quantity-${prenotazione.id}">${prenotazione.qta}</span><br>
-            Totale parziale: ${(prenotazione.qta * prenotazione.rel_lotto.prezzo_unitario).toFixed(2)} €
-        </p>
+    card.innerHTML = `
+        <div class="card-body">
+            <h5 class="card-title">${rel_prodotto.nome_prodotto}</h5>
+            <p class="card-text">
+                Data Consegna: ${formatDate(data_consegna)}<br>
+                Prezzo per Unità: ${prezzo_unitario} €<br>
+                Quantità: <span id="quantity-${id}">${qta}</span><br>
+                Totale parziale: ${(qta * prezzo_unitario).toFixed(2)} €
+            </p>
+            ${createButtonGroup(id, qta)}
+        </div>
     `;
-
-    // Aggiunge il gruppo di pulsanti (Modifica, Elimina) al corpo della card
-    cardBody.appendChild(createButtonGroup(prenotazione.id, prenotazione.qta));
-    card.appendChild(cardBody);
 
     return card;
 }
 
-// Funzione per creare il gruppo di pulsanti (Modifica, Elimina) per ciascuna prenotazione
+/**
+ * Crea il gruppo di pulsanti per modificare ed eliminare una prenotazione.
+ * @param {number} id - ID della prenotazione
+ * @param {number} currentQuantity - Quantità attuale della prenotazione
+ * @returns {string} - HTML string per il gruppo di pulsanti
+ */
 function createButtonGroup(id, currentQuantity) {
-    const buttonGroup = document.createElement('div');
-    buttonGroup.className = 'btn-group mt-2';
-
-    const editButton = document.createElement('button');
-    editButton.textContent = 'Modifica';
-    editButton.className = 'btn btn-primary';
-    editButton.addEventListener('click', () => showEditForm(id, currentQuantity));
-
-    const deleteButton = document.createElement('button');
-    deleteButton.textContent = 'Elimina';
-    deleteButton.className = 'btn btn-danger';
-    deleteButton.addEventListener('click', () => deletePrenotazione(id));
-
-    buttonGroup.appendChild(editButton);
-    buttonGroup.appendChild(deleteButton);
-
-    return buttonGroup;
+    return `
+        <div class="btn-group mt-2">
+            <button class="btn btn-primary" onclick="showEditForm(${id}, ${currentQuantity})">Modifica</button>
+            <button class="btn btn-danger" onclick="deletePrenotazione(${id})">Elimina</button>
+        </div>
+    `;
 }
 
-// Funzione per formattare la data in formato DD/MM/YYYY
+/**
+ * Formatta una data in formato italiano (dd/mm/yyyy).
+ * @param {string} dateString - Data in formato ISO
+ * @returns {string} - Data formattata
+ */
 function formatDate(dateString) {
     const date = new Date(dateString);
-    return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
+    return date.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' });
 }
 
-// Funzione per mostrare il form di modifica per una prenotazione
+/**
+ * Mostra il form per modificare la quantità di una prenotazione.
+ * @param {number} id - ID della prenotazione
+ * @param {number} currentQuantity - Quantità attuale della prenotazione
+ */
 function showEditForm(id, currentQuantity) {
     const card = document.getElementById(`prenotazione-${id}`);
     const quantitySpan = card.querySelector(`#quantity-${id}`);
     const buttonGroup = card.querySelector('.btn-group');
 
-    // Nascondi la quantità corrente e i pulsanti
+    // Nasconde la quantità attuale e i pulsanti
     quantitySpan.style.display = 'none';
     buttonGroup.style.display = 'none';
 
-    // Crea il form di modifica
+    // Crea e aggiunge il form di modifica
     const editForm = document.createElement('div');
     editForm.innerHTML = `
         <input type="number" id="edit-quantity-${id}" value="${currentQuantity}" min="1" class="form-control mb-2">
@@ -111,21 +129,21 @@ function showEditForm(id, currentQuantity) {
     card.querySelector('.card-body').appendChild(editForm);
 }
 
-// Funzione per annullare la modifica di una prenotazione
+/**
+ * Annulla la modifica di una prenotazione, ripristinando la visualizzazione originale.
+ * @param {number} id - ID della prenotazione
+ */
 function cancelEdit(id) {
     const card = document.getElementById(`prenotazione-${id}`);
-    const quantitySpan = card.querySelector(`#quantity-${id}`);
-    const buttonGroup = card.querySelector('.btn-group');
-    const editForm = card.querySelector('div:last-child');
-
-    // Mostra la quantità corrente e i pulsanti
-    quantitySpan.style.display = 'inline';
-    buttonGroup.style.display = 'block';
-    // Rimuovi il form di modifica
-    editForm.remove();
+    card.querySelector(`#quantity-${id}`).style.display = 'inline';
+    card.querySelector('.btn-group').style.display = 'block';
+    card.querySelector('div:last-child').remove(); // Rimuove il form di modifica
 }
 
-// Funzione per aggiornare la quantità di una prenotazione
+/**
+ * Aggiorna la quantità di una prenotazione sul server.
+ * @param {number} id - ID della prenotazione
+ */
 function updateQuantity(id) {
     const newQuantity = parseInt(document.getElementById(`edit-quantity-${id}`).value, 10);
     if (isNaN(newQuantity) || newQuantity <= 0) {
@@ -133,40 +151,48 @@ function updateQuantity(id) {
         return;
     }
 
-    fetch('/api/prenotazione/modifica', {
+    fetch(API_ENDPOINTS.UPDATE_PRENOTAZIONE, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, quantita: newQuantity })
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.error) {
-            alert(data.error);
-        } else {
-            alert(data.message);
-            fetchPrenotazioni(); // Aggiorna la lista delle prenotazioni
-        }
+    .then(response => {
+        if (!response.ok) throw new Error('Errore nell\'aggiornamento della quantità');
+        return response.json();
     })
-    .catch(error => console.error('Errore agggiornando la quantità', error)); // Gestione degli errori
+    .then(data => {
+        alert(data.message);
+        fetchPrenotazioni(); // Aggiorna la lista delle prenotazioni
+    })
+    .catch(error => {
+        console.error('Errore nell\'aggiornamento della quantità:', error);
+        alert('Si è verificato un errore nell\'aggiornamento della quantità. Riprova più tardi.');
+    });
 }
 
-// Funzione per eliminare una prenotazione
+/**
+ * Elimina una prenotazione dal server.
+ * Chiede conferma all'utente prima di procedere.
+ * @param {number} id - ID della prenotazione da eliminare
+ */
 function deletePrenotazione(id) {
-    if (confirm('Sei sicuro di voler eliminare questa prenotazione?')) {
-        fetch('/api/prenotazione/elimina', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                alert(data.error);
-            } else {
-                alert(data.message);
-                fetchPrenotazioni(); // Aggiorna la lista delle prenotazioni
-            }
-        })
-        .catch(error => console.error('Errore cancellando la prenotazione', error)); // Gestione degli errori
-    }
+    if (!confirm('Sei sicuro di voler eliminare questa prenotazione?')) return;
+
+    fetch(API_ENDPOINTS.DELETE_PRENOTAZIONE, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id })
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Errore nell\'eliminazione della prenotazione');
+        return response.json();
+    })
+    .then(data => {
+        alert(data.message);
+        fetchPrenotazioni(); // Aggiorna la lista delle prenotazioni
+    })
+    .catch(error => {
+        console.error('Errore nell\'eliminazione della prenotazione:', error);
+        alert('Si è verificato un errore nell\'eliminazione della prenotazione. Riprova più tardi.');
+    });
 }
