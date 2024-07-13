@@ -83,15 +83,16 @@ def nuova_prenotazione(id_lotto):
     quantita = int(request.form.get('quantita'))
     
 
-    #verifica che la quantita si a
+    #verifica che la quantita sia:
     # - maggiore o uguale a 1
     if quantita < 1 :
         #TODO: fix flask messagges
         flash('La quantita deve essere maggiore di zero!', 'warning')
         return redirect(url_for('mostra_lotto',id_lotto=id_lotto))
+    
+
     # - minore o uguale alla quantita disponibile
     lotto =db.session.get(Lotto, id_lotto)
-
     if quantita > lotto.get_qta_disponibile():
         flash('Hai prenotato di più della quantità disponibile.', 'warning')
         return redirect(url_for('mostra_lotto', id_lotto=id_lotto))
@@ -110,15 +111,6 @@ def aggiorna_prenotazione(id_prenotazione):
     ...
 
     return render_template('prenotazioni.html')
-
-
-#GET prenotazione card individuale:
-
-@app.route('/modif_prenot')
-def modif_prenot():
-    ...
-
-    return render_template('modif_prenot.html')
 
 
 
