@@ -4,16 +4,23 @@ from sqlalchemy_serializer import SerializerMixin
 
 locale.setlocale(locale.LC_TIME, 'it_IT')
 
-db = SQLAlchemy()
+db = SQLAlchemy()   
 
-class User(db.Model, SerializerMixin):
-    __tablename__ = 'users'
+class User(db.Model, SerializerMixin):  # La classe User eredita da db.Model e SerializerMixin.
+    __tablename__ = 'users' # È associata alla tabella del database denominata 'users'.
     id = db.mapped_column(db.Integer(), primary_key=True)
     cognome = db.mapped_column(db.String(50), nullable=False)
     nome = db.mapped_column(db.String(50), nullable=False)
     telefono = db.mapped_column(db.String(20), nullable=False)
     email = db.mapped_column(db.String(50), unique=True, nullable=False)
     password = db.mapped_column(db.String(30), nullable=False)
+
+        # id: L’ID dell’utente (chiave primaria).
+        # cognome: Il cognome dell’utente (stringa, obbligatorio).
+        # nome: Il nome dell’utente (stringa, obbligatorio).
+        # telefono: Il numero di telefono dell’utente (stringa, obbligatorio).
+        # email: L’indirizzo email dell’utente (stringa, univoco, obbligatorio).
+        # password: La password dell’utente (stringa, obbligatoria).
 
 class Produttore(db.Model, SerializerMixin):
     __tablename__ = 'produttori'
@@ -42,6 +49,7 @@ class Lotto(db.Model, SerializerMixin):
 
     serialize_rules = ('get_qta_disponibile', 'get_date', 'get_prezzo_str')
 
+
     def get_qta_disponibile(self):
         prenotazioni_lotto = Prenotazione.query.filter_by(lotto_id=self.id).all()
         qta_prenotata = sum(prenotazione.qta for prenotazione in prenotazioni_lotto)
@@ -52,6 +60,19 @@ class Lotto(db.Model, SerializerMixin):
     
     def get_prezzo_str(self):
         return f'{self.prezzo_unitario:.2f} €/{self.qta_unita_misura}'
+        # Questi metodi personalizzati all’interno della classe Lotto forniscono alcune funzionalità specifiche:
+
+        # get_qta_disponibile:
+        # Questo metodo calcola la quantità disponibile per il lotto.
+        # Recupera tutte le prenotazioni associate a questo lotto (prenotazioni_lotto).
+        # Somma la quantità prenotata in tutte le prenotazioni.
+        # Restituisce la differenza tra la quantità totale del lotto e la quantità prenotata.
+        # get_date:
+        # Questo metodo restituisce la data di consegna del lotto nel formato “giorno della settimana giorno/mese/anno” (ad esempio, “Lunedì 01/01/2023”).
+        # Utilizza il metodo strftime() per formattare la data.
+        # get_prezzo_str:
+        # Questo metodo restituisce una rappresentazione testuale del prezzo unitario del lotto.
+        # Formatta il prezzo con due cifre decimali e include l’unità di misura (ad esempio, “10.50 €/kg”).
 
 
 class Prenotazione(db.Model, SerializerMixin):

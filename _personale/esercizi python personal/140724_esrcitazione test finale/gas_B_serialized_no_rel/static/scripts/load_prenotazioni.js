@@ -3,21 +3,36 @@ const rowPrenotazioni = document.querySelector('#row-prenotazioni');
 
 onLoad();
 
-function onLoad() {
+function onLoad() 
 
+    {
+    
     // eseguo la chiamata per ottenere le prenotazioni
     // select delle Prenotazioni con in join Lotti, join con Prodotti e join con Produttori 
-
+    
     const urlPrenotazioni = '/api/dati_prenotazioni';
+    
+    // Questa funzione viene chiamata quando la pagina si carica.
+    // Effettua una chiamata API per recuperare i dati delle prenotazioni.
+    // I dati vengono prelevati dall’URL /api/dati_prenotazioni.
 
     fetch(urlPrenotazioni).then(res => res.json()).then(data => {
         console.log(data);
 
+        // La riga fetch(urlPrenotazioni) recupera i dati dall’URL specificato.
+        // La parte .then(res => res.json()) analizza la risposta come JSON.
+        // Il blocco successivo .then(data => { ... }) elabora i dati recuperati.
+
         if (data.length == 0) {
             rowPrenotazioni.innerHTML = `<p>Non hai ancora effettuato prenotazioni, <a href="/">scopri i prodotti disponibili</a>!</p>`;
-        }          
+        }       
+            // La condizione if (data.length == 0) verifica se l’array data (contenente le prenotazioni) è vuoto.
+            // Se non ci sono prenotazioni (lunghezza dell’array uguale a 0), viene eseguito il blocco di 
+            // codice all’interno delle parentesi graffe { ... }.   
 
         for(prenot of data) {
+
+                // viene eseguito un ciclo for per ogni prenotazione presente nei dati.
 
             let renderModifica = '';
             if(!prenot.lotto.sospeso) {
@@ -25,6 +40,13 @@ function onLoad() {
             } else {
                 renderModifica = '<a href="#" class="btn btn-danger disabled">Annullato</a>';                
             }
+                // Per ciascuna prenotazione:
+                // Si determina se il lotto associato alla prenotazione è sospeso (prenot.lotto.sospeso).
+                // In base a questa condizione, viene generato un pulsante per la modifica della 
+                // prenotazione o un messaggio di annullamento.
+                // Vengono costruite le card con i dettagli della prenotazione (nome del prodotto, 
+                // data di disponibilità, produttore, prezzo, ecc.) e aggiunte all’elemento rowPrenotazioni.
+            
 
             rowPrenotazioni.innerHTML += `
             <div class="col-lg-3 mb-3">

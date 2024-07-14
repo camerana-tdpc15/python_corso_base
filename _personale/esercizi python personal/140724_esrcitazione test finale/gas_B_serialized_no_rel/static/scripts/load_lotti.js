@@ -8,12 +8,21 @@ function onLoad() {
     // eseguo la chiamata per ottenere i Lotti
     // select dei Lotti con in join Prodotti e join con Produttori 
 
+    
     const urlLotti = '/api/dati_lotti';
+    
+    // Questa funzione viene chiamata quando la pagina si carica.
+    // Effettua una chiamata API per recuperare i dati dei “lotti”.
+    // I dati vengono prelevati dall’URL /api/dati_lotti.
 
     fetch(urlLotti).then(res => res.json()).then(data => {
         console.log(data);
+        // La riga fetch(urlLotti) recupera i dati dall’URL specificato.
+        // La parte .then(res => res.json()) analizza la risposta come JSON.
+        // Il blocco successivo .then(data => { ... }) elabora i dati recuperat
 
         for(lotto of data) {
+            // Per ogni “lotto” nei dati:
 
             let renderPrenota = '';
             if (lotto.sospeso) {
@@ -23,6 +32,8 @@ function onLoad() {
             } else {
                 renderPrenota = `<a href="/lotto/${lotto.id}" class="btn btn-primary w-100">Prenota</a>`;
             }
+            // Determina se è sospeso (sospeso) o esaurito (get_qta_disponibile == 0).
+            // Genera pulsanti appropriati per la prenotazione in base alla disponibilità.
 
             rowLotti.innerHTML += `
             <div class="col-lg-3 mb-3">
@@ -61,3 +72,6 @@ function onLoad() {
     });
 
 }
+
+    // Costruisce una card con i dettagli del lotto (nome del prodotto, data di disponibilità, produttore, prezzo, ecc.).
+    // Aggiunge la card all’elemento rowLotti.
