@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<h1 class="display-4">Benvenuti sul Sito Guestbook</h1>
+
+{% if 'user_id' in session %}
+
+<div class="row">
+    <div class="col-lg-6 mt-4">
+        <h6 class="display-6">Benvenuto, {{ utente.username }} detto {{ utente.nickname }}</h6>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 mt-4">
+        <h6>
+            Vai al Guestbook
+            <a class="btn btn-primary d-inline" href="{{ url_for('guestbook') }}" role="button">GUESTBOOK</a>
+        </h6>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 mt-4">
+        <h6>
+            Fai il Logout
+            <a class="btn btn-primary d-inline" href="{{ url_for('logout') }}" role="button">LOGOUT</a>
+        </h6>
+    </div>
+</div>
+
+
+
+{% else %}
+
+<div class="row">
+    <div class="col-lg-6 mt-4">
+        <h6>
+            Per accedere fai il Login
+            <a class="btn btn-primary d-inline" href="{{ url_for('login') }}" role="button">LOGIN</a>
+        </h6>
+    </div>
+    
+</div>
+<div class="row">
+    
+    <div class="col-lg-6 mt-4 mb-4">
+        <h6>
+            oppure, se non hai un account, fai il Sign Up
+            <a class="btn btn-primary d-inline" href="{{ url_for('signup') }}" role="button">SIGN UP</a>
+        </h6>
+    </div>
+</div>
+
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+
+<!-- Custom JavaScript -->
+<script src="{{ url_for('static', filename='scripts.js') }}"></script>
+
+
+{% endblock %}
+

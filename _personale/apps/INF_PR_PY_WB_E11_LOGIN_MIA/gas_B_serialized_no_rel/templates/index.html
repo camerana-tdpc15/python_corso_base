@@ -1,0 +1,22 @@
+{% extends "_layout_base.html" %}
+
+{% block title %}Prodotti disponibili {{ super() }}{% endblock %}
+
+{% block h1 %}Benvenuto nella piattaforma di prenotazione prodotti{% endblock %}
+
+{% block content %}
+
+{% if not session.user_id %}
+    <!-- Avviso inserito se l'utente non è loggato -->
+    <p>Per prenotare i prodotti, <a href="{{ url_for('login') }}">accedi</a>.</p>
+{% endif %}
+
+<div class="row" id="row-lotti">
+    <!-- riga popolata dinamicamente con una colonna BS contenente una card per ogni lotto -->
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='scripts/load_lotti.js') }}"></script>
+{% endblock %}

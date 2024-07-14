@@ -1,0 +1,38 @@
+{% extends "_layout_base.html" %}
+
+{% block title %}Prenotazione {{ super() }}{% endblock %}
+
+{% block h1 %}Modifica la tua prenotazione mia{% endblock %}
+
+{% block content %}
+
+<div class="row" id="row-mod-prenotazione">
+    <!-- riga popolata dinamicamente con una colonna BS contenente una card per ogni prenotazione -->
+</div>
+
+ <!-- Form per la modifica di una prenotazione -->
+ <div class="card-footer">
+    <form method="POST" action="{{ url_for('modifica_prenotazione', prenotazione_id=prenotazione.id) }}">
+        <div class="form-group mb-3">
+            <label for="quantita" class="form-label">Quantità</label>
+            <input type="number" class="form-control" id="quantita" name="quantita"
+                required min="0" max="{{ prenotazione.lotto.get_qta_disponibile() + prenotazione.qta}}"
+                value="{{ prenotazione.qta }}">
+        </div>
+        <button type="submit" class="btn btn-primary" name="azione" value="aggiorna">
+            Modifica quantità
+        </button>
+        <button type="submit" class="btn btn-danger float-end" name="azione" value="elimina"
+                onclick="return confirm('Sei sicuro di voler eliminare la prenotazione?')">
+            Elimina prenotazione
+        </button>
+    </form>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='scripts/mod_prenotazione.js') }}"></script>
+{% endblock %}
+
+

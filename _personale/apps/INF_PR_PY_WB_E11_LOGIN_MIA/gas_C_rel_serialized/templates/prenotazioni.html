@@ -1,0 +1,17 @@
+{% extends "_layout_base.html" %}
+
+{% block title %}Prenotazioni {{ super() }}{% endblock %}
+
+{% block h1 %}Le tue prenotazioni{% endblock %}
+
+{% block content %}
+
+<div class="row" id="row-prenotazioni">
+    <!-- riga popolata dinamicamente con una colonna BS contenente una card per ogni prenotazione -->
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='scripts/load_prenotazioni.js') }}"></script>
+{% endblock %}
