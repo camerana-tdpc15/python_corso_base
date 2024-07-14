@@ -124,9 +124,6 @@ def get_prenotazioni():
 
     return jsonify(prenot_data)
 
-# @TODO: Implementare il login / logout
-...
-
 
 
 @app.route('/login', methods=['GET', 'POST'])
