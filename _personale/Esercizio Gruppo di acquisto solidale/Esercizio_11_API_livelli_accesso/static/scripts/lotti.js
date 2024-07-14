@@ -1,41 +1,41 @@
-// alert('OK');
+// alert('OK'); // Commentato: alert di test
+
+// Seleziona l'elemento con id 'row-lotti' e lo assegna alla variabile rowLotti
 const rowLotti = document.querySelector('#row-lotti');
 
-
-// Fa fetch di un file JSON e lo stampa in console
+// Fa una fetch di un file JSON dall'API e lo stampa in console
 fetch("/api/lotti?order=desc")
-    // ......... QUI FLASK STA LAVORANDO PER PREPARARCI LA RISPOSTA
-    // ......... E ALLA FINE CE LA INVIA
-    .then(response => response.json())
-    .then(data => {
-        for (lotto of data) {
-            console.log(lotto);
+    // Qui Flask sta lavorando per prepararci la risposta
+    // E alla fine ce la invia
+    .then(response => response.json()) // Converte la risposta in formato JSON
+    .then(data => { // Elabora i dati ricevuti
+        for (lotto of data) { // Itera su ogni lotto ricevuto
+            console.log(lotto); // Stampa il lotto in console (debugging)
 
-            // debugger;
-
+            // Variabile per il pulsante da visualizzare
             let displayButton = '';
             if(lotto.sospeso) {
-                // button rosso
+                // Se il lotto è sospeso, crea un pulsante rosso disabilitato
                 displayButton = '<button class="btn btn-danger w-100" disabled>Sospeso</button>';
             }
             else if (lotto.get_qta_disponibile == 0) {
-                // button giallo
+                // Se il lotto è esaurito, crea un pulsante giallo disabilitato
                 displayButton = '<button class="btn btn-warning w-100" disabled>Esaurito</button>';
             } 
             else {
-                // button blu
+                // Altrimenti, crea un pulsante blu per prenotare il lotto
                 displayButton = `<a class="btn btn-primary w-100" href="/lotto/${lotto.id}">Prenota</a>`;
             }
 
+            // Aggiunge un nuovo elemento HTML per ogni lotto nella variabile rowLotti
             rowLotti.innerHTML += `
                <div class="col-lg-4 col-md-4 col-sm-6 my-2 d-flex align-items-stretch">
                     <div class="card h-100 d-flex flex-column">
-                            <div class="card-header bg-gas-primary">
+                        <div class="card-header bg-gas-primary">
                             <h4 class="card-title text-gas-primary">${lotto.rel_prodotto.nome_prodotto}</h4>
                             <p class="text-end"><small>(cod. lotto: ${lotto.id})</small></p>
-                            
                         </div>
-                            <div class="card-body flex-grow-1">
+                        <div class="card-body flex-grow-1">
                             <p>Produttore: <b>${lotto.rel_prodotto.rel_produttore.nome_produttore}</b></p>
                             <p>Data consegna: <b>${lotto.get_date}</b></p>
                             <p>Q.tà TOT: <b>${lotto.qta_lotto} ${lotto.qta_unita_misura}</b></p>
@@ -51,3 +51,4 @@ fetch("/api/lotti?order=desc")
             `;   
         }
     });
+

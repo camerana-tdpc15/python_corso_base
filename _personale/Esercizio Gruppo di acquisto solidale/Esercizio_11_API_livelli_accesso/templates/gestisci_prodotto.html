@@ -1,51 +1,86 @@
 {% extends "_layout.html" %}
 {% block content %}
-<h2>Gestisci Prodotto</h2>
+<h2>Gestisci Lotto</h2>
 
+<!-- Sezione per selezionare un lotto esistente da modificare -->
 <div class="mb-3">
-    <label for="seleziona_prodotto">Seleziona un prodotto esistente da modificare:</label>
-    <select id="seleziona_prodotto" class="form-control">
-        <option value="">Nuovo prodotto</option>
-        {% for p in prodotti %}
-        <option value="{{ p.id }}" {% if prodotto and prodotto.id == p.id %}selected{% endif %}>
-            {{ p.nome_prodotto }}
+    <label for="seleziona_lotto">Seleziona un lotto esistente da modificare:</label>
+    <select id="seleziona_lotto" class="form-control">
+        <option value="">Nuovo lotto</option>
+        {% for l in lotti %}
+        <option value="{{ l.id }}" {% if lotto and lotto.id == l.id %}selected{% endif %}>
+            {{ l.rel_prodotto.nome_prodotto }} - {{ l.data_consegna.strftime('%d/%m/%Y') }}
         </option>
         {% endfor %}
     </select>
 </div>
 
-<form method="POST" id="form_prodotto">
-    <input type="hidden" id="prodotto_id" name="prodotto_id" value="{{ prodotto.id if prodotto else '' }}">
+<!-- Form per aggiungere o modificare un lotto -->
+<form method="POST" id="form_lotto">
+    <!-- Campo nascosto per l'ID del lotto -->
+    <input type="hidden" id="lotto_id" name="lotto_id" value="{{ lotto.id if lotto else '' }}">
+    
+    <!-- Selezione del prodotto -->
     <div class="form-group">
-        <label for="produttore_id">Produttore</label>
-        <select class="form-control" id="produttore_id" name="produttore_id" required>
-            {% for produttore in produttori %}
-            <option value="{{ produttore.id }}" {% if prodotto and prodotto.produttore_id == produttore.id %}selected{% endif %}>
-                {{ produttore.nome_produttore }}
+        <label for="prodotto_id">Prodotto</label>
+        <select class="form-control" id="prodotto_id" name="prodotto_id" required>
+            {% for prodotto in prodotti %}
+            <option value="{{ prodotto.id }}" {% if lotto and lotto.prodotto_id == prodotto.id %}selected{% endif %}>
+                {{ prodotto.nome_prodotto }}
             </option>
             {% endfor %}
         </select>
     </div>
+    
+    <!-- Campo per la data di consegna -->
     <div class="form-group">
-        <label for="nome_prodotto">Nome Prodotto</label>
-        <input type="text" class="form-control" id="nome_prodotto" name="nome_prodotto" 
-               value="{{ prodotto.nome_prodotto if prodotto else '' }}" required>
+        <label for="data_consegna">Data Consegna</label>
+        <input type="date" class="form-control" id="data_consegna" name="data_consegna" 
+               value="{{ lotto.data_consegna.strftime('%Y-%m-%d') if lotto else '' }}" required>
     </div>
+    
+    <!-- Campo per l'unità di misura -->
     <div class="form-group">
-        <label for="immagine">URL Immagine</label>
-        <input type="text" class="form-control" id="immagine" name="immagine" 
-               value="{{ prodotto.immagine if prodotto else '' }}">
+        <label for="qta_unita_misura">Unità di Misura</label>
+        <input type="text" class="form-control" id="qta_unita_misura" name="qta_unita_misura" 
+               value="{{ lotto.qta_unita_misura if lotto else '' }}" required>
     </div>
-    <button type="submit" class="btn btn-primary">{{ 'Aggiorna' if prodotto else 'Aggiungi' }} Prodotto</button>
+    
+    <!-- Campo per la quantità del lotto -->
+    <div class="form-group">
+        <label for="qta_lotto">Quantità Lotto</label>
+        <input type="number" class="form-control" id="qta_lotto" name="qta_lotto" 
+               value="{{ lotto.qta_lotto if lotto else '' }}" required>
+    </div>
+    
+    <!-- Campo per il prezzo unitario -->
+    <div class="form-group">
+        <label for="prezzo_unitario">Prezzo Unitario</label>
+        <input type="number" step="0.01" class="form-control" id="prezzo_unitario" name="prezzo_unitario" 
+               value="{{ lotto.prezzo_unitario if lotto else '' }}" required>
+    </div>
+    
+    <!-- Campo per lo stato "sospeso" del lotto -->
+    <div class="form-group">
+        <label for="sospeso">Sospeso</label>
+        <select class="form-control" id="sospeso" name="sospeso">
+            <option value="false" {% if lotto and not lotto.sospeso %}selected{% endif %}>No</option>
+            <option value="true" {% if lotto and lotto.sospeso %}selected{% endif %}>Sì</option>
+        </select>
+    </div>
+    
+    <!-- Pulsante per inviare il form -->
+    <button type="submit" class="btn btn-primary">{{ 'Aggiorna' if lotto else 'Aggiungi' }} Lotto</button>
 </form>
 
+<!-- Script per gestire il cambiamento di selezione del lotto -->
 <script>
-document.getElementById('seleziona_prodotto').addEventListener('change', function() {
+document.getElementById('seleziona_lotto').addEventListener('change', function() {
     var selectedId = this.value;
     if (selectedId) {
-        window.location.href = "{{ url_for('gestisci_prodotto', id=0) }}".replace('0', selectedId);
+        window.location.href = "{{ url_for('gestisci_lotto', id=0) }}".replace('0', selectedId);
     } else {
-        window.location.href = "{{ url_for('gestisci_prodotto') }}";
+        window.location.href = "{{ url_for('gestisci_lotto') }}";
     }
 });
 </script>
