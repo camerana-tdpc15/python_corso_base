@@ -4,10 +4,25 @@ from datetime import date
 from pprint import pprint
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy_serializer import SerializerMixin
-from settings import BASE_DIR
+from flask_bcrypt import Bcrypt  # Importazione aggiunta per Bcrypt
+from flask import Flask  # Importazione aggiunta per Flask
+from settings import BASE_DIR, DATABASE_PATH
 
+# Inizializzazione dell'istanza di SQLAlchemy
 db = SQLAlchemy()
 
+# Inizializzazione dell'app Flask e di Bcrypt
+app = Flask(__name__)
+bcrypt = Bcrypt(app)
+
+# Configurazione dell'app Flask
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + DATABASE_PATH
+app.config['SECRET_KEY'] = 'mysecretkey'
+
+# Associa l'app Flask all'istanza di SQLAlchemy
+db.init_app(app)
+
+# Modello per la tabella 'users'
 class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -18,10 +33,12 @@ class User(db.Model, SerializerMixin):
     password = db.Column(db.String(150), nullable=False)
     ruolo = db.Column(db.String(10), default='utente')  # Nuovo campo per il ruolo dell'utente (admin o utente)
 
+    # Relazione con la tabella 'Prenotazione'
     rel_prenotazioni = db.relationship('Prenotazione', back_populates='rel_user')
 
     serialize_rules = ('-password', '-rel_prenotazioni.rel_user')
 
+# Modello per la tabella 'produttori'
 class Produttore(db.Model, SerializerMixin):
     __tablename__ = 'produttori'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -30,18 +47,21 @@ class Produttore(db.Model, SerializerMixin):
     indirizzo = db.Column(db.Text(), nullable=False)
     telefono = db.Column(db.String(), nullable=False)
     email = db.Column(db.String(), nullable=False)
-    # RELATIONSHIPS
+    
+    # Relazione con la tabella 'Prodotto'
     rel_prodotti = db.relationship('Prodotto', back_populates='rel_produttore')
 
     serialize_rules = ('-rel_prodotti.rel_produttore',)
 
+# Modello per la tabella 'prodotti'
 class Prodotto(db.Model, SerializerMixin):
     __tablename__ = 'prodotti'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     produttore_id = db.Column(db.Integer, db.ForeignKey('produttori.id'), nullable=False)
     nome_prodotto = db.Column(db.String(50), nullable=False)
     immagine = db.Column(db.String(255))  # Nuovo campo per l'URL dell'immagine
-    # RELATIONSHIPS
+    
+    # Relazione con le tabelle 'Lotto' e 'Produttore'
     rel_lotti = db.relationship('Lotto', back_populates='rel_prodotto')
     rel_produttore = db.relationship('Produttore', back_populates='rel_prodotti')
 
@@ -54,7 +74,7 @@ class Prodotto(db.Model, SerializerMixin):
     # che provocano la ricorsione!
     # serialize_only = ('nome_prodotto', 'rel_produttore')
 
-
+# Modello per la tabella 'lotti'
 class Lotto(db.Model, SerializerMixin):
     __tablename__ = 'lotti'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -64,7 +84,8 @@ class Lotto(db.Model, SerializerMixin):
     qta_lotto = db.Column(db.Integer, nullable=False)
     prezzo_unitario = db.Column(db.Float, nullable=False)
     sospeso = db.Column(db.Boolean, default=False)
-    # RELATIONSHIPS
+    
+     # Relazione con le tabelle 'Prodotto' e 'Prenotazione'
     rel_prodotto = db.relationship('Prodotto', back_populates='rel_lotti')
     rel_prenotazioni = db.relationship('Prenotazione', back_populates='rel_lotto')
 
@@ -82,13 +103,16 @@ class Lotto(db.Model, SerializerMixin):
     #     'get_qta_disponibile',
     # )
 
+     # Funzione per ottenere la quantità disponibile del lotto
     def get_date(self):
         res_data = self.data_consegna.strftime('%A %d/%m/%Y')
         return res_data  # es. "Giovedì 27/06/2024"
 
+    # Funzione per ottenere il prezzo come stringa formattata
     def get_prezzo_str(self):
         return f'{self.prezzo_unitario} €/{self.qta_unita_misura}'  # es. "8.50 €/L"
 
+     # Funzione per ottenere la data di consegna come stringa formattata
     def get_qta_disponibile(self):
         qta_prenotata = 0
         for prenot in self.rel_prenotazioni:
@@ -96,25 +120,27 @@ class Lotto(db.Model, SerializerMixin):
         
         return self.qta_lotto - qta_prenotata
 
+# Modello per la tabella 'prenotazioni'
 class Prenotazione(db.Model, SerializerMixin):
     __tablename__ = 'prenotazioni'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     lotto_id = db.Column(db.Integer, db.ForeignKey('lotti.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     qta = db.Column(db.Integer, nullable=False)
-    # RELATIONSHIPS
+
+    # Relazione con le tabelle 'User' e 'Lotto'
     rel_lotto = db.relationship('Lotto', back_populates='rel_prenotazioni')
     rel_user = db.relationship('User', back_populates='rel_prenotazioni')
 
     serialize_rules = ('-rel_lotto.rel_prenotazioni', '-rel_user.rel_prenotazioni')
 
-    # Definisco un unique constraint per la coppia lotto_id e user_id
-    # in modo che non sia possibile creare una prenotazione con i medesimi
+    # Vincolo per assicurarsi che non sia possibile creare una prenotazione con i medesimi
     # user_id e lotto_id
     __table_args__ = (
         db.UniqueConstraint('lotto_id', 'user_id', name='lotto_user_unique'),
     )
 
+# Funzione per inizializzare il database
 def init_db():
     # Crea le tabelle solo se non esistono già
     db.create_all()
@@ -157,3 +183,23 @@ def init_db():
         
         # Eseguo il commit della sessione per scrivere i dati nel database
         db.session.commit()
+
+# Funzione per rehash delle password degli utenti
+def rehash_passwords():
+    with app.app_context():
+        users = User.query.all()
+        for user in users:
+            # Verifica se la password è già hashata (ad esempio, la lunghezza dell'hash bcrypt è 60 caratteri)
+            if len(user.password) != 60 or not user.password.startswith('$2b$'):
+                # Hash la password con bcrypt
+                hashed_password = bcrypt.generate_password_hash(user.password).decode('utf-8')
+                user.password = hashed_password
+                print(f"Password re-hashata per l'utente: {user.email}")
+        db.session.commit()
+        print("Re-hashing completato.")
+
+if __name__ == '__main__':
+    # Inizializza il database
+    init_db()
+    # Rehash delle password degli utenti
+    rehash_passwords()

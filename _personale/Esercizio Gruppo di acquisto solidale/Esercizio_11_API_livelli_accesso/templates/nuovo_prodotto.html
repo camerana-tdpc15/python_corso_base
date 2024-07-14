@@ -1,0 +1,30 @@
+{% extends "_layout.html" %}
+
+{% block title %}Nuovo Prodotto{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h2>Nuovo Prodotto</h2>
+        <form method="POST">
+            <div class="mb-2">
+                <label for="produttore_id" class="form-label">Produttore</label>
+                <select class="form-select" id="produttore_id" name="produttore_id" required>
+                    {% for produttore in produttori %}
+                    <option value="{{ produttore.id }}">{{ produttore.nome_produttore }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-2">
+                <label for="nome_prodotto" class="form-label">Nome prodotto</label>
+                <input type="text" class="form-control" id="nome_prodotto" name="nome_prodotto" required>
+            </div>
+            <div class="mb-2">
+                <label for="immagine" class="form-label">Nome immagine</label>
+                <input type="text" class="form-control" id="immagine" name="immagine" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Aggiungi prodotto</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
