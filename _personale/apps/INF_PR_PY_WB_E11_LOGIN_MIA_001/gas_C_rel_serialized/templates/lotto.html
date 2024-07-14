@@ -22,6 +22,7 @@
                 <div class="text-end"><small>(cod. lotto {{ lotto.id }})</small></div>
             </div>
             <div class="card-body">
+                <img class="card-img-top" src="{{ lotto.prodotto.immagine }}" alt="Card image" style="width:100%">
                 <p class="card-text">
                     <small>Disponibile da:</small> <b>{{ lotto.get_date() }}</b>
                 </p>

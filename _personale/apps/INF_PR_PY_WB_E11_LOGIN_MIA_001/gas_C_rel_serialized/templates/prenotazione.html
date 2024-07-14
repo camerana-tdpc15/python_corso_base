@@ -16,6 +16,7 @@
                 <div class="text-end"><small>(cod. lotto {{ prenotazione.lotto.id }} / prenot. {{ prenotazione.id }})</small></div>
             </div>
             <div class="card-body">
+                <img class="card-img-top" src="{{ prenotazione.lotto.prodotto.immagine }}" alt="Card image" style="width:100%">
                 <p class="card-text">
                     <small>Disponibile da:</small> <b>{{ prenotazione.lotto.get_date() }}</b>
                 </p>
