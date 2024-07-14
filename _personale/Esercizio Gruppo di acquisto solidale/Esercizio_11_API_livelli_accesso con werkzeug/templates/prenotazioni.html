@@ -1,0 +1,21 @@
+{% extends "_layout.html" %}
+
+{% block title %}Le tue Prenotazioni{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="my-4">{{ user.nome }}, ecco le tue prenotazioni:</h1>
+
+    <div id="prenotazioni-container">
+        <!-- Popolato da prenotazioni.js -->
+    </div>
+
+    <p id="no-prenotazioni-message" style="display: none;">Non hai prenotazioni.</p>
+    <h3 id="total-price" class="text-end mt-4">Totale complessivo: 0 €</h3>
+    <div class="text-center mt-4">
+        <a href="{{ url_for('home') }}" class="btn btn-primary">Effettua un'altra prenotazione</a>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='scripts/prenotazioni.js') }}"></script>
+{% endblock %}

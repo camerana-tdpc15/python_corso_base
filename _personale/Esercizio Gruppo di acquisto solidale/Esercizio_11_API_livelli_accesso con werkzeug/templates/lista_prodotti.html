@@ -1,0 +1,25 @@
+{% extends "_layout.html" %}
+{% block content %}
+<h2>Lista Prodotti</h2>
+<a href="{{ url_for('gestisci_prodotto') }}" class="btn btn-success mb-3">Aggiungi/Modifica Prodotto</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nome Prodotto</th>
+            <th>Produttore</th>
+            <th>Azioni</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for prodotto in prodotti %}
+        <tr>
+            <td>{{ prodotto.nome_prodotto }}</td>
+            <td>{{ prodotto.rel_produttore.nome_produttore }}</td>
+            <td>
+                <a href="{{ url_for('gestisci_prodotto', id=prodotto.id) }}" class="btn btn-sm btn-primary">Modifica</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

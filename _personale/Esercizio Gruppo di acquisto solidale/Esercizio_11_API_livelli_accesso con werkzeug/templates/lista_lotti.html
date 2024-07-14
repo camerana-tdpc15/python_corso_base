@@ -1,0 +1,31 @@
+{% extends "_layout.html" %}
+{% block content %}
+<h2>Lista Lotti</h2>
+<a href="{{ url_for('gestisci_lotto') }}" class="btn btn-success mb-3">Aggiungi/Modifica Lotto</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Prodotto</th>
+            <th>Data Consegna</th>
+            <th>Quantità</th>
+            <th>Prezzo Unitario</th>
+            <th>Sospeso</th>
+            <th>Azioni</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for lotto in lotti %}
+        <tr>
+            <td>{{ lotto.rel_prodotto.nome_prodotto }}</td>
+            <td>{{ lotto.data_consegna.strftime('%d/%m/%Y') }}</td>
+            <td>{{ lotto.qta_lotto }} {{ lotto.qta_unita_misura }}</td>
+            <td>{{ lotto.prezzo_unitario }} €</td>
+            <td>{% if lotto.sospeso %}Sì{% else %}No{% endif %}</td>
+            <td>
+                <a href="{{ url_for('gestisci_lotto', id=lotto.id) }}" class="btn btn-sm btn-primary">Modifica</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

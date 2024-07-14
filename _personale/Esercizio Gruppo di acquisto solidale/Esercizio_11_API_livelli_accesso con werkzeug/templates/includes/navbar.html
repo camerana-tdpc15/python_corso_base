@@ -1,0 +1,54 @@
+<nav class="navbar navbar-expand-lg navbar-dark custom-navbar">
+    <div class="container-fluid">
+      <!-- Logo e brand -->
+      <a class="navbar-brand" href="#">
+        <img src="/static/imgs/logo_bio.jpg" width="30" height="30" class="d-inline-block align-text-top" alt="Logo">
+        Acquista naturale!
+      </a>
+      <!-- Bottone per il toggle della navbar su dispositivi mobili -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <!-- Collegamenti della navbar -->
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+          </li>
+          {% if g.user %}
+            <!-- Collegamenti visibili solo se l'utente è loggato -->
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('mostra_prenotazioni') }}">Le mie prenotazioni</a>
+            </li>
+            {% if g.user.ruolo == 'admin' %}
+              <!-- Collegamenti aggiuntivi visibili solo se l'utente è un amministratore -->
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('lista_produttori') }}">Gestisci Produttori</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('lista_prodotti') }}">Gestisci Prodotti</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('lista_lotti') }}">Gestisci Lotti</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('gestisci_utenti') }}">Gestisci Utenti</a>
+              </li>
+            {% endif %}
+            <!-- Link per il logout -->
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+            </li>
+          {% else %}
+            <!-- Collegamenti visibili solo se l'utente non è loggato -->
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('registrazione') }}">Registrazione</a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>

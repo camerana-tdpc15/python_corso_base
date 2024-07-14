@@ -1,0 +1,7 @@
+Flask
+Flask-SQLAlchemy
+sqlalchemy-serializer
+flask-bcrypt
+flask-limiter
+
+# admin admin@admin.com Ciotola<1

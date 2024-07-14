@@ -1,0 +1,45 @@
+{% extends "_layout.html" %}
+
+{% block title %}Nuovo Lotto{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h2>Nuovo Lotto</h2>
+        <form method="POST" action="{{ url_for('nuovo_lotto') }}">
+            <div class="mb-2">
+                <label for="prodotto_id" class="form-label">Prodotto</label>
+                <select class="form-select" id="prodotto_id" name="prodotto_id" required>
+                    {% for prodotto in prodotti %}
+                    <option value="{{ prodotto.id }}">{{ prodotto.nome_prodotto }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-2">
+                <label for="data_consegna" class="form-label">Data Consegna</label>
+                <input type="date" class="form-control" id="data_consegna" name="data_consegna" required>
+            </div>
+            <div class="mb-2">
+                <label for="qta_unita_misura" class="form-label">Unità di Misura</label>
+                <input type="text" class="form-control" id="qta_unita_misura" name="qta_unita_misura" required>
+            </div>
+            <div class="mb-2">
+                <label for="qta_lotto" class="form-label">Quantità Lotto</label>
+                <input type="number" class="form-control" id="qta_lotto" name="qta_lotto" required>
+            </div>
+            <div class="mb-2">
+                <label for="prezzo_unitario" class="form-label">Prezzo Unitario</label>
+                <input type="number" step="0.01" class="form-control" id="prezzo_unitario" name="prezzo_unitario" required>
+            </div>
+            <div class="mb-2">
+                <label for="sospeso" class="form-label">Sospeso</label>
+                <select class="form-select" id="sospeso" name="sospeso" required>
+                    <option value=0>No</option>
+                    <option value=1>Sì</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Aggiungi Lotto</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

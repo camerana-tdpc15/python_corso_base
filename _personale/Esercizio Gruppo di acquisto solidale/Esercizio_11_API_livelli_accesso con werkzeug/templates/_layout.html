@@ -1,0 +1,45 @@
+<!doctype html>
+<html class="h-100">
+<head>
+    <!-- BLOCCO DEL TITOLO -->
+    <title>{% block title %}- Sito GAS{% endblock %}</title>
+    <!-- Inclusione del file head.html -->
+    {% include 'includes/head.html' %}
+</head>
+<body class="d-flex flex-column h-100 bg-gas-sfondo">
+
+    <header>
+        <!-- Inclusione del file navbar.html -->
+        {% include 'includes/navbar.html' %}
+    </header>
+    
+    <main class="flex-shrink-0">
+        <div class="container mt-4">
+    
+        <!-- Inclusione del file flash.html -->
+        {% include 'includes/flash.html' %}
+
+        <!-- BLOCCO DEL CONTENUTO -->
+        {% block content %}{% endblock %}
+    
+        </div>
+    </main>
+
+    <!-- Inclusione del file footer.html -->
+    {% include 'includes/footer.html' %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Seleziona tutti gli elementi con la classe 'toast'
+        var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+        // Crea una lista di oggetti toast
+        var toastList = toastElList.map(function (toastEl) {
+            return new bootstrap.Toast(toastEl, { delay: 5000 });
+        });
+        // Mostra ogni toast
+        toastList.forEach(toast => toast.show());
+    });
+</script>
+</body>
+</html>
+

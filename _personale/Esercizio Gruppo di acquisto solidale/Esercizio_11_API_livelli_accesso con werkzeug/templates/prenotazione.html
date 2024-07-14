@@ -1,0 +1,18 @@
+{% extends "_layout.html" %}
+
+{% block title %}Aggiorna Prenotazione{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="my-4">Aggiorna Prenotazione</h1>
+
+    <form method="POST" action="{{ url_for('aggiorna_prenotazione', id_prenotazione=prenotazione.id) }}">
+        <div class="mb-3">
+            <label for="quantita" class="form-label">Quantità</label>
+            <input type="number" class="form-control" id="quantita" name="quantita" value="{{ prenotazione.qta }}" min="1" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Aggiorna</button>
+        <a href="{{ url_for('mostra_prenotazioni') }}" class="btn btn-secondary">Annulla</a>
+    </form>
+</div>
+{% endblock %}
