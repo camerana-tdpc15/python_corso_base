@@ -1,0 +1,92 @@
+{% extends "_layout_base.html" %}
+
+{% block title %}Prenotazione {{ super() }}{% endblock %}
+
+{% block h1 %}
+{% if prenotazione_esistente %}
+    {% if azione == 'nuovaPrenotazione' %}
+        Aggiungi alla tua prenotazione
+    {% elif azione == 'aggiornaPrenotazione' %}
+        Aggiorna la tua prenotazione
+    {% endif %}
+{% else %}
+    Nuova prenotazione
+{% endif %}
+
+{% endblock %}
+
+{% block content %}
+<div class="row mb-4 justify-content-center">
+    <!-- lotto infos -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">
+                    {{ lotto.prodotto.nome }}
+                </h4>
+                <div class="text-end"><small>(cod. lotto {{ lotto.id }})</small></div>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    <small>Disponibile da:</small> <b>{{ lotto.get_date() }}</b>
+                </p>
+                <p class="card-text">
+                    <small>Prodotto da:</small> <b>{{ lotto.prodotto.produttore.nome }}</b>
+                </p>
+                <p class="card-text">
+                    <small>Q.tà totale lotto:</small> <b>{{ lotto.qta_lotto }} {{ lotto.qta_unita_misura }}</b>
+                </p>
+                <p class="card-text">
+                    <small>Q.tà disponibile:</small> <b>{{ lotto.get_qta_disponibile() }} {{ lotto.qta_unita_misura }}</b>
+                </p>
+                <p class="card-text">
+                    <small>Prezzo:</small> <b>{{ lotto.get_prezzo_str() }}</b>
+                </p>
+                {% if prenotazione_esistente %}
+                <div class="row alert alert-primary text-center">
+                    <div class="col card-text">
+                        <small>Q.tà già prenotata:</small> <b>{{ prenotazione_esistente.qta }} {{ lotto.qta_unita_misura }}</b>
+                    </div>
+                    <div class="col card-text">
+                        <small>Prezzo totale:</small> <b>{{ prenotazione_esistente.get_prezzo_totale_str() }}</b>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            <!-- Form per la creazione o la modifica di una prenotazione -->
+            <div class="card-footer">
+                <form method="POST">
+                    <!-- <input type="hidden" name="lotto_id" value="{{ lotto.id }}"> -->
+                    {% if azione == 'nuovaPrenotazione' %}
+                        <div class="form-group mb-3">
+                            <label for="quantita" class="form-label">Quantità</label>
+                            <input type="number" class="form-control" id="quantita" name="quantita"
+                                required min="1" max="{{ lotto.get_qta_disponibile() }}"
+                                value="{{ quantita }}">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100" name="azione" value="nuovaPrenotazione">
+                            {% if prenotazione_esistente %} Aggiungi quantità {% else %} Prenota quantità {% endif %}
+                        </button>
+                    {% elif azione == 'aggiornaPrenotazione' %}
+                        <div class="form-group mb-3">
+                            <label for="quantita" class="form-label">Quantità</label>
+                            <input type="number" class="form-control" id="quantita" name="quantita"
+                                required min="0" max="{{ lotto.get_qta_disponibile() + prenotazione_esistente.qta}}"
+                                value="{{ quantita }}">
+                        </div>
+                        <button type="submit" class="btn btn-primary" name="azione" value="aggiornaPrenotazione">Modifica quantità</button>
+                        <button type="submit" class="btn btn-danger float-end" name="azione" value="eliminaPrenotazione"
+                                onclick="return confirm('Sei sicuro di voler eliminare la prenotazione?')">
+                            Elimina prenotazione
+                        </button>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='scripts/load_prenotazione.js') }}"></script>
+{% endblock %}
