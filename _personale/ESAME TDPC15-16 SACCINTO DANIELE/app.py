@@ -16,7 +16,37 @@ db.init_app(app)  # Inizializza l'istanza di SQLAlchemy con l'app Flask
 
 @app.route('/')
 def home():
-    return render_template('login.html')
+    return render_template('home.html')
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        # ATTENZIONE: Possiamo usare la password come parametro di ricerca
+        #             perché l'abbiamo memorizzata in chiaro (e non come "hash")
+        user = utente.query.filter_by(email=email, password=password).first()
+        if user:
+            session['utente_id'] = user.id
+            # flash('Login riuscito!')
+            return redirect(url_for('home'))
+        else:
+            # flash('Credenziali non valide!')
+            return redirect(url_for('login'))
+    
+    elif request.method == 'GET':
+        return render_template('login.html')
+    
+
+
+
+
+@app.route('/logout')
+def logout():
+    session.pop('utente_id', None)
+    # flash('Logout effettuato con successo!')
+    return redirect(url_for('home'))
 
 
 
