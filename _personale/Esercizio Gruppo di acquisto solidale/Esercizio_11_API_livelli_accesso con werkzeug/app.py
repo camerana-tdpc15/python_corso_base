@@ -7,7 +7,7 @@ import shutil
 from flask import Flask, flash, g, render_template, jsonify, request, session, redirect, url_for
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-from werkzeug.security import check_password_hash  # Aggiunta questa importazione
+from werkzeug.security import check_password_hash, generate_password_hash# Aggiunta questa importazione
 from werkzeug.utils import secure_filename
 from settings import DATABASE_PATH
 from models import db, init_db, Lotto, Prodotto, Produttore, User, Prenotazione
@@ -275,7 +275,7 @@ def registrazione():
             flash('Email già registrata. Utilizza un\'altra email.', 'danger')
             return render_template('registrazione.html')
 
-        hashed_password = bcrypt.generate_password_hash(request.form['password']).decode('utf-8')
+        hashed_password = generate_password_hash(request.form['password'])
         new_user = User(
             nome=request.form['nome'],
             cognome=request.form['cognome'],
