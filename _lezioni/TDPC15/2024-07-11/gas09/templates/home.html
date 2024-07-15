@@ -1,0 +1,15 @@
+{% extends "_layout.html" %}
+
+{% block title %}Lotti disponibili - GAS{% endblock %}
+
+{% block content %}
+
+    <h1 class="text-center my-4">Lotti disponibili</h1>
+
+    <div class="row" id="row-lotti">
+        <!-- popolato dinamicamente da js -->
+    </div>
+
+    <script src="{{ url_for('static', filename='scripts/lotti.js') }}"></script>
+
+{% endblock %}
