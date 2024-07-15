@@ -113,7 +113,7 @@ def init_db():
                 # Se la chiave 'data_consegna' è presente nel dizionario
                 if 'data_ora' in record_dict:
                 #     # Converto il valore della 'data_consegna' in un oggetto date
-                    var_data_ora = date.fromisoformat(record_dict['data_ora'],'%d-%m-%Y-%H:%M:%S')
+                    var_data_ora = datetime.strptime(record_dict['data_ora'],'%d-%m-%Y-%H:%M:%S')
                     record_dict['data_ora'] = var_data_ora
 
                 # Creo un nuovo record del modello corrispondente
