@@ -9,48 +9,43 @@ from flask_limiter.util import get_remote_address
 from settings import DATABASE_PATH
 from models import db, init_db, Lotto, Prodotto, Produttore, User, Prenotazione
 
+# Imposta la localizzazione italiana per le date
 locale.setlocale(locale.LC_TIME, 'it_IT')
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+DATABASE_PATH
+# Configurazione dell'URI del database e della chiave segreta per l'app Flask
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + DATABASE_PATH
 app.config['SECRET_KEY'] = 'mysecretkey'
 
-db.init_app(app)  # Inizializza l'istanza di SQLAlchemy con l'app Flask
+# Inizializza l'istanza di SQLAlchemy con l'app Flask
+db.init_app(app)  
 
-# Configurazione di Flask-Limiter
-limiter = Limiter(
-    get_remote_address,
-    app=app,
-    default_limits=["200 per day", "50 per hour"]
-)
+# Configurazione di Flask-Limiter per limitare il numero di richieste
+limiter = Limiter(get_remote_address, app=app, default_limits=["200 per day", "50 per hour"])
 
 # Funzione per convalidare la password
 def is_password_strong(password):
-    """Controlla se la password soddisfa i criteri di sicurezza."""
-    if len(password) < 8:
-        return False
-    if not re.search("[a-z]", password):
-        return False
-    if not re.search("[A-Z]", password):
-        return False
-    if not re.search("[0-9]", password):
-        return False
-    if not re.search("[!@#$%^&*(),.?\":{}|<>]", password):
-        return False
-    return True
+    return (len(password) >= 8 and
+            re.search("[a-z]", password) and
+            re.search("[A-Z]", password) and
+            re.search("[0-9]", password) and
+            re.search("[!@#$%^&*(),.?\":{}|<>]", password))
 
-# Listener per l'evento first_request per creare l'admin di default
+# Listener per l'evento before_request per caricare l'utente loggato
 @app.before_request
-def before_request():
-    if not hasattr(g, 'initialized'):
+def load_logged_in_user():
+    user_id = session.get('user_id')
+    g.user = User.query.get(user_id) if user_id else None
+    if not getattr(g, 'initialized', False):
         create_default_admin()
         g.initialized = True
 
+# Funzione per creare un admin di default se non esiste
 def create_default_admin():
     if not User.query.filter_by(email='admin@admin.com').first():
-        hashed_password = bcrypt.generate_password_hash('Ciotola_1').decode('utf-8')
+        hashed_password = bcrypt.generate_password_hash('Ciotola<1').decode('utf-8')
         default_admin = User(
             nome='Admin',
             cognome='Default',
@@ -62,7 +57,7 @@ def create_default_admin():
         db.session.add(default_admin)
         db.session.commit()
 
-# Funzioni per il controllo dei ruoli
+# Funzioni per il controllo dell'autenticazione come admin
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -71,7 +66,7 @@ def admin_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-# Decoratore per proteggere le rotte che richiedono autenticazione
+# Funzione per il controllo dell'autenticazione
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -81,53 +76,26 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-@app.before_request
-def load_logged_in_user():
-    user_id = session.get('user_id')
-    if user_id is None:
-        g.user = None
-    else:
-        g.user = User.query.get(user_id)
-
-# Mostra l'elenco dei lotti disponibili
+# Route per la home page
 @app.route('/')
 def home():
-    user = None
-    if 'user_id' in session:
-        user = db.session.get(User, session['user_id'])
+    user = db.session.get(User, session.get('user_id')) if 'user_id' in session else None
     return render_template('home.html', user=user)
 
-# Restituisce i dati dei lotti disponibili in formato JSON
+# API per ottenere i lotti
 @app.route('/api/lotti', methods=['GET'])
 def get_lotti():
-
-    # Leggo i parametri passati in query string
     order = request.args.get('order', 'asc')
-
-    if order == 'asc':
-        lotti = Lotto.query.order_by(Lotto.data_consegna).all()
-    elif order == 'desc':
-        lotti = Lotto.query.order_by(Lotto.data_consegna.desc()).all()
-    else:
+    if order not in ['asc', 'desc']:
         return 'Parametro order non valido. Utilizzare "asc" o "desc".'
+    
+    lotti = Lotto.query.order_by(Lotto.data_consegna.desc() if order == 'desc' else Lotto.data_consegna).all()
+    return jsonify([lotto.to_dict() for lotto in lotti])
 
-    lotti_data = []
-    for lotto in lotti:
-        dict_lotto = lotto.to_dict()
-        lotti_data.append(dict_lotto)
-
-    return jsonify(lotti_data)
-
-
-@app.route('/lotto/<int:id_lotto>', methods=['GET']) # verifico che sia un integer
+# Route per visualizzare un singolo lotto
+@app.route('/lotto/<int:id_lotto>', methods=['GET'])
 @login_required
-def mostra_lotto(id_lotto): #endpoint
-    # Controllare che l'utente sia loggato
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-
-
-    # Ottengo il record del lotto a partire dal suo ID
+def mostra_lotto(id_lotto):
     lotto = db.session.get(Lotto, id_lotto)
     if not lotto:
         return 'Lotto non trovato!', 404
@@ -135,47 +103,32 @@ def mostra_lotto(id_lotto): #endpoint
     prenot_utente = Prenotazione.query.filter_by(
         user_id=session['user_id'],
         lotto_id=id_lotto
-    ).first()           # se uso all ottengo una lista, meglio usare first o one
+    ).first()
 
-    # Se l'utente ha delle prenotazioni su qusto specifico lotto
     if prenot_utente:
         return redirect(url_for('aggiorna_prenotazione', id_prenotazione=prenot_utente.id))
-    # Se l'utente non ha delle prenotazioni su questo specifico lotto
     else:
         return render_template('lotto.html', lotto=lotto, user=g.user)
-    
+
+# Route per creare una nuova prenotazione
 @app.route('/lotto/<int:id_lotto>', methods=['POST'])
+@login_required
 def nuova_prenotazione(id_lotto):
-    if 'user_id' not in session:
-        return 'non sei autorizzato', 401
-    else:       # istruzione inutile a livello di programma, ma esplicita che se non sei loggato non puoi continuare
-        pass
-    
-    quantita = request.form.get('quantita')
     try:
-        quantita = int(quantita)
+        quantita = int(request.form.get('quantita'))
     except ValueError:
         flash('Quantità non valida!', 'warning')
         return redirect(url_for('mostra_lotto', id_lotto=id_lotto))
 
-     # Ottieni l'oggetto Lotto dal database 
     lotto = db.session.get(Lotto, id_lotto)
     if not lotto:
         flash('Lotto non trovato!', 'danger')
         return redirect(url_for('home'))
 
-    # Ottieni la quantità disponibile dal metodo dell'oggetto Lotto
     quantita_disp = lotto.get_qta_disponibile()
 
-    # verifica che la quantità sia 
-    #   - minore o uguale alla quantità disponibile
-    #   - che sia un valore > o = a 1
-    if quantita < 1:
-        flash('La quantità deve essere maggiore di 0', 'warning')
-        return redirect(url_for('mostra_lotto', id_lotto=id_lotto))
-    
-    if quantita > quantita_disp:
-        flash('La quantità deve essere minore o uguale a quella disponibile', 'warning')
+    if quantita < 1 or quantita > quantita_disp:
+        flash('Quantità non valida.', 'warning')
         return redirect(url_for('mostra_lotto', id_lotto=id_lotto))
 
     new_prenotazione = Prenotazione(qta=quantita, lotto_id=id_lotto, user_id=session['user_id'])
@@ -190,42 +143,23 @@ def nuova_prenotazione(id_lotto):
 
     return redirect(url_for('mostra_prenotazioni'))
 
+# Route per aggiornare una prenotazione esistente
 @app.route('/prenotazione/<int:id_prenotazione>', methods=['GET', 'POST'])
 @login_required
 @limiter.limit("5 per minute")
 def aggiorna_prenotazione(id_prenotazione):
-    # Check if the user is logged in
-    if 'user_id' not in session:
-        flash('Non sei autorizzato', 'danger')
-        return redirect(url_for('login'))
-
-    # Fetch dei dettagli della prenotazione
     prenotazione = db.session.get(Prenotazione, id_prenotazione)
-    if not prenotazione:
-        flash('Prenotazione non trovata!', 'danger')
-        return redirect(url_for('mostra_prenotazioni'))
-
-    # Verificare che l'utente loggato è autorizzato a modificare la prenotazione
-    if prenotazione.user_id != session['user_id']:
-        flash('Non sei autorizzato a modificare questa prenotazione', 'danger')
+    if not prenotazione or prenotazione.user_id != session['user_id']:
+        flash('Prenotazione non trovata o non autorizzata!', 'danger')
         return redirect(url_for('mostra_prenotazioni'))
 
     if request.method == 'POST':
         quantita = int(request.form.get('quantita'))
-        # Fetch al lotto associato
-        lotto = db.session.get(Lotto, prenotazione.lotto_id)
-        if not lotto:
-            flash('Lotto non trovato!', 'danger')
-            return redirect(url_for('mostra_prenotazioni'))
+        lotto = prenotazione.rel_lotto
+        quantita_disp = lotto.get_qta_disponibile() + prenotazione.qta
 
-        quantita_disp = lotto.get_qta_disponibile()
-
-        if quantita < 1:
-            flash('La quantità deve essere maggiore di 0', 'warning')
-            return redirect(url_for('aggiorna_prenotazione', id_prenotazione=id_prenotazione))
-
-        if quantita > quantita_disp + prenotazione.qta:
-            flash('La quantità deve essere minore o uguale a quella disponibile', 'warning')
+        if quantita < 1 or quantita > quantita_disp:
+            flash('Quantità non valida.', 'warning')
             return redirect(url_for('aggiorna_prenotazione', id_prenotazione=id_prenotazione))
 
         prenotazione.qta = quantita
@@ -235,89 +169,65 @@ def aggiorna_prenotazione(id_prenotazione):
 
     return render_template('prenotazione.html', prenotazione=prenotazione, user=g.user)
 
-    
+# Route per visualizzare tutte le prenotazioni dell'utente
 @app.route('/prenotazioni')
 @login_required
 def mostra_prenotazioni():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-    user = None                                               # ho aggiunto g. vedere se da dei problemi
-    if 'user_id' in session:
-        user = db.session.get(User, session['user_id'])       # ho aggiunto g. vedere se da dei problemi
-    return render_template('prenotazioni.html', user=g.user)    # qui g. c'era già
+    return render_template('prenotazioni.html', user=g.user)
 
+# API per ottenere le prenotazioni dell'utente
 @app.route('/api/prenotazioni', methods=['GET'])
+@login_required
 def get_prenotazioni():
-    if 'user_id' not in session:
-        return jsonify({"error": "Non sei autorizzato"}), 401
-    
-    # fetch alle prenotazioni dell'utente
-    user_id = session['user_id']
-    prenotazioni = Prenotazione.query.filter_by(user_id=user_id).all()
+    prenotazioni = Prenotazione.query.filter_by(user_id=session['user_id']).all()
+    return jsonify([prenotazione.to_dict() for prenotazione in prenotazioni]), 200
 
-    # controllo se ci sono altre prenotazioni
-    if not prenotazioni:
-        return jsonify([]), 200
-    
-    # Uso SerializerMixin per generare la lista prenotazioni
-    prenotazioni_list = [prenotazione.to_dict() for prenotazione in prenotazioni]
-    
-    return jsonify(prenotazioni_list), 200
-
+# API per modificare una prenotazione
 @app.route('/api/prenotazione/modifica', methods=['POST'])
+@login_required
 def modifica_prenotazione():
-    if 'user_id' not in session:
-        return jsonify({"error": "Non sei autorizzato"}), 401
-    
     data = request.json
-    prenotazione_id = data.get('id')
+    prenotazione = db.session.get(Prenotazione, data.get('id'))
+    if not prenotazione or prenotazione.user_id != session['user_id']:
+        return jsonify({"error": "Prenotazione non trovata"}), 404
+
     try:
         nuova_quantita = int(data.get('quantita'))
     except ValueError:
         return jsonify({"error": "La quantità deve essere un numero intero"}), 400
-    
-    prenotazione = Prenotazione.query.get(prenotazione_id)
-    if not prenotazione or prenotazione.user_id != session['user_id']:
-        return jsonify({"error": "Prenotazione non trovata"}), 404
-    
+
     lotto = prenotazione.rel_lotto
     quantita_disponibile = lotto.get_qta_disponibile() + prenotazione.qta
-    
-    if nuova_quantita > quantita_disponibile:
-        return jsonify({"error": f"Quantità non disponibile. Massimo disponibile: {quantita_disponibile}"}), 400
-    
-    if nuova_quantita <1:
-        return jsonify({"error": "La quantità deve essere maggiore di zero"}), 400
-    
+
+    if nuova_quantita < 1 or nuova_quantita > quantita_disponibile:
+        return jsonify({"error": f"Quantità non valida. Massimo disponibile: {quantita_disponibile}"}), 400
+
     prenotazione.qta = nuova_quantita
     db.session.commit()
-    
+
     return jsonify({"success": True, "message": "Quantità aggiornata con successo"})
 
+# API per eliminare una prenotazione
 @app.route('/api/prenotazione/elimina', methods=['POST'])
+@login_required
 def elimina_prenotazione():
-    if 'user_id' not in session:
-        return jsonify({"error": "Non sei autorizzato"}), 401
-    
     data = request.json
-    prenotazione_id = data.get('id')
-    
-    prenotazione = Prenotazione.query.get(prenotazione_id)
+    prenotazione = db.session.get(Prenotazione, data.get('id'))
     if not prenotazione or prenotazione.user_id != session['user_id']:
         return jsonify({"error": "Prenotazione non trovata"}), 404
-    
+
     db.session.delete(prenotazione)
     db.session.commit()
-    
+
     return jsonify({"success": True, "message": "Prenotazione eliminata con successo"})
 
+# Route per il login
 @app.route('/login', methods=['GET', 'POST'])
 @limiter.limit("10 per minute")
 def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-       
         user = User.query.filter_by(email=email).first()
         if user and bcrypt.check_password_hash(user.password, password):
             session['user_id'] = user.id
@@ -326,40 +236,36 @@ def login():
         else:
             flash('Credenziali non valide!', 'danger')
             return redirect(url_for('login'))
-    
-    elif request.method == 'GET':
-        return render_template('login.html')
-    
+    return render_template('login.html')
+
+# Route per la registrazione
 @app.route('/registrazione', methods=['GET', 'POST'])
 @limiter.limit("5 per minute")
 def registrazione():
     if request.method == 'POST':
-        nome = request.form['nome']
-        cognome = request.form['cognome']
-        telefono = request.form['telefono']
-        email = request.form['email']
-        password = request.form['password']
-
-        if not is_password_strong(password):
-            flash('La password deve contenere almeno 8 caratteri, incluse lettere maiuscole, minuscole, numeri e caratteri speciali.', 'danger')
+        if not is_password_strong(request.form['password']):
+            flash('La password non soddisfa i requisiti di sicurezza.', 'danger')
             return redirect(url_for('registrazione'))
 
-        # Hashing della password con bcrypt
-        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-        
-        # Verifica se l'email esiste già
-        user_exists = User.query.filter_by(email=email).first()
-        if user_exists:
+        if User.query.filter_by(email=request.form['email']).first():
             flash('Email già registrata. Utilizza un\'altra email.', 'danger')
             return render_template('registrazione.html')
-        
-        new_user = User(nome=nome, cognome=cognome, telefono=telefono, email=email, password=hashed_password)
+
+        hashed_password = bcrypt.generate_password_hash(request.form['password']).decode('utf-8')
+        new_user = User(
+            nome=request.form['nome'],
+            cognome=request.form['cognome'],
+            telefono=request.form['telefono'],
+            email=request.form['email'],
+            password=hashed_password
+        )
         db.session.add(new_user)
         db.session.commit()
         flash('Registrazione effettuata con successo. Puoi effettuare il login.', 'success')
         return redirect(url_for('login'))
     return render_template('registrazione.html')
 
+# Route per il logout
 @app.route('/logout')
 @login_required
 def logout():
@@ -367,99 +273,149 @@ def logout():
     flash('Logout effettuato con successo!', 'success')
     return redirect(url_for('home'))
 
-# funzioni per amministratore
-@app.route('/nuovo_produttore', methods=['GET', 'POST'])
+# Route per gestire i produttori (aggiunta/modifica) (solo per admin)
+@app.route('/gestisci_produttore/<int:id>', methods=['GET', 'POST'])
+@app.route('/gestisci_produttore', defaults={'id': None}, methods=['GET', 'POST'])
 @admin_required
-def nuovo_produttore():
+def gestisci_produttore(id):
+    produttore = Produttore.query.get(id) if id else None
     if request.method == 'POST':
-        nome_produttore = request.form['nome_produttore']
-        descrizione = request.form['descrizione']
-        indirizzo = request.form['indirizzo']
-        telefono = request.form['telefono']
-        email = request.form['email']
-        nuovo_produttore = Produttore(
-            nome_produttore=nome_produttore, 
-            descrizione=descrizione, 
-            indirizzo=indirizzo, 
-            telefono=telefono, 
-            email=email)
-        db.session.add(nuovo_produttore)
+        if produttore:
+            produttore.nome_produttore = request.form['nome_produttore']
+            produttore.descrizione = request.form['descrizione']
+            produttore.indirizzo = request.form['indirizzo']
+            produttore.telefono = request.form['telefono']
+            produttore.email = request.form['email']
+            flash('Produttore aggiornato con successo', 'success')
+        else:
+            nuovo_produttore = Produttore(
+                nome_produttore=request.form['nome_produttore'],
+                descrizione=request.form['descrizione'],
+                indirizzo=request.form['indirizzo'],
+                telefono=request.form['telefono'],
+                email=request.form['email']
+            )
+            db.session.add(nuovo_produttore)
+            flash('Nuovo produttore aggiunto con successo', 'success')
+        
         db.session.commit()
-        flash('Produttore aggiunto con successo', 'success')
-        return redirect(url_for('home'))
-    return render_template('nuovo_produttore.html')
-
-@app.route('/nuovo_prodotto', methods=['GET', 'POST'])
-@admin_required
-def nuovo_prodotto():
+        return redirect(url_for('lista_produttori'))
+    
     produttori = Produttore.query.all()
-    if request.method == 'POST':
-        produttore_id = request.form['produttore_id']
-        nome_prodotto = request.form['nome_prodotto']
-        immagine = request.form['immagine']
-        nuovo_prodotto = Prodotto(
-            produttore_id=produttore_id, 
-            nome_prodotto=nome_prodotto, 
-            immagine=immagine)
-        db.session.add(nuovo_prodotto)
-        db.session.commit()
-        flash('Prodotto aggiunto con successo', 'success')
-        return redirect(url_for('home'))
-    return render_template('nuovo_prodotto.html', produttori=produttori)
+    return render_template('gestisci_produttore.html', produttore=produttore, produttori=produttori)
 
-@app.route('/nuovo_lotto', methods=['GET', 'POST'])
+# Route per gestire i produtti (aggiunta/modifica) (solo per admin)
+@app.route('/gestisci_prodotto/<int:id>', methods=['GET', 'POST'])
+@app.route('/gestisci_prodotto', defaults={'id': None}, methods=['GET', 'POST'])
 @admin_required
-def nuovo_lotto():
-    prodotti = Prodotto.query.all()
+def gestisci_prodotto(id):
+    prodotto = Prodotto.query.get(id) if id else None
     if request.method == 'POST':
-        prodotto_id = request.form['prodotto_id']
-        data_consegna = datetime.strptime(request.form['data_consegna'], '%Y-%m-%d')
-        qta_unita_misura = request.form['qta_unita_misura']
-        qta_lotto = request.form['qta_lotto']
-        prezzo_unitario = request.form['prezzo_unitario']
-        sospeso = request.form['sospeso'] == 'true'
-        nuovo_lotto = Lotto(
-            prodotto_id=prodotto_id, 
-            data_consegna=data_consegna, 
-            qta_unita_misura=qta_unita_misura, 
-            qta_lotto=qta_lotto, 
-            prezzo_unitario=prezzo_unitario, 
-            sospeso=sospeso)
-        db.session.add(nuovo_lotto)
+        if prodotto:
+            # Aggiornamento prodotto esistente
+            prodotto.produttore_id = request.form['produttore_id']
+            prodotto.nome_prodotto = request.form['nome_prodotto']
+            prodotto.immagine = request.form['immagine']
+            flash('Prodotto aggiornato con successo', 'success')
+        else:
+            # Creazione nuovo prodotto
+            nuovo_prodotto = Prodotto(
+                produttore_id=request.form['produttore_id'],
+                nome_prodotto=request.form['nome_prodotto'],
+                immagine=request.form['immagine']
+            )
+            db.session.add(nuovo_prodotto)
+            flash('Nuovo prodotto aggiunto con successo', 'success')
+        
         db.session.commit()
-        flash('Lotto aggiunto con successo', 'success')
-        return redirect(url_for('home'))
-    return render_template('nuovo_lotto.html', prodotti=prodotti)
+        return redirect(url_for('lista_prodotti'))
+    
+    prodotti = Prodotto.query.all()
+    produttori = Produttore.query.all()
+    return render_template('gestisci_prodotto.html', prodotto=prodotto, prodotti=prodotti, produttori=produttori)
 
+# Route per gestire i lotti (aggiunta/modifica) (solo per admin)
+@app.route('/gestisci_lotto/<int:id>', methods=['GET', 'POST'])
+@app.route('/gestisci_lotto', defaults={'id': None}, methods=['GET', 'POST'])
+@admin_required
+def gestisci_lotto(id):
+    lotto = Lotto.query.get(id) if id else None
+    if request.method == 'POST':
+        if lotto:
+            lotto.prodotto_id = request.form['prodotto_id']
+            lotto.data_consegna = datetime.strptime(request.form['data_consegna'], '%Y-%m-%d')
+            lotto.qta_unita_misura = request.form['qta_unita_misura']
+            lotto.qta_lotto = int(request.form['qta_lotto'])
+            lotto.prezzo_unitario = float(request.form['prezzo_unitario'])
+            lotto.sospeso = request.form['sospeso'] == 'true'
+            flash('Lotto aggiornato con successo', 'success')
+        else:
+            nuovo_lotto = Lotto(
+                prodotto_id=request.form['prodotto_id'],
+                data_consegna=datetime.strptime(request.form['data_consegna'], '%Y-%m-%d'),
+                qta_unita_misura=request.form['qta_unita_misura'],
+                qta_lotto=int(request.form['qta_lotto']),
+                prezzo_unitario=float(request.form['prezzo_unitario']),
+                sospeso=request.form['sospeso'] == 'true'
+            )
+            db.session.add(nuovo_lotto)
+            flash('Nuovo lotto aggiunto con successo', 'success')
+        
+        db.session.commit()
+        return redirect(url_for('lista_lotti'))
+    
+    lotti = Lotto.query.all()
+    prodotti = Prodotto.query.all()
+    return render_template('gestisci_lotto.html', lotto=lotto, lotti=lotti, prodotti=prodotti)
+
+# Route per la lista dei produttori (solo per admin)
+@app.route('/lista_produttori')
+@admin_required
+def lista_produttori():
+    produttori = Produttore.query.all()
+    return render_template('lista_produttori.html', produttori=produttori)
+
+# Route per la lista dei prodotti (solo per admin)
+@app.route('/lista_prodotti')
+@admin_required
+def lista_prodotti():
+    prodotti = Prodotto.query.all()
+    return render_template('lista_prodotti.html', prodotti=prodotti)
+
+# Route per la lista dei lotti (solo per admin)
+@app.route('/lista_lotti')
+@admin_required
+def lista_lotti():
+    lotti = Lotto.query.all()
+    return render_template('lista_lotti.html', lotti=lotti)
+
+# Route per gestire gli utenti (solo per admin)
 @app.route('/gestisci_utenti', methods=['GET', 'POST'])
 @admin_required
 def gestisci_utenti():
     if request.method == 'POST':
         user_id = request.form['user_id']
         action = request.form['action']
+        user = User.query.get(user_id)
         
-        if action == 'update':
-            nuovo_ruolo = request.form['ruolo']
-            utente = User.query.get(user_id)
-            if utente:
-                utente.ruolo = nuovo_ruolo
-                db.session.commit()
-                flash('Ruolo aggiornato con successo', 'success')
+        if not user:
+            flash('Utente non trovato', 'danger')
+        elif action == 'update':
+            user.ruolo = request.form['ruolo']
+            db.session.commit()
+            flash('Ruolo aggiornato con successo', 'success')
         elif action == 'delete':
-            utente = User.query.get(user_id)
-            if utente:
-                prenotazioni = Prenotazione.query.filter_by(user_id=user_id).count()
-                if prenotazioni > 0:
-                    flash('Impossibile eliminare l\'utente, ci sono delle prenotazioni!', 'danger')
-                else:
-                    db.session.delete(utente)
-                    db.session.commit()
-                    flash('Utente eliminato con successo', 'success')
+            if Prenotazione.query.filter_by(user_id=user_id).count() > 0:
+                flash('Impossibile eliminare l\'utente, ci sono delle prenotazioni!', 'danger')
+            else:
+                db.session.delete(user)
+                db.session.commit()
+                flash('Utente eliminato con successo', 'success')
     
     utenti = User.query.all()
     return render_template('gestisci_utenti.html', utenti=utenti)
 
-
+# Inizializzazione dell'app e del database
 if __name__ == '__main__':
     with app.app_context():
         init_db()

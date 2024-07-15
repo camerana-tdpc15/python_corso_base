@@ -1,0 +1,31 @@
+{% extends "_layout.html" %}
+{% block content %}
+<h2>{% if prodotto %}Modifica{% else %}Aggiungi{% endif %} Prodotto</h2>
+
+<form method="POST" enctype="multipart/form-data">
+    <div class="form-group mt-3">
+        <label for="produttore_id">Produttore</label>
+        <select class="form-control" id="produttore_id" name="produttore_id" required>
+            {% for produttore in produttori %}
+            <option value="{{ produttore.id }}" {% if prodotto and prodotto.produttore_id == produttore.id %}selected{% endif %}>
+                {{ produttore.nome_produttore }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group mt-3">
+        <label for="nome_prodotto">Nome Prodotto</label>
+        <input type="text" class="form-control" id="nome_prodotto" name="nome_prodotto" 
+               value="{{ prodotto.nome_prodotto if prodotto else '' }}" required>
+    </div>
+    <div class="form-group mt-5">
+        <label for="immagine">Carica immagine prodotto</label>
+        <input type="file" class="form-control-file" id="immagine" name="immagine" accept="image/*">
+        {% if prodotto and prodotto.immagine %}
+        <small class="form-text text-muted">Immagine attuale: {{ prodotto.immagine }}</small>
+        {% endif %}
+        <!-- <small class="form-text text-muted">Seleziona un'immagine dal tuo computer.</small> -->
+    </div>
+    <button type="submit" class="btn btn-primary mt-5">{% if prodotto %}Aggiorna{% else %}Aggiungi{% endif %} Prodotto</button>
+</form>
+{% endblock %}
