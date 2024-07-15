@@ -44,8 +44,17 @@ class Prenotazione(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     qta = db.Column(db.Integer, nullable=False)
 
+#Relationship
+rel_lotto = db.relationship('Lotto', back_populates='rel_prenotazioni')
+
+serialize_rules = ('-rel_lotto.rel_prenotazioni',)
+
     # @TODO: Da implementare l'unique constraint per la coppia lotto_id e user_id
-    # ...
+    #in modo che non sia possibile creare una prenotazione con  i medesimi 
+    #user_id e lotto_id
+__table_arg__ = (
+    db.UniqueConstraint('lotto_id', 'user_id', name='lotto_user_unique')
+)
 
 def init_db():
     # Crea le tabelle se non esistono già

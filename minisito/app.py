@@ -6,7 +6,10 @@ app = Flask(__name__)
 @app.route("/")
 def prima_pagina():
 
-    return render_template ('home.html')
+    risultato  = ' 2 + 2'
+    lista = ["mele", "pere", "cani"]
+
+    return render_template ('home.html',var_2 = risultato, var_3 = lista )
 
 
 
