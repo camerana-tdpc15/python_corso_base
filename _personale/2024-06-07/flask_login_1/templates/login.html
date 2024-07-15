@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    {% include 'includes/head.html' %}
+</head>
+<body>
+    {% include 'includes/navbar.html' %}
+
+    <!-- Ho aggiunto dei div con classi Bootstrap per un migliore layout -->
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h2>Login</h2>
+
+                <!-- Ho aggiunto delle classi Bootstrap per migliorare il form -->
+                <form method="post">
+                    <div class="mb-3">
+                        <label for="username_input" class="form-label">Username:</label>
+                        <input type="text" class="form-control" id="username_input" name="tx_user" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password_input" class="form-label">Password:</label>
+                        <input type="password" class="form-control" id="password_input" name="tx_password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" name="bt_login">Invia</button>
+                </form>
+            
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
