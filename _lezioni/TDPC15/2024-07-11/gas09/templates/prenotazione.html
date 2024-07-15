@@ -1,0 +1,65 @@
+{% extends "_layout.html" %}
+
+{% block title %}Prenotazione {{ super() }}{% endblock %}
+
+{% block h1 %}Modifica la tua prenotazione{% endblock %}
+
+{% block content %}
+<div class="row mb-4 justify-content-center">
+    <!-- lotto infos -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">
+                    {{ prenotazione.rel_lotto.rel_prodotto.nome_prodotto }}
+                </h4>
+                <div class="text-end"><small>(cod. lotto {{ prenotazione.rel_lotto.id }} / prenot. {{ prenotazione.id }})</small></div>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    <small>Disponibile da:</small> <b>{{ prenotazione.rel_lotto.get_date() }}</b>
+                </p>
+                <p class="card-text">
+                    <small>Prodotto da:</small> <b>{{ prenotazione.rel_lotto.rel_prodotto.rel_produttore.nome_produttore }}</b>
+                </p>
+                <p class="card-text">
+                    <small>Q.tà totale lotto:</small> <b>{{ prenotazione.rel_lotto.qta_lotto }} {{ prenotazione.rel_lotto.qta_unita_misura }}</b>
+                </p>
+                <p class="card-text">
+                    <small>Q.tà disponibile:</small> <b>{{ prenotazione.rel_lotto.get_qta_disponibile() }} {{ prenotazione.rel_lotto.qta_unita_misura }}</b>
+                </p>
+                <p class="card-text">
+                    <small>Prezzo:</small> <b>{{ prenotazione.rel_lotto.get_prezzo_str() }}</b>
+                </p>
+                <div class="row alert alert-primary text-center">
+                    <div class="col card-text">
+                        <small>Q.tà già prenotata:</small> <b>{{ prenotazione.qta }} {{ prenotazione.rel_lotto.qta_unita_misura }}</b>
+                    </div>
+                </div>
+            </div>
+            <!-- Form per la modifica di una prenotazione -->
+            <div class="card-footer">
+                <form method="POST" action="{{ url_for('modifica_prenotazione', prenotazione_id=prenotazione.id) }}">
+                    <div class="form-group mb-3">
+                        <label for="quantita" class="form-label">Quantità</label>
+                        <input type="number" class="form-control" id="quantita" name="quantita"
+                            required min="0" max="{{ prenotazione.rel_lotto.get_qta_disponibile() + prenotazione.qta}}"
+                            value="{{ prenotazione.qta }}">
+                    </div>
+                    <button type="submit" class="btn btn-primary" name="azione" value="aggiorna">
+                        Modifica quantità
+                    </button>
+                    <button type="submit" class="btn btn-danger float-end" name="azione" value="elimina"
+                            onclick="return confirm('Sei sicuro di voler eliminare la prenotazione?')">
+                        Elimina prenotazione
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='scripts/load_prenotazione.js') }}"></script>
+{% endblock %}

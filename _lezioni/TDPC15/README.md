@@ -39,4 +39,6 @@
 - [2024-07-05](./2024-07-05): `db.relationship()` e argomento `back_populates`, esercizio "web app per prenotazione prodotti (Object Oriented)" (4)
 - [2024-07-07](./2024-07-07): cicli `for` e `while`, esercizio "web app per prenotazione prodotti (Object Oriented)" (5)
 - [2024-07-08](./2024-07-08): esercizio "web app per prenotazione prodotti (Object Oriented)" (6)
-- [2024-07-09](./2024-07-09): riassunto classi nella programmazione ad oggetti, composite unique constraint, esercizio "web app per prenotazione prodotti (Object Oriented)" (6)
+- [2024-07-09](./2024-07-09): riassunto classi nella programmazione ad oggetti, composite unique constraint, esercizio "web app per prenotazione prodotti (Object Oriented)" (7)
+- [2024-07-10](./2024-07-10): ripasso argomenti, caso d'uso dell'app con diagramma di flusso
+- [2024-07-11](./2024-07-11): riflessioni per debriefing finale progetto, esercizio "web app per prenotazione prodotti (Object Oriented)" (8)
