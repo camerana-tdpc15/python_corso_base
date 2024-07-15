@@ -1,0 +1,92 @@
+[
+    {
+        "CodReplica": 1,
+        "Evento": {
+            "CodEvento": 1,
+            "NomeEvento": "Concerto di Chopin",
+            "Locale": {
+                "CodLocale": 1,
+                "Nome": "Music Lounge",
+                "Luogo": "Ponte3-Piano2",
+                "Posti": 150
+            }
+        },        
+        "DataEOra": "27-07-2020-20:30:00",
+        "Annullato": false
+    },
+    {
+        "CodReplica": 2,
+        "Evento": {
+            "CodEvento": 1,
+            "NomeEvento": "Concerto di Chopin",
+            "Locale": {
+                "CodLocale": 1,
+                "Nome": "Music Lounge",
+                "Luogo": "Ponte3-Piano2",
+                "Posti": 150
+            }
+        },
+        "DataEOra": "28-07-2020-20:30:00",
+        "Annullato": false
+    },
+    {
+        "CodReplica": 3,
+        "Evento": {
+            "CodEvento": 1,
+            "NomeEvento": "Concerto di Chopin",
+            "Locale": {
+                "CodLocale": 1,
+                "Nome": "Music Lounge",
+                "Luogo": "Ponte3-Piano2",
+                "Posti": 150
+            }
+        },
+        "DataEOra": "29-07-2020-20:30:00",
+        "Annullato": false
+    },
+    {
+        "CodReplica": 4,
+        "Evento": {
+            "CodEvento": 2,
+            "NomeEvento": "Beethoven sul mare",
+            "Locale": {
+                "CodLocale": 1,
+                "Nome": "Music Lounge",
+                "Luogo": "Ponte3-Piano2",
+                "Posti": 150
+            }
+        },
+        "DataEOra": "01-08-2020-20:30:00",
+        "Annullato": false
+    },
+    {
+        "CodReplica": 5,
+        "Evento": {
+            "CodEvento": 3,
+            "NomeEvento": "Il ventaglio - Goldoni",
+            "Locale": {
+                "CodLocale": 2,
+                "Nome": "Teatro",
+                "Luogo": "Ponte8-Piano3",
+                "Posti": 350
+            }
+        },
+        "DataEOra": "30-07-2020-21:00:00",
+        "Annullato": false
+    },  
+    {
+        "CodReplica": 6,
+        "Evento": {
+            "CodEvento": 4,
+            "NomeEvento": "Pool Brunch Party",
+            "Locale": {
+                "CodLocale": 4,
+                "Nome": "Piscina",
+                "Luogo": "Ponte5-Piano9",
+                "Posti": 150
+            }
+        },
+        "DataEOra": "27-07-2020-21:00:00",
+        "Annullato": true
+    }
+]

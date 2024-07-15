@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html class="h-100" lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- TITLE -->
+    <title>{% block title %}- BioSquadra GAS{% endblock %}</title>
+    
+    <link rel="shortcut icon" href="{{ url_for('static', filename='imgs/shortcut-icon.png') }}">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+</head>
+
+<body class="d-flex flex-column h-100">
+
+    <header>
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+            <div class="container-fluid">
+                <!-- area logo/brand -->
+                <a class="navbar-brand" href="{{ url_for('home') }}">
+                    <img src="/static/imgs/shortcut-icon.png" alt="Logo" width="30" height="30"
+                        class="d-inline-block align-text-top">
+                    BioSquadra
+                </a>
+                <!-- hamburger menu per responsive su mobile -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <!-- voci di menù -->
+                <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('home') }}">Lotti disponibili</a>
+                        </li>
+                        {% if session.user_id %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('prenotazioni') }}">Prenotazioni</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="flex-shrink-0">
+        <section class="container mt-4">
+            <!-- H1 -->
+            <h1 class="mb-3">{% block h1 %} {% endblock %}</h1>
+    
+            <!-- FLASH MESSAGES -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}" role="alert">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- CONTENT -->
+            {% block content %} {% endblock %}
+        </section>
+    </main>
+
+    <footer class="bg-dark text-white text-center py-3 mt-auto">
+        <div class="container">
+            <p>&copy; 2024 BioSquadra GAS. Alcuni diritti riservati.</p>
+            <p>
+                via Roma 100, Qualche Città, 12345, XY<br>
+                Phone: (+39) 123.4567.890 | Email: info@biosquadra.it
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    {% block scripts %} {% endblock %}
+
+</body>
+</html>
