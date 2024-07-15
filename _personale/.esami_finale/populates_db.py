@@ -18,12 +18,12 @@ def init_db():
         ]
 
         repliche = [
-            Replica(evento_id=1, data_ora=datetime.strptime('27-07-2024-20:30:00','%d-%m-%y %-H:%M:%S'),annulato=0),
-            Replica(evento_id=1, data_ora=datetime.strptime('28-07-2024-20:30:00','%d-%m-%y %-H:%M:%S'),annulato=0),
-            Replica(evento_id=1, data_ora=datetime.strptime('29-07-2024-20:30:00','%d-%m-%y %-H:%M:%S'),annulato=0),
-            Replica(evento_id=2, data_ora=datetime.strptime('01-08-2024-20:30:00','%d-%m-%y %-H:%M:%S'),annulato=0),
-            Replica(evento_id=3, data_ora=datetime.strptime('30-07-2024-21:00:00','%d-%m-%y %-H:%M:%S'),annulato=0),
-            Replica(evento_id=3, data_ora=datetime.strptime('27-07-2024-21:00:00','%d-%m-%y %-H:%M:%S'),annulato=1),
+            Replica(evento_id=1, data_ora=datetime.strptime('27-07-2024-20:30:00','%d-%M-%Y %-H:%M:%S'),annulato=0),
+            Replica(evento_id=1, data_ora=datetime.strptime('28-07-2024-20:30:00','%d-%M-%Y %-H:%M:%S'),annulato=0),
+            Replica(evento_id=1, data_ora=datetime.strptime('29-07-2024-20:30:00','%d-%M-%Y %-H:%M:%S'),annulato=0),
+            Replica(evento_id=2, data_ora=datetime.strptime('01-08-2024-20:30:00','%d-%M-%Y %-H:%M:%S'),annulato=0),
+            Replica(evento_id=3, data_ora=datetime.strptime('30-07-2024-21:00:00','%d-%M-%Y %-H:%M:%S'),annulato=0),
+            Replica(evento_id=3, data_ora=datetime.strptime('27-07-2024-21:00:00','%d-%M-%Y %-H:%M:%S'),annulato=1),
          
         ]
 
