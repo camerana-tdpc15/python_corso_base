@@ -2,7 +2,7 @@ console.log('OK')
 
 
 
-// Aggiunge un listener per l'evento 'DOMContentLoaded' che carica le prenotazioni una volta che il DOM è completamente caricato
+// Aggiunge un ascoltatore  per l'evento 'DOMContentLoaded' che carica le prenotazioni una volta che il DOM è completamente caricato
 document.addEventListener('DOMContentLoaded', () => {
     loadPrenotazioni();
 });
@@ -33,6 +33,7 @@ function loadPrenotazioni() {
                             </tr>
                         </thead>
                         <tbody>
+                        
                             ${prenotazioni.map(p => `
                                 <tr>
                                     <td>${p.evento}</td>
@@ -53,7 +54,7 @@ function loadPrenotazioni() {
                         </tbody>
                     </table>
                 `;
-            }
+            } //utiliziamo la funzione .map per ricorrere ogni elemento di ogni array.
         })
         .catch(error => {
             console.error('Error:', error);
@@ -62,9 +63,9 @@ function loadPrenotazioni() {
         });
 }
 
-// Funzione per modificare una prenotazione
-function modificaPrenotazione(prenotazioneId) {
-    // Ottiene la nuova quantità dal campo di input
+// Funzione per modificare la prenotazione
+    function modificaPrenotazione(prenotazioneId) {
+    //creiamo la costante che ottiene la nuova quantità dal campo di input
     const nuovaQuantita = document.getElementById(`quantita-${prenotazioneId}`).value;
     fetch('/api/prenotazioni', {
         method: 'POST',
