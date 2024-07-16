@@ -48,7 +48,18 @@ class replica(db.Model, SerializerMixin):
     rel_eventi= db.relationship('evento',  back_populates='rel_repliche')
     rel_prenotazioni= db.relationship('prenotazione',  back_populates='rel_repliche')
 
-    serialize_rules =('-rel_eventi.rel_repliche', '-rel_prenotazioni.rel_repliche')
+    serialize_rules =('-rel_eventi.rel_repliche', '-rel_prenotazioni.rel_repliche','get_date','get_qta_disponibile')
+
+    def get_date(self):
+        res_data = self.data_ora.strftime('%A %d/%m/%Y')
+        return res_data  # es. "Giovedì 27/06/2024"
+
+    def get_qta_disponibile(self):
+        qta_prenotata = 0
+        for prenot in self.rel_prenotazioni:
+            qta_prenotata += prenot.quantita
+        
+        return self.rel_eventi.rel_locali.posti - qta_prenotata
 
 
 class evento(db.Model, SerializerMixin):
