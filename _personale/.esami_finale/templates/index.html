@@ -5,7 +5,7 @@
 
 <!-- Sovrascrive il contenuto del blocco 'content' definito nel template base -->
 {% block content %}
-<h1 class="mb-4 text-center text-warning"><b>I nostri eventi!</b></h1>
+<h1 class=" eventi mb-4 text-center text-warning"><b>I nostri eventi!</b></h1>
 
 <!-- Controlla se l'utente è loggato e mostra un messaggio di benvenuto o invita a loggarsi -->
 {% if session.get('user_id') %}
@@ -18,12 +18,12 @@
 </div>
 {% endif %}
 
-<div >
+<div id="ecard">
 <!-- Faciamo vedere gli eventi disponibili -->
 <div class="row row-cols-1 row-cols-md-4 g-4">
     {% for evento in eventi %}
     <div class="col">
-        <div class="card h-100">
+        <div class="card cardindex h-100">
             <div class="card-body ">
                 <!-- Titolo e sottotitolo della card -->
                 <h5 class="card-title">{{ evento.nome_evento }}</h5>
@@ -46,7 +46,7 @@
             </div>
             <!-- Sezione che lascia vedere il pulstante solo se sei logato -->
             {% if session.get('user_id') %}
-            <div class="card-footer">
+            <div class="card-footer text-center">
                 <a href="{{ url_for('repliche', evento_id=evento.id) }}" class="btn btn-warning">Prenota</a>
             </div>
             {% endif %}

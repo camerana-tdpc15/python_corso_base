@@ -27,8 +27,8 @@ function loadRepliche(eventoId) {
 // Funzione per creare una card HTML per ogni replica
 function createReplicaCard(replica) {
     return `
-        <div class="col-md-6 mb-3">
-            <div class="card">
+        <div class="col-md-6 mb-3 ">
+            <div class="card cardreplica">
                 <div class="card-body">
                     <h5 class="card-title">${replica.data_ora}</h5>
                     <p class="card-text">Posti disponibili: ${replica.posti_disponibili}</p>
@@ -40,8 +40,10 @@ function createReplicaCard(replica) {
                                     <label for="quantita-${replica.id}" class="form-label ">Quantità:</label>
                                     <input type="number" class="form-control" id="quantita-${replica.id}" name="quantita" value="1" min="1" max="${replica.posti_disponibili}">
                                 </div>
-                                <button type="submit" class="btn btn-outline-success">Prenota</button>
-                            </form>
+                                <div class="text-center">
+                                <button type="submit" class="btn btn-outline-success ">Prenota</button>
+                                </div>
+                                </form>
                         `
                     }
                 </div>

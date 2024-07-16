@@ -1,17 +1,27 @@
 body {
-    background-image: url("https://www.economiadelmare.org/wp-content/uploads/2023/11/Costa-Serena.jpg");
+    background-image: url("..//img/Bella\ crociera.jpg");
     background-repeat: no-repeat;
    
   }
 
-  .contenitore {
+.contenitore {
     border-style: solid;
     border-width: medium;
   }
   
 
-  .footer{
-
-    position: fixed;
-    bottom: 0px;
+#ecard{
+    margin-top: 40px;
+    margin-bottom: 15px;
   }
+
+.eventi{
+    margin-top: 100px;
+  }
+
+.cardreplica{
+  border-radius: 10%;
+}
+.cardindex{
+  border-radius: 10%;
+}
