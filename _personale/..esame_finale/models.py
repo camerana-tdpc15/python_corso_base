@@ -1,0 +1,77 @@
+import locale
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy_serializer import SerializerMixin
+
+locale.setlocale(locale.LC_TIME, 'it_IT')
+
+db = SQLAlchemy()
+
+class Utente(db.Model, SerializerMixin):
+    __tablename__ = 'utenti'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    cognome = db.Column(db.String(50), nullable=False)
+    nome = db.Column(db.String(50), nullable=False)
+    telefono = db.Column(db.String(20))
+    email = db.Column(db.String(50), unique=True, nullable=False)
+    password = db.Column(db.String(30), nullable=False)
+
+    # RELATIONSHIPS
+    prenotazioni = db.relationship('Prenotazione', back_populates='utenti', lazy='dynamic')
+    serialize_rules = ('-password',)
+
+class Prenotazione(db.Model, SerializerMixin):
+    __tablename__ = 'prenotazioni'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    utente_id = db.Column(db.Integer, db.ForeignKey('utenti.id'), nullable=False)
+    replica_id = db.Column(db.Integer, db.ForeignKey('repliche.id'), nullable=False)
+    quantita = db.Column(db.Integer, nullable=False)
+
+    # RELATIONSHIPS
+    utenti = db.relationship('Utente', back_populates='prenotazioni')
+    repliche = db.relationship('Replica', back_populates='prenotazioni')
+
+    serialize_rules = ('-utenti.prenotazioni', '-repliche.prenotazioni')
+
+class Replica(db.Model, SerializerMixin):
+    __tablename__ = 'repliche'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    evento_id = db.Column(db.Integer, db.ForeignKey('eventi.id'), nullable=False)
+    data_ora = db.Column(db.Date, nullable=False)
+    annullato = db.Column(db.Boolean, default=False)
+
+    # RELATIONSHIPS
+    prenotazioni = db.relationship('Prenotazione', back_populates='repliche')
+    eventi = db.relationship('Evento', back_populates='repliche')
+
+    serialize_rules = ('-prenotazioni.repliche', '-eventi.repliche')
+
+    def get_date(self):
+        res_data = self.data_ora.strftime('%d-%m-%y %-H:%M:%S')
+        return res_data 
+
+class Evento(db.Model, SerializerMixin):
+    __tablename__ = 'eventi'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    locale_id = db.Column(db.Integer, db.ForeignKey('locali.id'), nullable=False)
+    nome_evento = db.Column(db.String(50), nullable=False)
+
+    # RELATIONSHIPS
+    repliche = db.relationship('Replica', back_populates='eventi')
+    locali = db.relationship('Locale', back_populates='eventi')
+
+    serialize_rules = ('-repliche.eventi', '-locali.eventi')
+
+class Locale(db.Model, SerializerMixin):
+    __tablename__ = 'locali'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    nome_locale = db.Column(db.String(50), nullable=False)
+    luogo = db.Column(db.String(50), nullable=False)
+    posti = db.Column(db.Integer, nullable=False)
+
+    # RELATIONSHIPS
+    eventi = db.relationship('Evento', back_populates='locali', lazy='dynamic')
+    serialize_rules = ('-eventi.locali',)
+
+__table_args__ = (
+    db.UniqueConstraint('utente_id', 'evento_id', name='utente_id_evento_id_uniq'),
+)
