@@ -54,8 +54,10 @@ def login():
 @app.route('/logout')
 def logout():
     session.pop('utente_id', None)
+    print(session)  # Controllo il contenuto della sessione
     flash('Logout effettuato con successo!')
-    return redirect(url_for('home'))
+    return redirect(url_for('login'))
+
 
 @app.route('/api/eventi', methods=['GET'])
 def get_eventi():
