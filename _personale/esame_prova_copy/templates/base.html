@@ -1,38 +1,30 @@
 <!doctype html>
 <html class="h-100">
-<head>
-    <!-- BLOCCO DEL TITOLO -->
-    <title>{% block title %}- Una rotonda sul mare{% endblock %}</title>
+    <head>
+        <!-- BLOCCO DEL TITOLO -->
+        <title>{% block title %}- Sito Film{% endblock %}</title>
 
-    {% include 'includes/head.html' %}
+        {% include 'includes/head.html' %}
 
-</head>
-<body class="d-flex flex-column h-100">
+    </head>
 
-    <header>
-        {% include 'includes/navbar.html' %}
-    </header>
-    
-    <main class="flex-shrink-0">
-        <div class="container mt-4 mb-4">
-             
-        <h1 class="mb-3">{% block h1 %} {% endblock %}</h1>
-        
-        {% include 'includes/flash.html' %}
+    <body class="d-flex flex-column h-100">
 
-        <!-- BLOCCO DEL CONTENUTO -->
-        {% block content %}{% endblock %}
-    
-        </div>
-    </main>
+        <header>
+            {% include 'includes/navbar.html' %}
+        </header>
 
-    {% include 'includes/footer.html' %}
+        <!-- Contenuto principale della pagina -->
+        <main class="container mt-4">
+            <!-- Gestione dei messaggi flash -->
+            {% include 'includes/flash.html' %}
 
-    <!-- BLOCCO DELLO SCRIPTS JAVASCRIPT -->
-    {% block scripts %}{% endblock %}
+            <!-- Blocco di contenuto che può essere sovrascritto dalle pagine che estendono questo template -->
+            {% block content %}
+            {% endblock %}
+        </main>
 
-</body>
+        {% include 'includes/footer.html' %}
+        {% block extra_js %}{% endblock %}
+    </body>
 </html>
-
-
-

@@ -1,7 +1,7 @@
 <nav  class="navbar navbar-expand-sm bg-info  text-success">
     <div class="container-fluid">
         <!-- area logo/brand -->
-        <a class="navbar-brand" href="{{ url_for('home') }}">
+        <a class="navbar-brand" href="{{ url_for('index') }}">
             <img src="/static/imgs/nave.png" alt="Logo" width="60" height="30"
                 class="d-inline-block align-text-top">
             Una Rotonda sul Mare
@@ -14,7 +14,7 @@
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('home') }}">Eventi</a>
+                    <a class="nav-link" href="{{ url_for('index') }}">Eventi</a>
                 </li>
                 {% if session.user_id %}
                 <li class="nav-item">

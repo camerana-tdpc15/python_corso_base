@@ -2,7 +2,7 @@
 import locale
 import os
 import json
-from datetime import datetime, date
+from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy_serializer import SerializerMixin
 from settings import BASE_DIR_PATH
@@ -18,10 +18,10 @@ class Prenotazione(db.Model, SerializerMixin):
     replica_id = db.mapped_column(db.Integer(), db.ForeignKey('repliche.id'), primary_key=True)
     quantita = db.mapped_column(db.Integer(), nullable=False)
     # -- RELATIONSHIPS --
-    rel_utenti = db.relationship('Utente', back_populates='rel_prenotazioni')
-    rel_repliche = db.relationship('Replica', back_populates='rel_prenotazioni')
+    rel_utente = db.relationship('Utente', back_populates='rel_prenotazioni')
+    rel_replica = db.relationship('Replica', back_populates='rel_prenotazioni')
 
-    serialize_rules = ('-utente', '-replica')
+    serialize_rules = ('-rel_utente.rel_prenotazioni', '-rel_replica.rel_prenotazioni')
 
 
 
@@ -34,9 +34,9 @@ class Utente(db.Model, SerializerMixin):
     email = db.mapped_column(db.String(50), nullable=False)
     password = db.mapped_column(db.String(30), nullable=False)    
     # -- RELATIONSHIPS --
-    rel_prenotazioni = db.relationship('Prenotazione', back_populates='rel_utenti')
+    rel_prenotazioni = db.relationship('Prenotazione', back_populates='rel_utente')
 
-    serialize_rules = ('-prenotazione',)
+    serialize_rules = ('-rel_prenotazioni.rel_utente', '-password')
 
 
 
@@ -47,10 +47,10 @@ class Replica(db.Model, SerializerMixin):
     data_ora = db.mapped_column(db.DateTime(), nullable=False)
     annullato = db.mapped_column(db.Boolean(), default=False)    
     # -- RELATIONSHIPS --
-    rel_prenotazioni = db.relationship('Prenotazione', back_populates='rel_repliche')
-    rel_eventi = db.relationship('Evento', back_populates='rel_repliche')
+    rel_prenotazioni = db.relationship('Prenotazione', back_populates='rel_replica')
+    rel_evento = db.relationship('Evento', back_populates='rel_repliche')
 
-    serialize_rules = ('-prenotazione', '-evento')
+    serialize_rules = ('-rel_prenotazioni.rel_replica', '-rel_evento.rel_repliche')
 
 
 
@@ -61,10 +61,10 @@ class Evento(db.Model, SerializerMixin):
     locale_id = db.mapped_column(db.Integer(), db.ForeignKey('locali.id'), nullable=False)
     nome_evento = db.mapped_column(db.String(100), nullable=False)
     # -- RELATIONSHIPS --
-    rel_repliche = db.relationship('Replica', back_populates='rel_eventi')
-    rel_locali = db.relationship('Locale', back_populates='rel_eventi')
+    rel_repliche = db.relationship('Replica', back_populates='rel_evento')
+    rel_locale = db.relationship('Locale', back_populates='rel_eventi')
 
-    serialize_rules = ('-replica', '-locale')
+    serialize_rules = ('-rel_repliche.rel_evento', '-rel_locale.rel_eventi')
 
 
     
@@ -76,13 +76,23 @@ class Locale(db.Model, SerializerMixin):
     luogo = db.mapped_column(db.String(100), nullable=False)
     posti = db.mapped_column(db.Integer(), nullable=False)
     # -- RELATIONSHIPS --
-    rel_eventi = db.relationship('Evento', back_populates='rel_locali')
+    rel_eventi = db.relationship('Evento', back_populates='rel_locale')
 
-    serialize_rules = ('-evento',)
+    serialize_rules = ('-rel_eventi.rel_locale',)
+    
+    
+# Funzione per convertire una stringa datetime in un oggetto datetime
+def converti_datetime(dt_string):
+    day, month, year, time = dt_string.split('-')
+    hour, minute, second = time.split(':')
+    return datetime(int(year), int(month), int(day), int(hour), int(minute), int(second))
+
 
 
 def init_db():
-    # Crea le tabelle solo se non esistono già
+    #db.init_app(app)
+    #with app.app_context():
+        # Crea le tabelle solo se non esistono già
     db.create_all()
 
     # Popolo le tabelle con i dati se non esiste un record in Utente
@@ -112,7 +122,7 @@ def init_db():
             for record_dict in lista_record:
                 # Se la chiave 'data_consegna' è presente nel dizionario
                 if 'data_ora' in record_dict:
-                #     # Converto il valore della 'data_consegna' in un oggetto date
+                #     # Converto il valore della 'data_consegna' in un oggetto datetime
                     var_data_ora = datetime.strptime(record_dict['data_ora'],'%d-%m-%Y-%H:%M:%S')
                     record_dict['data_ora'] = var_data_ora
 
