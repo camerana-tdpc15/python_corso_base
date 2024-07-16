@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Le Mie Prenotazioni{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Le Mie Prenotazioni</h1>
+<div id="prenotazioni-container">
+    <!-- Le prenotazioni verranno caricate qui dinamicamente -->
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='scripts/prenotazioni.js') }}"></script>
+{% endblock %}

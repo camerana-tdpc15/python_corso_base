@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Repliche{% endblock %}
+
+{% block content %}
+<div id="repliche-container" data-evento-id="{{ evento_id }}">
+    <!-- Le repliche verranno caricate qui dinamicamente -->
+</div>
+
+<a href="{{ url_for('index') }}" class="btn btn-secondary mt-3">Torna alla lista eventi</a>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='scripts/repliche.js') }}"></script>
+{% endblock %}
