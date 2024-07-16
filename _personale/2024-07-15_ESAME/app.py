@@ -18,9 +18,9 @@ db.init_app(app)  # Inizializza l'istanza di SQLAlchemy con l'app Flask
 def home():
     return render_template('index.html')
 
-@app.route('/prenotazioni')
-def mostra_prenotazioni():
-    return render_template('prenotazioni.html')
+# @app.route('/prenotazioni')
+# def mostra_prenotazioni():
+#     return render_template('prenotazioni.html')
 
 
 # Restituisce i dati dei lotti disponibili in formato JSON
@@ -39,10 +39,10 @@ def get_lotti():
 
     eventi_data = []
     for evento in eventi:
-        dict_lotto = lotto.to_dict()
-        lotti_data.append(dict_lotto)
+        dict_lotto = evento.to_dict()
+        eventi_data.append(dict_lotto)
 
-    return jsonify(lotti_data)
+    return jsonify(eventi_data)
 
 
 
