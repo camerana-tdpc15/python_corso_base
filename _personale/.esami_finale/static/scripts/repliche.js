@@ -27,14 +27,15 @@ function loadRepliche(eventoId) {
 // Funzione per creare una card HTML per ogni replica
 function createReplicaCard(replica) {
     return `
+    
         <div class="col-md-6 mb-3 ">
             <div class="card cardreplica">
                 <div class="card-body">
                     <h5 class="card-title">${replica.data_ora}</h5>
                     <p class="card-text">Posti disponibili: ${replica.posti_disponibili}</p>
-                    ${replica.annullato 
-                        ? '<h5 class="text-danger">Siamo spiacenti, questa replica è stata annullata.</h5>'
-                        : `
+                    ${replica.annullato
+            ? '<h5 class="text-danger">Siamo spiacenti, questa replica è stata annullata.</h5>'
+            : `
                             <form onsubmit="prenota(event, ${replica.id})">
                                 <div class="mb-3">
                                     <label for="quantita-${replica.id}" class="form-label ">Quantità:</label>
@@ -45,10 +46,11 @@ function createReplicaCard(replica) {
                                 </div>
                                 </form>
                         `
-                    }
+        }
                 </div>
             </div>
         </div>
+       
     `;
 }
 
@@ -69,19 +71,19 @@ function prenota(event, replicaId) {
             quantita: parseInt(quantita)
         }),
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.message) {
-            alert(data.message);
-            // Ricarica le repliche per aggiornare i posti disponibili
-            const eventoId = document.getElementById('repliche-container').dataset.eventoId;
-            loadRepliche(eventoId);
-        } else if (data.error) {
-            alert(data.error);
-        }
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-        alert('Si è verificato un errore durante la prenotazione.');
-    });
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert(data.message);
+                // Ricarica le repliche per aggiornare i posti disponibili
+                const eventoId = document.getElementById('repliche-container').dataset.eventoId;
+                loadRepliche(eventoId);
+            } else if (data.error) {
+                alert(data.error);
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            alert('Si è verificato un errore durante la prenotazione.');
+        });
 }
