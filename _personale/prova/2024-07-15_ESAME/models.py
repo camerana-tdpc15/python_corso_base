@@ -26,14 +26,7 @@ class Replica(db.Model, SerializerMixin):
     data_ora = db.Column(db.DateTime, nullable=False)
     annullato = db.Column(db.Boolean, default=False)
     # RELATIONSHIPS
-    rel_evento = db.relationship('Evento', back_populates='rel_repliche')
-    rel_prenotazioni = db.relationship('Prenotazione', back_populates='rel_replica')
-
-    serialize_rules = ('-rel_evento.rel_repliche',
-                       '-rel_prenotazioni.rel_replica',
-                       'get_date',
-                       'get_prezzo_str',
-                       'get_qta_disponibile')
+    rel_prenotazione = db.relationship('Prenotazione', back_populates='rel_replica')
 
 class Prenotazione(db.Model, SerializerMixin):
     __tablename__ = 'prenotazioni'
@@ -42,16 +35,7 @@ class Prenotazione(db.Model, SerializerMixin):
     replica_id = db.Column(db.Integer, db.ForeignKey('repliche.id'), nullable=False)
     quantita = db.Column(db.Integer, nullable=False)
     # RELATIONSHIPS
-    rel_replica = db.relationship('Replica', back_populates='rel_prenotazioni')
-
-    serialize_rules = ('-rel_replica.rel_prenotazioni',)
-
-    # Definisco un unique constraint per la coppia lotto_id e user_id
-    # in modo che non sia possibile creare una prenotazione con i medesimi
-    # user_id e lotto_id
-    __table_args__ = (
-        db.UniqueConstraint('replica_id', 'utente_id', name='replica_utente_unique'),
-    )
+    rel_utente = db.relationship('Utente', back_populates='rel_prenotazioni')
     
 
 class Locale(db.Model, SerializerMixin):
@@ -60,28 +44,13 @@ class Locale(db.Model, SerializerMixin):
     nome_locale = db.Column(db.String(50), nullable=False)
     luogo = db.Column(db.String(100), nullable=False)
     posti = db.Column(db.Integer, nullable=False)
-    # RELATIONSHIPS
-    rel_eventi = db.relationship('Evento', back_populates='rel_locale')
-
-    serialize_rules = ('-rel_eventi.rel_locale',)
+    rel_evento = db.relationship('Evento', back_populates='rel_locale')
 
 class Evento(db.Model, SerializerMixin):
     __tablename__ = 'eventi'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     locale_id = db.Column(db.Integer, db.ForeignKey('locali.id'), nullable=False)
     nome_evento = db.Column(db.String(50), nullable=False)
-     # RELATIONSHIPS
-    rel_repliche = db.relationship('Replica', back_populates='rel_evento')
-    rel_locale = db.relationship('Locale', back_populates='rel_eventi')
-
-    # Se dobbiamo escludere delle relazioni ricorsive dobbiamo
-    # elencarle in "serialize_rules" con un '-'
-    serialize_rules = ('-rel_repliche.rel_evento', '-rel_produttore.rel_prodotti')
-
-    # Altrimenti, l'approccio inverso è quello di elencare solo i campi che
-    # devono essere estratti. Ricordiamoci che non dobbiamo includere le relazioni
-    # che provocano la ricorsione!
-    # serialize_only = ('nome_prodotto', 'rel_produttore')
    
 def init_db():
     # Crea le tabelle solo se non esistono già
