@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Funzione per caricare le prenotazioni dall'API
-function loadPrenotazioni() {
+function loadPrenotazioni() { 
     fetch('/api/prenotazioni')
         .then(response => response.json())
         .then(prenotazioni => {
