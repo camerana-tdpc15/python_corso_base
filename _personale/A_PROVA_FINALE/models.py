@@ -16,7 +16,9 @@ class User(db.Model, SerializerMixin):
     email = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(30), nullable=False) 
 
-    serialize_rules = ('-password',)
+    serialize_rules = ('-password', '-prenotazioni.user')
+
+    prenotazioni = db.relationship('Prenotazione', back_populates='user', lazy='dynamic')
 
 class Produttore(db.Model, SerializerMixin):
     __tablename__ = 'produttori'
@@ -26,6 +28,12 @@ class Produttore(db.Model, SerializerMixin):
     indirizzo = db.Column(db.String(100), nullable=False)
     telefono = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
+
+    prodotti = db.relationship('Prodotto', back_populates='produttore')
+
+    serialize_rules = ('-prodotti.produttore', '-prodotti.lotti.prenotazioni')
+
+
    
    
 
@@ -35,12 +43,18 @@ class Prodotto(db.Model, SerializerMixin):
     produttore_id = db.Column(db.Integer, db.ForeignKey('produttori.id'), nullable=False)
     nome_prodotto = db.Column(db.String(50), nullable=False)
 
+    produttore = db.relationship('Produttore', back_populates='prodotti')
+    lotti = db.relationship('Lotto', back_populates='prodotto')
+
 class Prenotazione(db.Model, SerializerMixin):
     __tablename__ = 'prenotazioni'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     utente_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     lotto_id = db.Column(db.Integer, db.ForeignKey('lotti.id'), nullable=False)
     qta = db.Column(db.Integer, nullable=False)
+
+    user = db.relationship('User', back_populates='prenotazioni')
+    lotto = db.relationship('Lotto', back_populates='prenotazioni')
 
 
 
@@ -54,6 +68,11 @@ class Lotto(db.Model, SerializerMixin):
     qta_lotto = db.Column(db.Integer, nullable=False)
     prezzo_unitario = db.Column(db.Float, nullable=False)
     sospeso = db.Column(db.Boolean, nullable=False)
+
+    prodotto = db.relationship('Prodotto', back_populates='lotti')
+    prenotazioni = db.relationship('Prenotazione', back_populates='lotto')
+
+    serialize_rules = ('-')
 
 
 def init_db():

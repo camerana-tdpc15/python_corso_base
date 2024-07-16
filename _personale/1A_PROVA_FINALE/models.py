@@ -16,6 +16,8 @@ class User(db.Model, SerializerMixin):
     email = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(30), nullable=False) 
 
+    # -- RELATIONSHIPS And RULES --
+
     prenotazioni = db.relationship('Prenotazione', back_populates='user', lazy='dynamic')
 
     serialize_rules = ('-prenotazioni.user', '-password')
@@ -27,11 +29,13 @@ class Prenotazione(db.Model, SerializerMixin):
     replica_id = db.Column(db.Integer, db.ForeignKey('repliche.id'), nullable=False)
     quantita = db.Column(db.Integer, nullable=False)
 
-     # -- RELATIONSHIPS --
+    # -- RELATIONSHIPS And RULES --
     user = db.relationship('User', back_populates='prenotazioni')
-    lotto = db.relationship('Replica', back_populates='prenotazioni')  
+    replica = db.relationship('Replica', back_populates='prenotazioni')  
 
     serialize_rules = ('-user.prenotazioni', '-replica.prenotazioni') #/,'get_prezzo_totale_str'/#)
+
+    
 
 class Replica(db.Model, SerializerMixin):
     __tablename__ = 'repliche'
@@ -40,11 +44,27 @@ class Replica(db.Model, SerializerMixin):
     data_ora = db.Column(db.DateTime, nullable=False)
     annullato = db.Column(db.Boolean, nullable=False)
 
+    # -- RELATIONSHIPS And RULES --
+
+    prenotazioni = db.relationship('Prenotazione', back_populates='replica')
+    evento = db.relationship('Evento', back_populates='repliche')
+
+    serialize_rules = ('-evento.repliche', '-prenotazioni.replica')
+
+
 class Evento(db.Model, SerializerMixin):
     __tablename__ = 'eventi'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     locale_id = db.Column(db.Integer, db.ForeignKey('locali.id'), nullable=False)
     nome_evento = db.Column(db.String(50), unique=True, nullable=False)
+
+    # -- RELATIONSHIPS And RULES --
+
+    repliche = db.relationship('Replica', back_populates='evento')
+    locale = db.relationship('Locale', back_populates='eventi' )
+
+    serialize_rules = ('-repliche.evento', '-locale.eventi')
+
 
 class Locale(db.Model, SerializerMixin):
     __tablename__ = 'locali'
@@ -52,7 +72,12 @@ class Locale(db.Model, SerializerMixin):
     nome_locale = db.Column(db.String(50), unique=True, nullable=False)
     luogo = db.Column(db.String(100), unique=True, nullable=False)
     posti = db.Column(db.Integer, autoincrement=True)
+
+    # -- RELATIONSHIPS And RULES --
     
+    eventi = db.relationship('Evento', back_populates='locale')
+
+    serialize_rules = ('-eventi.locale',)
 
 def init_db():
     db.create_all()
