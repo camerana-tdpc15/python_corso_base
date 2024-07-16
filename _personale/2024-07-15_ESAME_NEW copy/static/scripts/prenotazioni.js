@@ -89,6 +89,7 @@ function modificaPrenotazione(prenotazioneId) {
         // Mostra un messaggio di errore se la modifica fallisce
         alert('Si è verificato un errore durante la modifica della prenotazione.');
     });
+
 }
 
 // Funzione per cancellare una prenotazione

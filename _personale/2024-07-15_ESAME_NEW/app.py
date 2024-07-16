@@ -165,7 +165,8 @@ def api_prenotazioni():
                 'data_ora': p.rel_replica.data_ora.strftime('%d-%m-%Y %H:%M'),
                 'quantita': p.quantita,
                 'annullato': p.rel_replica.annullato,
-                'replica_id': p.replica_id
+                'replica_id': p.replica_id,
+                'luogo': p.rel_replica.rel_evento.rel_locale.luogo
             })
         return jsonify(prenotazioni_data)
     

@@ -13,42 +13,41 @@ function loadPrenotazioni() {
             // Controlla se ci sono prenotazioni
             if (prenotazioni.length === 0) {
                 // Se non ci sono prenotazioni, mostra un messaggio
-                container.innerHTML = '<p>Non hai ancora effettuato prenotazioni.</p>';
+                container.innerHTML = '<H4>Non hai ancora effettuato prenotazioni.</H4>';
             } else {
                 // Se ci sono prenotazioni, crea una tabella per visualizzarle
-                container.innerHTML = `
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Evento</th>
-                                <th>Locale</th>
-                                <th>Data e Ora</th>
-                                <th>Quantità</th>
-                                <th>Stato</th>
-                                <th>Azioni</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${prenotazioni.map(p => `
-                                <tr>
-                                    <td>${p.evento}</td>
-                                    <td>${p.locale}</td>
-                                    <td>${p.data_ora}</td>
-                                    <td>
-                                        <input type="number" min="1" value="${p.quantita}" id="quantita-${p.id}" ${p.annullato ? 'disabled' : ''}>
-                                    </td>
-                                    <td>${p.annullato ? '<span class="text-danger">Annullato</span>' : '<span class="text-success">Confermato</span>'}</td>
-                                    <td>
-                                        ${p.annullato ? '' : `
-                                            <button onclick="modificaPrenotazione(${p.id})" class="btn btn-sm btn-primary">Modifica</button>
-                                            <button onclick="cancellaPrenotazione(${p.id})" class="btn btn-sm btn-danger">Cancella</button>
-                                        `}
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                `;
+                console.log(prenotazioni);
+                for (evento of prenotazioni) {
+                   
+        
+
+
+                    container.innerHTML += `
+                        <div class="col-lg-3 my-2">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <h4 class="card-title">${evento.evento}</h4>
+                                    <p class="text-end"><small>(cod. lotto: ${evento.id})</small><p>
+                                </div>
+                                <div class="card-body d-flex flex-column">
+                                    <p>Evento: <b>${evento.evento}</b></p>
+                                    <p>Locale: <b>${evento.locale}</b></p>
+                                    <p>Luogo: <b>${evento.luogo}</b></p>
+                                    <p>Data e ora: <b>${evento.data_ora}</b></p>
+                                    <p>Q.tà Disp: <b><input type="number" min="1" value="${evento.quantita}" id="quantita-${evento.id}" ${evento.annullato ? 'disabled' : ''}></b></p>
+                                    <p>Stato: <b>${evento.annullato ? '<span class="text-danger">Annullato</span>' : '<span class="text-success">Confermato</span>'}</b></p>
+                                    <p>Azione: <b>${evento.annullato ? '' : `
+                                    <button onclick="modificaPrenotazione(${evento.id})" class="btn btn-sm btn-primary">Modifica</button>
+                                    <button onclick="cancellaPrenotazione(${evento.id})" class="btn btn-sm btn-danger">Cancella</button>
+                                `}</b></p>
+                                   
+        
+                                </div>
+                            </div>
+                        <div>
+                    `;   
+                }
+
             }
         })
         .catch(error => {
@@ -80,6 +79,7 @@ function modificaPrenotazione(prenotazioneId) {
             alert(data.message);
             // Ricarica le prenotazioni dopo la modifica
             loadPrenotazioni();
+            window.location.href = "/prenotazioni";
         } else if (data.error) {
             alert(data.error);
         }
@@ -112,6 +112,7 @@ function cancellaPrenotazione(prenotazioneId) {
                 alert(data.message);
                 // Ricarica le prenotazioni dopo la cancellazione
                 loadPrenotazioni();
+                window.location.href = "/prenotazioni";
             } else if (data.error) {
                 alert(data.error);
             }

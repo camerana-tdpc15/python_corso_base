@@ -16,12 +16,9 @@
         <!-- Voci di menù -->
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('index') }}">Home</a>
-                </li>
                 {% if 'user_id' in session %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('prenotazioni') }}">Guestbook</a>
+                    <a class="nav-link" href="{{ url_for('prenotazioni') }}">Prenotazioni</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>

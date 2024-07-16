@@ -29,11 +29,11 @@
                     {% for replica in evento.repliche %}
                     <li class="list-group-item {% if replica.annullato %}text-danger{% endif %}">
                         <!-- Data e ora della replica -->
-                        {{ replica.data_ora.strftime('%d-%m-%Y %H:%M') }}
+                            - Data e ora: {{ replica.data_ora.strftime('%d-%m-%Y %H:%M') }}
                         {% if replica.annullato %}
                             (Annullato)
                         {% else %}
-                            - Posti disponibili: {{ replica.posti_disponibili }}
+                            <br> - Posti disponibili: {{ replica.posti_disponibili }}
                         {% endif %}
                     </li>
                     {% endfor %}
