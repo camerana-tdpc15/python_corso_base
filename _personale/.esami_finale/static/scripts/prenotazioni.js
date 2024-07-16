@@ -35,8 +35,10 @@ function loadPrenotazioni() {
                         <p class="card-text">${p.annullato ? '<span class="text-danger">Annullato</span>' : '<span class="text-success">Confermato</span>'}</p>
                         <div class="card-actions">
                             ${p.annullato ? '' : `
+                            <div class="text-center ">
                                 <button onclick="modificaPrenotazione(${p.id})" class="btn btn-sm btn-outline-success">Modifica</button>
                                 <button onclick="cancellaPrenotazione(${p.id})" class="btn btn-sm btn-outline-danger">Cancella</button>
+                                </div>
                             `}
                         </div>
                     </div>
