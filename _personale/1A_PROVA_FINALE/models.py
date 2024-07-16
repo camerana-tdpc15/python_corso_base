@@ -49,7 +49,16 @@ class Replica(db.Model, SerializerMixin):
     prenotazioni = db.relationship('Prenotazione', back_populates='replica')
     evento = db.relationship('Evento', back_populates='repliche')
 
-    serialize_rules = ('-evento.repliche', '-prenotazioni.replica')
+    serialize_rules = ('-evento.repliche', '-prenotazioni.replica', 'get_posti_disponibili')
+
+    def get_posti_disponibili(self):
+        posti_prenotati = 0
+        for prenot in self.prenotazioni:
+            posti_prenotati += prenot.quantita
+
+        return self.evento.locale.posti - posti_prenotati
+
+   
 
 
 class Evento(db.Model, SerializerMixin):

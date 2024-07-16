@@ -8,20 +8,20 @@ function onLoad() {
     // eseguo la chiamata per ottenere i Lotti
     // select dei Lotti con in join Prodotti e join con Produttori 
 
-    const urlLotti = '/api/dati_lotti';
+    const urlLotti = '/api/dati_repliche';
 
     fetch(urlLotti).then(res => res.json()).then(data => {
         console.log(data);
 
-        for(lotto of data) {
+        for(replica of data) {
 
             let renderPrenota = '';
-            if (lotto.sospeso) {
+            if (replica.annullato) {
                 renderPrenota = '<a href="#" class="btn btn-danger disabled w-100">Sospeso</a>';                
-            } else if (lotto.get_qta_disponibile == 0) {
-                renderPrenota = '<a href="#" class="btn btn-danger disabled w-100">Esaurito</a>';                
+             } else if (replica.get_posti_disponibili == 0) {
+                 renderPrenota = '<a href="#" class="btn btn-danger disabled w-100">Esaurito</a>';                
             } else {
-                renderPrenota = `<a href="/lotto/${lotto.id}" class="btn btn-primary w-100">Prenota</a>`;
+                renderPrenota = `<a href="/replica/${replica.id}" class="btn btn-primary w-100">Prenota</a>`;
             }
 
             rowLotti.innerHTML += `
@@ -29,26 +29,25 @@ function onLoad() {
                 <div class="card mb-3 w-100 h-100">
                     <div class="card-header">
                         <h4 class="card-title">
-                            ${lotto.prodotto.nome}
+                            ${replica.evento.nome_evento}
                         </h4>
-                        <div class="text-end"><small>(cod. lotto ${lotto.id})</small></div>
+                        <div class="text-end"><small>(cod. lotto ${replica.id})</small></div>
                     </div>
                     <div class="card-body d-flex flex-column">
                         <p class="card-text">
-                            <small>Disponibile da:</small> <b>${lotto.get_date}</b>
+                            <small>Data Evento:</small> <b>${replica.data_ora}</b>
                         </p>
                         <p class="card-text">
-                            <small>Prodotto da:</small> <b>${lotto.prodotto.produttore.nome}</b>
+                            <small>Locale Evento:</small> <b>${replica.evento.locale.nome_locale}</b>
                         </p>
                         <p class="card-text">
-                            <small>Prezzo:</small> <b>${lotto.get_prezzo_str}</b>
+                            <small>Posti in sala:</small> <b>${replica.evento.locale.posti}</b>
                         </p>   
                         <p class="card-text">
-                            <small>Q.tà totale lotto:</small> <b>${lotto.qta_lotto}</b>
+                            <small>Posti disponibili:</small> <b>${replica.get_posti_disponibili}</b>
                         </p>
-                        <p class="card-text">
-                            <small>Q.tà disponibile:</small> <b>${lotto.get_qta_disponibile}</b>
-                        </p>
+                        
+                      
                         <div class="mt-auto">
                             ${renderPrenota}
                         </div>
