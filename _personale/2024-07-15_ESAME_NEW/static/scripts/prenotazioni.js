@@ -1,56 +1,125 @@
-// alert('OK');
-const rowPrenotazioni = document.querySelector('#row-prenotazioni');
+// Aggiunge un listener per l'evento 'DOMContentLoaded' che carica le prenotazioni una volta che il DOM è completamente caricato
+document.addEventListener('DOMContentLoaded', () => {
+    loadPrenotazioni();
+});
 
+// Funzione per caricare le prenotazioni dall'API
+function loadPrenotazioni() {
+    fetch('/api/prenotazioni')
+        .then(response => response.json())
+        .then(prenotazioni => {
+            // Ottiene il container delle prenotazioni
+            const container = document.getElementById('prenotazioni-container');
+            // Controlla se ci sono prenotazioni
+            if (prenotazioni.length === 0) {
+                // Se non ci sono prenotazioni, mostra un messaggio
+                container.innerHTML = '<p>Non hai ancora effettuato prenotazioni.</p>';
+            } else {
+                // Se ci sono prenotazioni, crea una tabella per visualizzarle
+                container.innerHTML = `
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Evento</th>
+                                <th>Locale</th>
+                                <th>Data e Ora</th>
+                                <th>Quantità</th>
+                                <th>Stato</th>
+                                <th>Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${prenotazioni.map(p => `
+                                <tr>
+                                    <td>${p.evento}</td>
+                                    <td>${p.locale}</td>
+                                    <td>${p.data_ora}</td>
+                                    <td>
+                                        <input type="number" min="1" value="${p.quantita}" id="quantita-${p.id}" ${p.annullato ? 'disabled' : ''}>
+                                    </td>
+                                    <td>${p.annullato ? '<span class="text-danger">Annullato</span>' : '<span class="text-success">Confermato</span>'}</td>
+                                    <td>
+                                        ${p.annullato ? '' : `
+                                            <button onclick="modificaPrenotazione(${p.id})" class="btn btn-sm btn-primary">Modifica</button>
+                                            <button onclick="cancellaPrenotazione(${p.id})" class="btn btn-sm btn-danger">Cancella</button>
+                                        `}
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Mostra un messaggio di errore se il caricamento delle prenotazioni fallisce
+            document.getElementById('prenotazioni-container').innerHTML = '<p>Si è verificato un errore nel caricamento delle prenotazioni.</p>';
+        });
+}
 
-// Fa fetch di un file JSON e lo stampa in console
-fetch("/api/prenotazioni")
-    // ......... QUI FLASK STA LAVORANDO PER PREPARARCI LA RISPOSTA
-    // ......... E ALLA FINE CE LA INVIA
+// Funzione per modificare una prenotazione
+function modificaPrenotazione(prenotazioneId) {
+    // Ottiene la nuova quantità dal campo di input
+    const nuovaQuantita = document.getElementById(`quantita-${prenotazioneId}`).value;
+    fetch('/api/prenotazioni', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            action: 'update',
+            prenotazione_id: prenotazioneId,
+            quantita: nuovaQuantita
+        }),
+    })
     .then(response => response.json())
     .then(data => {
-        for (prenot of data) {
-            console.log(prenot);
-
-            // debugger;
-
-            let displayButton = '';
-            if(prenot.rel_lotto.sospeso) {
-                // button rosso
-                displayButton = '<button class="btn btn-danger w-100" disabled>Sospeso</button>';
-            }
-            else if (prenot.rel_lotto.get_qta_disponibile == 0) {
-                // button giallo
-                displayButton = '<button class="btn btn-warning w-100" disabled>Esaurito</button>';
-            } 
-            else {
-                // button blu
-                displayButton = `<a class="btn btn-primary w-100" href="/prenotazione/${prenot.id}">Modifica</a>`;
-            }
-
-            rowPrenotazioni.innerHTML += `
-                <div class="col-lg-3 my-2">
-                    <div class="card h-100">
-                        <div class="card-header">
-                            <h4 class="card-title">${prenot.rel_lotto.rel_prodotto.nome_prodotto}</h4>
-                            <p class="text-end"><small>(cod. lotto: ${prenot.rel_lotto.id})</small><p>
-                        </div>
-                        <div class="card-body d-flex flex-column">
-                            <p>Produttore: <b>${prenot.rel_lotto.rel_prodotto.rel_produttore.nome_produttore}</b></p>
-                            <p>Data consegna: <b>${prenot.rel_lotto.get_date}</b></p>
-                            <p>Q.tà TOT: <b>${prenot.rel_lotto.qta_lotto} ${prenot.rel_lotto.qta_unita_misura}</b></p>
-                            <p>Q.tà Disp: <b>${prenot.rel_lotto.get_qta_disponibile} ${prenot.rel_lotto.qta_unita_misura}</b></p>
-                            <p>Prezzo: <b>${prenot.rel_lotto.get_prezzo_str}</b></p>
-
-                            <p>Q.ta prenotata: <b>${prenot.qta} ${prenot.rel_lotto.qta_unita_misura}</b></p>
-
-                            <div class="mt-auto">
-                                ${displayButton}
-                            </div>
-                        </div>
-                    </div>
-                <div>
-            `;   
+        // Mostra un messaggio di successo o di errore
+        if (data.message) {
+            alert(data.message);
+            // Ricarica le prenotazioni dopo la modifica
+            loadPrenotazioni();
+        } else if (data.error) {
+            alert(data.error);
         }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        // Mostra un messaggio di errore se la modifica fallisce
+        alert('Si è verificato un errore durante la modifica della prenotazione.');
     });
+}
 
-    // <p>Prezzo: <b>${lotto.prezzo_unitario} €/${qta_unita_misura}</b></p>
+// Funzione per cancellare una prenotazione
+function cancellaPrenotazione(prenotazioneId) {
+    // Chiede conferma all'utente prima di cancellare la prenotazione
+    if (confirm('Sei sicuro di voler cancellare questa prenotazione?')) {
+        fetch('/api/prenotazioni', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                action: 'delete',
+                prenotazione_id: prenotazioneId
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Mostra un messaggio di successo o di errore
+            if (data.message) {
+                alert(data.message);
+                // Ricarica le prenotazioni dopo la cancellazione
+                loadPrenotazioni();
+            } else if (data.error) {
+                alert(data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Mostra un messaggio di errore se la cancellazione fallisce
+            alert('Si è verificato un errore durante la cancellazione della prenotazione.');
+        });
+    }
+}
