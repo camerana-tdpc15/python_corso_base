@@ -15,6 +15,7 @@ def iniziale():
 
 @app.route('/home')
 def home():
+    
     return render_template('home.html')
 
 @app.route('/prenotazioni', methods=['GET'])
@@ -32,6 +33,9 @@ def pag_prenot():
 
 @app.route('/eventi')
 def pag_eventi():
+    if 'utente_id' not in session:
+        return redirect(url_for('login'))
+
     eventi = Evento.query.all()
     repliche = Replica.query.all()
     return render_template('eventi.html', eventi=eventi, repliche=repliche)
@@ -44,10 +48,10 @@ def login():
         user = Utente.query.filter_by(email=email, password=password).one_or_none()
         if user:
             session['utente_id'] = user.id
-            flash('Login riuscito!')
+            flash('Login riuscito!','success')
             return redirect(url_for('home'))
         else:
-            flash('Credenziali non valide!')
+            flash('Credenziali non valide!', 'warning')
             return redirect(url_for('login'))
     return render_template('login.html')
 
@@ -55,7 +59,7 @@ def login():
 def logout():
     session.pop('utente_id', None)
     print(session)  # Controllo il contenuto della sessione
-    flash('Logout effettuato con successo!')
+    flash('Logout effettuato con successo!','success')
     return redirect(url_for('login'))
 
 
@@ -108,7 +112,7 @@ def nuova_prenotazione(id_replica):
     replica_item = Replica.query.get_or_404(id_replica)
     if quantita > replica_item.get_qta_disponibile():
         flash('Hai prenotato di più della quantità disponibile.', 'warning')
-        return redirect(url_for('mostra_replica', id_replica=id_replica))
+        return redirect(url_for('pag_eventi'))
 
     new_prenotazione = Prenotazione(quantita=quantita, replica_id=id_replica, utente_id=session['utente_id'])
     db.session.add(new_prenotazione)

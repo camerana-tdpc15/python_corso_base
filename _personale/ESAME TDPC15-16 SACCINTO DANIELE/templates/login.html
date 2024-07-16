@@ -11,19 +11,61 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </head>
-<body>
-    <h1>CROCIERE</h1>
-    <form method="post" action="/login">
-        <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input type="text" class="form-control" id="email" name="email" required>
+<body style="background: url('{{ url_for('static', filename='img/sfondo.jpg') }}') no-repeat center center fixed; background-size: cover;">
+
+    <nav class="bg-info">
+       
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="logo" class="my-3">
+            
+        
+    </nav>
+    <nav class="navbar navbar-expand-sm bg-warning navbar-warning">
+
+        <div class="container-fluid">
+            
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('pag_eventi') }}">Eventi</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('pag_prenot') }}">Prenotazioni</a>
+                </li>
+                 
+            </ul>
         </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="password" name="password" required>
+    </nav>
+    <!-- Messaggi flash -->
+    <div class="container mt-3">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+    <div class="card bg-warning text-white container my-3">
+        <div class="card-body">
+            <h4 class=" container text-center mb-5 text-info">Effettua il login per verificare le tue prenotazioni!</h4>
+
+            
+            <form method="post" action="/login">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="text" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-info">Login</button>
+            </form>
         </div>
-        <button type="submit" class="btn btn-primary">Login</button>
-    </form>
-    
+        
+    </div>
+
+{% extends "includes/footer.html" %}   
 </body>
 </html>

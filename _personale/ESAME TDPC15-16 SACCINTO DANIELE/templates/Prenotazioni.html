@@ -4,24 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prenotazioni</title>
+
+      <!-- Latest compiled and minified CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Latest compiled JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </head>
-<body>
-    <h1>Prenotazioni</h1>
-    <div id="prenotazioni-container">
+
+<body style="background: url('{{ url_for('static', filename='img/sfondo.jpg') }}') no-repeat center center fixed; background-size: cover;">
+
+
+    <nav class="bg-info navbar-brand">
+       
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="logo" class="my-3">
+       
+    
+    </nav>
+    <nav class="navbar navbar-expand-sm bg-warning navbar-warning">
+
+        <div class="container-fluid">
+            
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('pag_eventi') }}">Eventi</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+                </li>  
+            </ul>
+        </div>
+    </nav>
+ <!-- Messaggi flash -->
+ <div class="container mt-3">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</div>
+    <h1 class="text-center ">Prenotazioni</h1>
+    <div  class="row">
+
+
+    
         {% for prenotazione in prenotazioni %}
-            <div class="prenotazione-card">
+            <div class="prenotazione-card col-sm-4 bg-warning m-5 rounded-3 text-center">
                 <h2>Prenotazione ID: {{ prenotazione.id }}</h2>
                 <p>Quantità: {{ prenotazione.quantita }}</p>
                 <p>Replica: {{ prenotazione.rel_repliche.get_date() }}</p>
                 <p>Evento: {{ prenotazione.rel_repliche.rel_eventi.nome_evento }}</p>
                 <form action="{{ url_for('modifica_prenotazione', prenotazione_id=prenotazione.id) }}" method="post">
-                    <input type="number" name="quantita" value="{{ prenotazione.quantita }}" min="1" required>
-                    <button type="submit" name="azione" value="aggiorna">Aggiorna</button>
-                    <button type="submit" name="azione" value="elimina">Elimina</button>
+                    <input  class="form-control" type="number" name="quantita" value="{{ prenotazione.quantita }}" min="1" required>
+                    <button type="submit" name="azione" value="aggiorna" class="btn btn-info my-2">Aggiorna</button>
+                    <button type="submit" name="azione" value="elimina" class="btn btn-info my-2">Elimina</button>
                 </form>
                 
             </div>
         {% endfor %}
     </div>
+{% extends "includes/footer.html" %}   
 </body>
 </html>
