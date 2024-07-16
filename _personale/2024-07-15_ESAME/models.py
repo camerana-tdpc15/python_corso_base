@@ -16,8 +16,10 @@ class Utente(db.Model, SerializerMixin):
     telefono = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(30), nullable=False)
+    # RELATIONSHIPS
+    rel_prenotazioni = db.relationship('Prenotazione', back_populates='rel_utente')
 
-    serialize_rules = ('-password',)
+    serialize_rules = ('-rel_prenotazioni.rel_utente', '-password')
 
 class Replica(db.Model, SerializerMixin):
     __tablename__ = 'repliche'
@@ -43,8 +45,10 @@ class Prenotazione(db.Model, SerializerMixin):
     quantita = db.Column(db.Integer, nullable=False)
     # RELATIONSHIPS
     rel_replica = db.relationship('Replica', back_populates='rel_prenotazioni')
+    # non c'era nel app fatta in classe gas09
+    rel_utente = db.relationship('Utente', back_populates='rel_prenotazioni')
 
-    serialize_rules = ('-rel_replica.rel_prenotazioni',)
+    serialize_rules = ('-rel_replica.rel_prenotazioni', '-rel_utente.rel_prenotazioni')
 
     # Definisco un unique constraint per la coppia lotto_id e user_id
     # in modo che non sia possibile creare una prenotazione con i medesimi
@@ -76,7 +80,7 @@ class Evento(db.Model, SerializerMixin):
 
     # Se dobbiamo escludere delle relazioni ricorsive dobbiamo
     # elencarle in "serialize_rules" con un '-'
-    serialize_rules = ('-rel_repliche.rel_evento', '-rel_produttore.rel_prodotti')
+    serialize_rules = ('-rel_repliche.rel_evento', '-rel_locale.rel_eventi')
 
     # Altrimenti, l'approccio inverso è quello di elencare solo i campi che
     # devono essere estratti. Ricordiamoci che non dobbiamo includere le relazioni
