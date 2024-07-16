@@ -11,7 +11,7 @@ function loadRepliche(eventoId) {
         .then(response => response.json())
         .then(data => {
             const container = document.getElementById('repliche-container');
-            // Aggiorna il contenuto del container con le informazioni dell'evento e le sue repliche
+            // Aggiorna il contenuto del container 
             container.innerHTML = `
                 <h1 class="mb-4">Repliche di "${data.nome_evento}"</h1>
                 <h2 class="mb-3">${data.locale}</h2>
