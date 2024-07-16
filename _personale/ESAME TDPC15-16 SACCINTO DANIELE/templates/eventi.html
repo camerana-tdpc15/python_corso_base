@@ -1,17 +1,33 @@
-{% extends "_layout.html" %}
-
-{% block title %}Eventi- GAS{% endblock %}
-
-{% block content %}
-
-    <div class="row-eventi">
-        
-      </div>
-
-   
-    
-      {% block scripts %}
-      <script src="{{ url_for('static', filename='scripts/eventi.js') }}"></script>
-      {% endblock %}
-
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventi</title>
+</head>
+<body>
+    <h1>Eventi</h1>
+    <div id="eventi-container">
+        {% for evento in eventi %}
+            <div class="evento-card">
+                <h2>{{ evento.nome_evento }}</h2>
+                <p>Locale: {{ evento.rel_locali.nome_locale }}</p>
+                <p>Luogo: {{ evento.rel_locali.luogo }}</p>
+                <h3>Repliche</h3>
+                <ul>
+                    {% for replica in evento.rel_repliche %}
+                        <li>
+                            <p>Data e Ora: {{ replica.get_date() }}</p>
+                            <p>Quantità Disponibile: {{ replica.get_qta_disponibile() }}</p>
+                            <form action="{{ url_for('nuova_prenotazione', id_replica=replica.id) }}" method="post">
+                                <input type="number" name="quantita" min="1" required>
+                                <button type="submit">Prenota</button>
+                            </form>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

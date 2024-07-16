@@ -3,12 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <H1>HOME</H1>
-
-    <a href="/eventi" class="btn btn-success">Eventi</a>
-    <a href="/prenotazioni" class="btn btn-success">Prenotazioni</a>
+    <h1>Benvenuto nella piattaforma di prenotazione eventi</h1>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('pag_eventi') }}">Eventi</a></li>
+            <li><a href="{{ url_for('pag_prenot') }}">Prenotazioni</a></li>
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        </ul>
+    </nav>
 </body>
 </html>

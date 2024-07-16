@@ -1,17 +1,27 @@
-{% extends "_layout.html" %}
-
-{% block title %}Le mie prenotazioni - GAS{% endblock %}
-
-{% block content %}
-
-
-
-
-    <div id="row_prenotazioni">
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prenotazioni</title>
+</head>
+<body>
+    <h1>Prenotazioni</h1>
+    <div id="prenotazioni-container">
+        {% for prenotazione in prenotazioni %}
+            <div class="prenotazione-card">
+                <h2>Prenotazione ID: {{ prenotazione.id }}</h2>
+                <p>Quantità: {{ prenotazione.quantita }}</p>
+                <p>Replica: {{ prenotazione.rel_repliche.get_date() }}</p>
+                <p>Evento: {{ prenotazione.rel_repliche.rel_eventi.nome_evento }}</p>
+                <form action="{{ url_for('modifica_prenotazione', prenotazione_id=prenotazione.id) }}" method="post">
+                    <input type="number" name="quantita" value="{{ prenotazione.quantita }}" min="1" required>
+                    <button type="submit" name="azione" value="aggiorna">Aggiorna</button>
+                    <button type="submit" name="azione" value="elimina">Elimina</button>
+                </form>
+                
+            </div>
+        {% endfor %}
     </div>
-
-    {% block scripts %}
-    <script src="{{ url_for('static', filename='scripts/prenotazioni.js') }}"></script>
-    {% endblock %}
-{% endblock %}
+</body>
+</html>
