@@ -1,0 +1,14 @@
+.grande {
+    display: inline-block; /* Mantener el comportamiento en línea */
+    text-decoration: none; /* Eliminar subrayado */
+  }
+
+  
+.grande:hover {
+    transform: scale(2.3); /* Aumentar el tamaño en un 10% */
+    transition: transform 0.3s ease; /* Animación suave */
+  }
+
+  .contenedor {
+    text-align: center;
+  }

@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "utente_id": 1,
+        "replica_id": 4,
+        "quantita": 2
+    },
+    {
+        "id": 2,
+        "utente_id": 2,
+        "replica_id": 2,
+        "quantita": 5
+    },
+    {
+        "id": 3,
+        "utente_id": 1,
+        "replica_id": 2,
+        "quantita": 2
+    },
+    {
+        "id": 4,
+        "utente_id": 4,
+        "replica_id": 4,
+        "quantita": 2
+    }
+]

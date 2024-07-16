@@ -15,10 +15,16 @@ db.init_app(app)  # Inizializza l'istanza di SQLAlchemy con l'app Flask
 @app.route('/')
 def home():
    return render_template('home.html')
+
     
 @app.route('/prenotazioni')
 def mostra_prenotazioni():
-    return render_template('prenotazioni.html')
+
+    if 'user_id' not in session:
+        return redirect( url_for('login'))
+    else:
+        return render_template('prenotazioni.html')
+    
 
 
 
@@ -31,19 +37,34 @@ def get_lotti():
     order = request.args.get('order', 'asc')
 
     if order == 'asc':
-        lotti = Lotto.query.order_by(Lotto.data_consegna).all()
+        lotti = Lotto.query.order_by(Lotto.data_consegna).all() # esta query es importante
     elif order == 'desc':
         lotti = Lotto.query.order_by(Lotto.data_consegna.desc()).all()
     else:
         return 'Parametro order non valido. Utilizzare "asc" o "desc".'
 
     lotti_data = []
-    for lotto in lotti:
+    for lotto in lotti: #model objects
         dict_lotto = lotto.to_dict()
         lotti_data.append(dict_lotto)
 
     return jsonify(lotti_data)
 
+@app.route('/api/prenotazioni', methods=['GET'])
+def get_prenotazioni():
+    
+    prenotazioni = Prenotazione.query \
+        .filter_by(user_id=session['user_id']) \
+        .join(Lotto, Lotto.id == Prenotazione.lotto_id) \
+        .order_by(Lotto.data_consegna) \
+        .all()  # -> list es. [<Prenotazione 1>, <Prenotazione 2>, ...]
+    
+    prenot_data = []
+
+    for prenot in prenotazioni:
+        dict_prenot = prenot.to_dict()
+        prenot_data.append(dict_prenot)
+    return jsonify(prenot_data)
 
 @app.route('/lotto/<int:id_lotto>', methods=['GET'])
 def mostra_lotto(id_lotto): #possiamo usare show_lotto
@@ -54,7 +75,6 @@ def mostra_lotto(id_lotto): #possiamo usare show_lotto
 
     #Ottengo il record del lotto a partire dal suo ID
     lotto = db.session.get(Lotto, id_lotto)
-
     if not lotto:
         return 'Lotto non trovato!',404
     
@@ -68,7 +88,7 @@ def mostra_lotto(id_lotto): #possiamo usare show_lotto
 
     # se l'utente ha delle prenotazioni su questo specifico lotto
     if prenot_utente:
-        return redirect(url_for('aggiorna_prenotazione',id_prenotazione = prenot_utente.id))
+        return redirect(url_for('mostra_prenotazione',prenotazione_id = prenot_utente.id))
     # se l'utente non ha delle prenotazioni su questo specifico lotto
     else:
         return render_template('lotto.html', lotto=lotto)
@@ -77,11 +97,12 @@ def mostra_lotto(id_lotto): #possiamo usare show_lotto
 def nuova_prenotazione(id_lotto):
 
     if 'user_id' not in session:
-        return 'Non sei autorizzato', 401
-
+        flash ('Non sei autorizzato, per favore fare login','warning', 401)
+        return redirect(url_for('login'))
     #meter el try except
     quantita = int(request.form.get('quantita'))
     
+    lotto = db.session.get(Lotto, id_lotto)
 
     #verifica che la quantita sia:
     # - maggiore o uguale a 1
@@ -101,34 +122,74 @@ def nuova_prenotazione(id_lotto):
     db.session.add(new_prenotazione)
     db.session.commit()
     flash('Prenotazione effettuata con successo!','success')
-    return redirect(url_for('mostra_prenotazioni'))
+    return redirect(url_for('prenotazioni', id_lotto=id_lotto))
 
 
-#GET PRENOTAzioni
-@app.route('/prenotazione/<int:id_prenotazione>', methods=['GET'])
-def aggiorna_prenotazione(id_prenotazione):
+# Mostra prenotazione esistente
+@app.route('/prenotazione/<int:prenotazione_id>', methods=['GET'])
+def mostra_prenotazione(prenotazione_id):
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    else:
+        pass
+
+    prenotazione = db.session.get(Prenotazione, prenotazione_id)
+
+    if not prenotazione:
+        flash('Prenotazione non trovata.', 'danger')
+        return redirect(url_for('prenotazioni'))
+    else:
+        pass
+
+    if prenotazione.user_id != session['user_id']:
+        flash('Non sei autorizzato a visualizzare questa prenotazione.', 'danger')
+        return redirect(url_for('prenotazioni'))
+
+    return render_template('prenotazione.html', prenotazione=prenotazione)
+
+#Modificar la reserva existente
+
+@app.route('/<int:id_prenotazione>', methods=['POST'])
+def modifica_prenotazione(id_prenotazione):
+    if 'user_id' not in session:
+        return redirect(url_for(login))
     
-    ...
+    prenotazione = db.session.get(Prenotazione,id_prenotazione)
 
-    return render_template('prenotazioni.html')
+    if not prenotazione:
+        flash('Prenotazione non trovata','danger')
+        return redirect(url_for('prenotazioni'))
+    else:
+        pass
+    azione = request.form.get('azione')
 
+    if azione =='aggionra':
+        quantita= int(request.form.get('quantita'))
+        lotto = prenotazione.lotto
 
+        if quantita <= 0:
+            flash('Quantità non valida. Inserire un numero maggiore di 0.', 'danger')
+            return redirect(url_for('mostra_prenotazione', prenotazione_id=id_prenotazione))
 
-@app.route('/api/prenotazioni', methods=['GET'])
-def get_prenotazioni():
-    
-    prenotazioni = Prenotazione.query \
-        .filter_by(user_id=session['user_id']) \
-        .join(Lotto, Lotto.id == Prenotazione.lotto_id) \
-        .order_by(Lotto.data_consegna) \
-        .all()  # -> list es. [<Prenotazione 1>, <Prenotazione 2>, ...]
-    
-    prenot_data = []
+        qta_disponibile = lotto.get_qta_disponibile()
 
-    for prenot in prenotazioni:
-        dict_prenot = prenot.to_dict()
-        prenot_data.append(dict_prenot)
-    return jsonify(prenot_data)
+        if quantita > qta_disponibile + prenotazione.qta:
+            flash('La quantità richiesta supera quella disponibile.', 'danger')
+            return redirect(url_for('mostra_prenotazione', prenotazione_id=id_prenotazione))
+
+        prenotazione.qta = quantita
+        db.session.commit()
+        flash(f'Prenotazione di "{lotto.prodotto.nome}" aggiornata a {quantita} {lotto.qta_unita_misura}.', 'success')
+
+    elif azione =='elimina':
+        db.session. delete(prenotazione)
+        db.session.commit()
+        flash('¨Prenotazione eliminata con successo','warning')
+
+    else:
+        flash('Azione non implementata','danger')
+
+    return redirect(url_for('prenotazioni'))
 
 # @TODO: Implementare il login / logout
 
