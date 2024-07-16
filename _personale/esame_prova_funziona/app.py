@@ -41,12 +41,14 @@ def index():
                 'data_ora': replica.data_ora,
                 'annullato': replica.annullato,
                 'posti_disponibili': posti_disponibili
+                
             })
         eventi_data.append({
             'id': evento.id,
             'nome_evento': evento.nome_evento,
             'locale': evento.rel_locale.nome_locale,
-            'repliche': repliche_data
+            'repliche': repliche_data,
+            'immagine': evento.immagine
         })
     return render_template('index.html', eventi=eventi_data)
 

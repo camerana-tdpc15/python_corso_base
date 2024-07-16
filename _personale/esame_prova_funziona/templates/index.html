@@ -5,12 +5,18 @@
 {% block h1 %}Una rotonda sul mare{% endblock %}
 
 {% block content %}
+<!-- Stile CSS per il cambio di font -->
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important; /*font cambiato */
+    }
+</style>
 
 <h2 class="mb-4">Eventi sulla Nave</h2>
 
 <!-- Controlla se l'utente è loggato e mostra un messaggio di benvenuto o invita a loggarsi -->
 {% if session.get('utente_id') %}
-    <p class="text-success">Benvenuto a bordo, {{ session.get('user_name') }}!</p>
+    <p class="text-success">Benvenuto a bordo!</p>
 {% else %}
     <p class="text-warning">Per poter assistere ai nostri spettacoli ti devi loggare: <a href="{{ url_for('login') }}">Accedi</a> per prenotare.</p>
 {% endif %}
@@ -23,6 +29,8 @@
             <div class="card-body">
                 <!-- Titolo e sottotitolo della card -->
                 <h5 class="card-title">{{ evento.nome_evento }}</h5>
+
+                <img src="{{ evento.immagine }}" alt="" style="max-width: 100%; height: auto;margin-bottom: 15px;">
                 <h6 class="card-subtitle mb-2 text-muted">{{ evento.locale }}</h6>
                 <p class="card-text"><strong>Repliche:</strong></p>
                 <!-- Lista delle repliche per l'evento -->
@@ -51,8 +59,6 @@
     {% endfor %}
 </div>
 {% endblock %}
-
-
 
 
 

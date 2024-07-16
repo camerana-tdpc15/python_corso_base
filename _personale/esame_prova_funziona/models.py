@@ -60,7 +60,7 @@ class Evento(db.Model, SerializerMixin):
     id = db.mapped_column(db.Integer(), primary_key=True)
     locale_id = db.mapped_column(db.Integer(), db.ForeignKey('locali.id'), nullable=False)
     nome_evento = db.mapped_column(db.String(100), nullable=False)
-    
+    immagine = db.mapped_column(db.String(100), nullable=False)
     # -- RELATIONSHIPS --
     rel_repliche = db.relationship('Replica', back_populates='rel_evento')
     rel_locale = db.relationship('Locale', back_populates='rel_eventi')
