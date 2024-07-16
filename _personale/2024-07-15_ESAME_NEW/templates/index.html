@@ -19,17 +19,22 @@
     {% for evento in eventi %}
     <div class="col">
         <div class="card h-100">
+            <div class="card-header">
+                <h4 class="card-title">{{ evento.nome_evento }}</h4>
+                <!-- <p class="text-end"><small>(cod. lotto: ${evento.id})</small><p> -->
+            </div>
             <div class="card-body">
                 <!-- Titolo e sottotitolo della card -->
-                <h5 class="card-title">{{ evento.nome_evento }}</h5>
-                <h6 class="card-subtitle mb-2 text-muted">{{ evento.locale }}</h6>
+                <!-- <h5 class="card-title">{{ evento.nome_evento }}</h5> -->
+                <h5 class="card-subtitle mb-2 text-muted">Locale:&nbsp;&nbsp;&nbsp;{{ evento.locale }}</h5>
                 <p class="card-text"><strong>Repliche:</strong></p>
                 <!-- Lista delle repliche per l'evento -->
                 <ul class="list-group list-group-flush">
                     {% for replica in evento.repliche %}
                     <li class="list-group-item {% if replica.annullato %}text-danger{% endif %}">
                         <!-- Data e ora della replica -->
-                            - Data e ora: {{ replica.data_ora.strftime('%d-%m-%Y %H:%M') }}
+                            - Data: {{ replica.data_ora.strftime('%d-%m-%Y') }}
+                            - Ora:  {{ replica.data_ora.strftime('%H:%M') }}
                         {% if replica.annullato %}
                             (Annullato)
                         {% else %}
