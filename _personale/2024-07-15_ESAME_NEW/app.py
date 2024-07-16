@@ -10,14 +10,14 @@ app.config['SECRET_KEY'] = 'mysecretkey'
 
 db.init_app(app)  # Inizializza l'istanza di SQLAlchemy con l'app Flask
 
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'user_id' not in session:
-            flash('Per favore, effettua il login per accedere a questa pagina.', 'warning')
-            return redirect(url_for('login', next=request.url))
-        return f(*args, **kwargs)
-    return decorated_function
+# def login_required(f):
+#     @wraps(f)
+#     def decorated_function(*args, **kwargs):
+#         if 'user_id' not in session:
+#             flash('Per favore, effettua il login per accedere a questa pagina.', 'warning')
+#             return redirect(url_for('login', next=request.url))
+#         return f(*args, **kwargs)
+#     return decorated_function
 
 @app.route('/')
 def index():
@@ -57,9 +57,42 @@ def login():
             flash('Login fallito. Controlla email e password.', 'danger')
     return render_template('login.html')
 
+@app.route("/signup", methods=["GET", "POST"])
+def signup():
+    if request.method == "POST":
+        cognome = request.form.get("cognome")
+        nome = request.form.get("nome")
+        telefono = request.form.get("telefono")
+        email = request.form.get("email")
+        password = request.form.get("password")
+        if not cognome or not nome or not telefono or not email or not password:
+            flash("Tutti i campi sono obbligatori!", "danger")
+            return redirect(url_for("signup"))
+        if (
+            Utente.query.filter_by(nome=nome).first()
+            or Utente.query.filter_by(cognome=cognome).first()
+            or Utente.query.filter_by(email=email).first()
+        ):
+            flash("Il nome o il cognome o l'email sono già in uso!", "danger")
+            return redirect(url_for("signup"))
+        new_user = Utente(cognome=cognome, nome=nome, telefono=telefono, email=email, password=password)
+        db.session.add(new_user)
+        db.session.commit()
+        flash("Registrazione effettuata con successo!", "success")
+        return redirect(url_for("index"))
+    return render_template("signup.html")
+
+
+
+
 @app.route('/logout')
-@login_required
+#@login_required
 def logout():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    else:
+        pass
+
     session.clear()
     flash('Logout effettuato con successo.', 'success')
     return redirect(url_for('index'))
@@ -85,13 +118,21 @@ def get_repliche(evento_id):
     })
 
 @app.route('/repliche/<int:evento_id>')
-@login_required
+#@login_required
 def repliche(evento_id):
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    else:
+        pass
     return render_template('repliche.html', evento_id=evento_id)
 
 @app.route('/prenota', methods=['POST'])
-@login_required
+#@login_required
 def prenota():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    else:
+        pass
     data = request.json
     replica_id = data.get('replica_id')
     quantita = int(data.get('quantita', 1))
@@ -107,8 +148,12 @@ def prenota():
     return jsonify({'message': 'Prenotazione effettuata con successo!'}), 201
 
 @app.route('/api/prenotazioni', methods=['GET', 'POST'])
-@login_required
+#@login_required
 def api_prenotazioni():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    else:
+        pass
     if request.method == 'GET':
         prenotazioni = Prenotazione.query.filter_by(utente_id=session['user_id']).all()
         prenotazioni_data = []
@@ -179,8 +224,12 @@ def api_prenotazioni():
             return jsonify({'error': 'Azione non valida'}), 400
 
 @app.route('/prenotazioni')
-@login_required
+#@login_required
 def prenotazioni():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    else:
+        pass
     return render_template('prenotazioni.html')
 
 if __name__ == '__main__':
