@@ -17,44 +17,40 @@
         <div class="card">
             <div class="card-header">
                 <h4 class="card-title">
-                    {{ lotto.prodotto.nome }}
+                    {{ replica.evento.nome_evento }}
                 </h4>
-                <div class="text-end"><small>(cod. lotto {{ lotto.id }})</small></div>
+                <!-- <div class="text-end"><small>(cod. replica {{ replica.id }})</small></div> -->
             </div>
             <div class="card-body">
                 <p class="card-text">
-                    <small>Disponibile da:</small> <b>{{ lotto.get_date() }}</b>
+                    <small>Data Evento:</small> <b>{{ replica.data_ora }}</b>
                 </p>
                 <p class="card-text">
-                    <small>Prodotto da:</small> <b>{{ lotto.prodotto.produttore.nome }}</b>
+                    <small>Visibile in :</small> <b>{{ replica.evento.locale.nome_locale }}</b>
                 </p>
                 <p class="card-text">
-                    <small>Q.tà totale lotto:</small> <b>{{ lotto.qta_lotto }} {{ lotto.qta_unita_misura }}</b>
+                    <small>Posti sala:</small> <b>{{ replica.evento.locale.posti }} </b>
                 </p>
                 <p class="card-text">
-                    <small>Q.tà disponibile:</small> <b>{{ lotto.get_qta_disponibile() }} {{ lotto.qta_unita_misura }}</b>
+                    <small>Posti disponibili:</small> <b>{{ replica.get_posti_disponibili() }} </b>
                 </p>
-                <p class="card-text">
-                    <small>Prezzo:</small> <b>{{ lotto.get_prezzo_str() }}</b>
-                </p>
+               
                 {% if prenotazione_esistente %}
                 <div class="row alert alert-primary text-center">
                     <div class="col card-text">
-                        <small>Q.tà già prenotata:</small> <b>{{ prenotazione_esistente.qta }} {{ lotto.qta_unita_misura }}</b>
+                        <small>Prenotazione già effettuata. Numero posti:</small> <b>{{ replica.prenotazione.quantita }} </b>
                     </div>
-                    <div class="col card-text">
-                        <small>Prezzo totale:</small> <b>{{ prenotazione_esistente.get_prezzo_totale_str() }}</b>
-                    </div>
+                    
                 </div>
                 {% endif %}
             </div>
             <!-- Form per la creazione o la modifica di una prenotazione -->
             <div class="card-footer">
-                <form method="POST" action="{{ url_for('prenota_lotto', lotto_id=lotto.id) }}">
+                <form method="POST" action="{{ url_for('prenota_replica', replica_id=replica.id) }}">
                     <div class="form-group mb-3">
                         <label for="quantita" class="form-label">Quantità</label>
                         <input type="number" class="form-control" id="quantita" name="quantita"
-                            required min="1" max="{{ lotto.get_qta_disponibile() }}"
+                            required min="1" max="{{ replica.get_posti_disponibili() }}"
                             value="1">
                     </div>
                     <button type="submit" class="btn btn-primary w-100" name="azione" value="nuovaPrenotazione">
