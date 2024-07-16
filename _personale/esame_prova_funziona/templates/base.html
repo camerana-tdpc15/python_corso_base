@@ -1,0 +1,30 @@
+<!doctype html>
+<html class="h-100">
+    <head>
+        <!-- BLOCCO DEL TITOLO -->
+        <title>{% block title %}- Sito Film{% endblock %}</title>
+
+        {% include 'includes/head.html' %}
+
+    </head>
+
+    <body class="d-flex flex-column h-100">
+
+        <header>
+            {% include 'includes/navbar.html' %}
+        </header>
+
+        <!-- Contenuto principale della pagina -->
+        <main class="container mt-4">
+            <!-- Gestione dei messaggi flash -->
+            {% include 'includes/flash.html' %}
+
+            <!-- Blocco di contenuto che può essere sovrascritto dalle pagine che estendono questo template -->
+            {% block content %}
+            {% endblock %}
+        </main>
+
+        {% include 'includes/footer.html' %}
+        {% block extra_js %}{% endblock %}
+    </body>
+</html>
