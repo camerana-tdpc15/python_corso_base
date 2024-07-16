@@ -9,16 +9,16 @@
 
 <!-- Controlla se l'utente è loggato e mostra un messaggio di benvenuto o invita a loggarsi -->
 {% if session.get('user_id') %}
-    <p class="text-success">Benvenuto, {{ session.get('user_name') }}!</p>
+    <p class="text-primary"style="font-size: 30px;">Benvenuto, {{ session.get('user_name') }}!</p>
 {% else %}
-    <p class="text-warning">Non sei loggato. <a href="{{ url_for('login') }}">Accedi</a> per prenotare.</p>
+    <p class="text-dark "> <a href="{{ url_for('login') }}">Accedi</a> per prenotare.</p>
 {% endif %}
 
 <!-- Sezione che mostra gli eventi in una griglia -->
 <div class="row row-cols-1 row-cols-md-3 g-4">
     {% for evento in eventi %}
     <div class="col">
-        <div class="card h-100">
+        <div class="card h-100" style="background-image: linear-gradient(to top, #118d96, #d2e00e);">
             <div class="card-body">
                 <!-- Titolo e sottotitolo della card -->
                 <h5 class="card-title">{{ evento.nome_evento }}</h5>

@@ -19,6 +19,11 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+    # Questo è un decorator personalizzato che verifica se l’utente ha effettuato l’accesso.
+    # Se l’utente non ha effettuato l’accesso, viene visualizzato un messaggio di avviso
+    # e viene reindirizzato alla pagina di login.
+    # Altrimenti, la funzione decorata viene eseguita.
+
 @app.route('/')
 def index():
     eventi = Evento.query.all()
@@ -41,6 +46,14 @@ def index():
             'repliche': repliche_data
         })
     return render_template('index.html', eventi=eventi_data)
+        # Quando un utente visita la homepage del sito, questa funzione viene eseguita.
+        # Recupera tutti gli eventi dal database utilizzando Evento.query.all().
+        # Per ciascun evento, recupera le repliche associate e calcola i 
+        # posti disponibili sottraendo i posti prenotati dal totale dei posti nel locale.
+        # Costruisce una struttura dati contenente informazioni sugli eventi e le repliche.
+        # Infine, restituisce il template HTML “index.html” con i dati degli eventi.
+
+        #scalar è un oggetto che rappresenta un singolo valore (è un valore semplice e non composto)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -51,20 +64,43 @@ def login():
         if user and user.password == password:
             session['user_id'] = user.id
             session['user_name'] = f"{user.nome} {user.cognome}"
-            flash(f'Benvenuto, {session["user_name"]}! Login effettuato con successo.', 'success')
+            flash(f'Welcome, {session["user_name"]}! ', 'success')
             return redirect(url_for('index'))
         else:
-            flash('Login fallito. Controlla email e password.', 'danger')
+            flash('Login failed. Check your email and password.', 'danger')
     return render_template('login.html')
+
+        # Questa route gestisce la pagina di login dell’applicazione (l’URL '/login').
+        # Se la richiesta HTTP è di tipo POST 
+        # Recupero delle credenziali:
+        # Estrae l’indirizzo email e la password inviati dal modulo di login.
+        # Cerca un utente nel database con l’indirizzo email fornito.
+        # Verifica delle credenziali:
+        # Se l’utente esiste e la password corrisponde a quella nel database, l’utente viene autenticato.
+        # Viene impostata una variabile di sessione user_id con l’ID dell’utente e una variabile user_name con il nome completo dell’utente.
+        # Viene mostrato un messaggio di successo tramite flash().
+        # L’utente viene reindirizzato alla pagina principale ('index').
+        # Gestione del fallimento del login:
+        # Se l’utente non esiste o la password non corrisponde, viene mostrato un messaggio di errore tramite flash().
+        # Renderizzazione del template HTML:
+        # Se la richiesta HTTP è di tipo GET (ovvero quando l’utente accede alla pagina di login), viene restituito il template HTML “login.html”.
 
 @app.route('/logout')
 @login_required
 def logout():
     session.clear()
-    flash('Logout effettuato con successo.', 'success')
+    flash('Logout successful.', 'success')
     return redirect(url_for('index'))
 
-@app.route('/api/repliche/<int:evento_id>')
+    # Questa route gestisce il logout dell’utente (URL: '/logout').
+    # Richiede che l’utente sia autenticato (grazie al decoratore @login_required).
+    # Quando un utente accede a questa route, i dati della sua sessione (compresi user_id e user_name) vengono cancellati utilizzando session.clear().
+    # Ciò effettua il logout dell’utente.
+    # Viene visualizzato un messaggio di successo utilizzando flash
+    # Infine, l’utente viene reindirizzato alla pagina principale ('index').
+
+@app.route('/api/repliche/<int:evento_id>') # questa route fornisce un’API per ottenere dettagli sulle 
+    # repliche di un evento specifico
 def get_repliche(evento_id):
     evento = Evento.query.get_or_404(evento_id)
     repliche = []
@@ -84,10 +120,36 @@ def get_repliche(evento_id):
         'repliche': repliche
     })
 
-@app.route('/repliche/<int:evento_id>')
+
+    # Questa route gestisce le richieste relative alle repliche di un evento specifico.
+    # L’URL include un parametro dinamico <int:evento_id> che rappresenta l’ID dell’evento 
+    # di cui si vogliono ottenere le repliche.
+    # La variabile evento viene inizializzata con l’evento corrispondente all’ID fornito. 
+    # Se l’evento non esiste, viene restituito un errore 404 (pagina non trovata).
+    # Viene creata una lista vuota repliche per contenere le informazioni sulle repliche.
+    # Per ciascuna replica associata all’evento, vengono calcolati i posti prenotati 
+    # e i posti disponibili.
+    # Le informazioni sulla replica vengono aggiunte alla lista repliche.
+    # Alla fine, viene restituito un oggetto JSON contenente:
+    # Il nome dell’evento (nome_evento).
+    # Il nome del locale associato all’evento (locale).
+    # Il luogo del locale (luogo).
+    # Un elenco di repliche con le relative informazioni (repliche).
+    
+
+@app.route('/repliche/<int:evento_id>') # questa route gestisce la visualizzazione delle repliche di un evento 
+    # specifico e richiede che l’utente sia autenticato
 @login_required
 def repliche(evento_id):
     return render_template('repliche.html', evento_id=evento_id)
+
+    # Questa route gestisce le richieste relative alle repliche di un evento specifico.
+    # L’URL include un parametro dinamico <int:evento_id> 
+    # che rappresenta l’ID dell’evento di cui si vogliono ottenere le repliche.
+    # La route è protetta dal decoratore @login_required.
+    # Ciò significa che l’utente deve essere autenticato (loggato) per accedere a questa pagina.
+    # Quando un utente accede a questa route, viene restituito il template HTML “repliche.html” 
+    # con l’ID dell’evento passato come parametro.
 
 @app.route('/prenota', methods=['POST'])
 @login_required
