@@ -1,4 +1,4 @@
-// Aggiunge un listener per l'evento 'DOMContentLoaded' che carica le prenotazioni una volta che il DOM è completamente caricato
+// Aggiunge un listener per l'evenuser_idto 'DOMContentLoaded' che carica le prenotazioni una volta che il DOM è completamente caricato
 document.addEventListener('DOMContentLoaded', () => {
     loadPrenotazioni();
 });

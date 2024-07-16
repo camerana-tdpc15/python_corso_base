@@ -19,7 +19,7 @@ db.init_app(app)  # Inizializza l'istanza di SQLAlchemy con l'app Flask
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if 'user_id' not in session:
+        if 'utente_id' not in session:
             flash('Per favore, effettua il login per accedere a questa pagina.', 'warning')
             return redirect(url_for('login', next=request.url))
         return f(*args, **kwargs)
@@ -58,7 +58,7 @@ def login():
         user = Utente.query.filter_by(email=email).first()
 
         if user and user.password == password:
-            session['user_id'] = user.id
+            session['utente_id'] = user.id
             flash(f'Login riuscito. Benvenuto {user.nome}!', 'success')
             return redirect(url_for('prenotazioni'))
         else:
@@ -154,7 +154,7 @@ def prenota():
         return jsonify({'error': 'Questa replica è stata annullata.'}), 400
     
     # creo un nuovo oggetto prenotazione
-    prenotazione = Prenotazione(utente_id=session['user_id'], replica_id=replica_id, quantita=quantita)
+    prenotazione = Prenotazione(utente_id=session['utente_id'], replica_id=replica_id, quantita=quantita)
     db.session.add(prenotazione)
     db.session.commit()
     
@@ -166,7 +166,7 @@ def prenota():
 def api_prenotazioni():
     # Quando la richiesta è di tipo GET, l'API restituisce tutte le prenotazioni dell'utente corrente
     if request.method == 'GET':
-        prenotazioni = Prenotazione.query.filter_by(utente_id=session['user_id']).all()
+        prenotazioni = Prenotazione.query.filter_by(utente_id=session['utente_id']).all()
         prenotazioni_data = []
         for p in prenotazioni:
             prenotazioni_data.append({
@@ -192,7 +192,7 @@ def api_prenotazioni():
             quantita = data.get('quantita', 1)
             
             # Controllo prenotazione esistente
-            existing_prenotazione = Prenotazione.query.filter_by(utente_id=session['user_id'], replica_id=replica_id).first()
+            existing_prenotazione = Prenotazione.query.filter_by(utente_id=session['utente_id'], replica_id=replica_id).first()
             # se la prenotazione è già esistente
             if existing_prenotazione:
                 return jsonify({'error': 'Hai già una prenotazione per questa replica.'}), 400
@@ -203,7 +203,7 @@ def api_prenotazioni():
                 return jsonify({'error': 'Questa replica è stata annullata.'}), 400
             
             # altrimenti si procede con la Creazione della prenotazione:
-            prenotazione = Prenotazione(utente_id=session['user_id'], replica_id=replica_id, quantita=quantita)
+            prenotazione = Prenotazione(utente_id=session['utente_id'], replica_id=replica_id, quantita=quantita)
             db.session.add(prenotazione)
             db.session.commit()
             
@@ -217,8 +217,8 @@ def api_prenotazioni():
             
             # Viene recuperata la prenotazione dal database tramite l'ID specificato 
             prenotazione = Prenotazione.query.get_or_404(prenotazione_id)
-            # verifica se l'utente corrente (identificato da session['user_id']) è uguale a quello associato alla prenotazione
-            if prenotazione.utente_id != session['user_id']:
+            # verifica se l'utente corrente (identificato da session['uyente_id']) è uguale a quello associato alla prenotazione
+            if prenotazione.utente_id != session['utente_id']:
                 return jsonify({'error': 'Non sei autorizzato a modificare questa prenotazione.'}), 403
             
             #  se la replica associata alla prenotazione è stata annullata
@@ -239,7 +239,7 @@ def api_prenotazioni():
             prenotazione = Prenotazione.query.get_or_404(prenotazione_id)
             
             # Controllo di autorizzazione
-            if prenotazione.utente_id != session['user_id']:
+            if prenotazione.utente_id != session['utente_id']:
                 return jsonify({'error': 'Non sei autorizzato a cancellare questa prenotazione.'}), 403
             
             # Cancellazione della prenotazione
