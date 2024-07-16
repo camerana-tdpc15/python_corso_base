@@ -21,7 +21,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + DATABASE_PATH
 app.config['SECRET_KEY'] = 'mysecretkey'
 
 # Inizializza l'istanza di SQLAlchemy con l'app Flask
-db.init_app(app)  
+db.init_app(app)
 
 # Configurazione di Flask-Limiter per limitare il numero di richieste
 limiter = Limiter(get_remote_address, app=app, default_limits=["200 per day", "50 per hour"])
@@ -45,9 +45,10 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # Limite di 16 MB per l'upl
 @app.before_request
 def load_logged_in_user():
     utente_id = session.get('utente_id')
-    g.utente = Utente.query.get(utente_id) if utente_id else None
-    if not getattr(g, 'initialized', False):
-        g.initialized = True
+    if utente_id is None:
+        g.user = None
+    else:
+        g.user = Utente.query.get(utente_id)
 
 # Funzione per il controllo dell'autenticazione
 def login_required(f):
@@ -62,19 +63,26 @@ def login_required(f):
 # Route per la home page
 @app.route('/')
 def home():
-    utente = db.session.get(Utente, session.get('utente_id')) if 'utente_id' in session else None
-    eventi = Evento.query.all()  # Recupera tutti gli eventi
-    return render_template('home.html', utente=utente, eventi=eventi)
+    return render_template('home.html')
 
-# API per ottenere le repliche
-@app.route('/api/repliche', methods=['GET'])
-def get_repliche():
-    order = request.args.get('order', 'asc')
-    if order not in ['asc', 'desc']:
-        return 'Parametro order non valido. Utilizzare "asc" o "desc".'
-    
-    repliche = Replica.query.order_by(Replica.data_ora.desc() if order == 'desc' else Replica.data_ora).all()
-    return jsonify([replica.to_dict() for replica in repliche])
+# API per ottenere gli eventi con repliche e posti disponibili
+@app.route('/api/eventi_con_repliche', methods=['GET'])
+def get_eventi_con_repliche():
+    eventi = Evento.query.all()
+    eventi_data = []
+    for evento in eventi:
+        evento_dict = evento.to_dict()
+        evento_dict['luogo'] = evento.rel_locale.luogo
+        repliche_data = []
+        for replica in evento.rel_repliche:
+            replica_dict = replica.to_dict()
+            replica_dict['posti_disponibili'] = replica.posti_disponibili()
+            replica_dict['data_ora'] = replica.get_date()
+            replica_dict['annullato'] = replica.annullato
+            repliche_data.append(replica_dict)
+        evento_dict['repliche'] = repliche_data
+        eventi_data.append(evento_dict)
+    return jsonify(eventi_data)
 
 # Route per visualizzare una singola replica
 @app.route('/replica/<int:id_replica>', methods=['GET'])
@@ -92,9 +100,7 @@ def mostra_replica(id_replica):
     if prenot_utente:
         return redirect(url_for('aggiorna_prenotazione', id_prenotazione=prenot_utente.id))
     else:
-        return render_template('replica.html', replica=replica, utente=g.utente)
-
-
+        return render_template('replica.html', replica=replica, utente=g.user)
 
 # Route per il login
 @app.route('/login', methods=['GET', 'POST'])
@@ -144,10 +150,67 @@ def registrazione():
 @app.route('/logout')
 @login_required
 def logout():
-    session.pop('user_id', None)
+    session.pop('utente_id', None)
     flash('Logout effettuato con successo!', 'success')
     return redirect(url_for('home'))
 
+# Route per prenotare una replica
+@app.route('/prenota/<int:replica_id>', methods=['POST'])
+@login_required
+def prenota_replica(replica_id):
+    data = request.json
+    quantita = data.get('quantita', 1)
+    replica = Replica.query.get_or_404(replica_id)
+
+    if replica.annullato:
+        return jsonify({'error': 'Replica annullata, non prenotabile.'}), 400
+
+    # Controlla se l'utente ha già una prenotazione per questa replica
+    prenotazione = Prenotazione.query.filter_by(utente_id=g.user.id, replica_id=replica_id).first()
+    if prenotazione:
+        return jsonify({'error': 'Hai già una prenotazione per questa replica. Puoi modificarla nella pagina delle prenotazioni.'}), 400
+
+    # Se non esiste una prenotazione, creane una nuova
+    nuova_prenotazione = Prenotazione(utente_id=g.user.id, replica_id=replica.id, quantita=quantita)
+    db.session.add(nuova_prenotazione)
+    db.session.commit()
+    return jsonify({'success': True, 'message': 'Prenotazione effettuata con successo!'})
+
+# API per ottenere le prenotazioni dell'utente
+@app.route('/api/prenotazioni', methods=['GET'])
+@login_required
+def get_prenotazioni():
+    prenotazioni = Prenotazione.query.filter_by(utente_id=g.user.id).all()
+    return jsonify([prenotazione.to_dict() for prenotazione in prenotazioni])
+
+# API per modificare una prenotazione
+@app.route('/api/prenotazioni/<int:prenotazione_id>', methods=['PUT'])
+@login_required
+def modifica_prenotazione(prenotazione_id):
+    data = request.json
+    prenotazione = Prenotazione.query.get_or_404(prenotazione_id)
+    if prenotazione.utente_id != g.user.id:
+        return jsonify({'error': 'Non autorizzato'}), 403
+    prenotazione.quantita = data.get('quantita', prenotazione.quantita)
+    db.session.commit()
+    return jsonify(prenotazione.to_dict())
+
+# API per cancellare una prenotazione
+@app.route('/api/prenotazioni/<int:prenotazione_id>', methods=['DELETE'])
+@login_required
+def cancella_prenotazione(prenotazione_id):
+    prenotazione = Prenotazione.query.get_or_404(prenotazione_id)
+    if prenotazione.utente_id != g.user.id:
+        return jsonify({'error': 'Non autorizzato'}), 403
+    db.session.delete(prenotazione)
+    db.session.commit()
+    return jsonify({'success': True})
+
+# Route per visualizzare la pagina delle prenotazioni
+@app.route('/prenotazioni')
+@login_required
+def mostra_prenotazioni():
+    return render_template('prenotazioni.html')
 
 # Inizializzazione dell'app e del database
 if __name__ == '__main__':

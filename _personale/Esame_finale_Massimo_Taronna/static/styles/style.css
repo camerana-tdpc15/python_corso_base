@@ -1,3 +1,24 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+footer {
+    background: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1em 0;
+    margin-top: auto;
+}
+
 /* Classe per il colore di sfondo primario */
 .bg-gas-primary {
     background-color: rgb(117, 111, 111);
@@ -10,24 +31,34 @@
 
 /* Classe per il colore di sfondo della pagina */
 .bg-gas-sfondo {
-    background-color: blanchedalmond;
+    background-color: rgb(204, 238, 243);
 }
 
-/* Stile di base per le card */
+/* Aggiungi questo CSS per assicurare che le card abbiano la stessa altezza */
 .card {
     display: flex;
-    flex-direction: column; /* Disposizione in colonna */
+    flex-direction: column;
+    height: 100%;
 }
 
-/* Stile per il corpo della card */
-.card-body {
-    flex-grow: 1; /* Permette al corpo della card di crescere per riempire lo spazio disponibile */
-}
-
-/* Stile per il footer della card */
-.card-footer {
+.card .card-body {
+    flex: 1 1 auto;
     display: flex;
-    justify-content: center; /* Allinea il contenuto al centro */
+    flex-direction: column;
+}
+
+.card .card-body h5 {
+    flex-grow: 0;
+}
+
+.card .card-body .card-text {
+    flex-grow: 1;
+    margin-bottom: 1rem;
+}
+
+.card .card-body button {
+    align-self: center;
+    margin-top: auto;
 }
 
 /* Stile per i pulsanti */
@@ -37,5 +68,9 @@
 
 /* Stile personalizzato per la navbar */
 .custom-navbar {
-    background-color: #708f23; /* Colore di sfondo della navbar */
+    background-color: #1a5f8a; /* Colore di sfondo della navbar */
+}
+
+.text-danger {
+    color: red;
 }

@@ -69,12 +69,18 @@ class Replica(db.Model, SerializerMixin):
         res_data = self.data_ora.strftime('%H:%M %A %d/%m/%Y')
         return res_data  # es. "Giovedì 27/06/2024"
 
+    # Funzione per ottenere i posti disponibili
+    def posti_disponibili(self):
+        posti_prenotati = sum([prenotazione.quantita for prenotazione in self.rel_prenotazioni])
+        return self.rel_evento.rel_locale.posti - posti_prenotati
+
 # Modello per la tabella 'eventi'
 class Evento(db.Model, SerializerMixin):
     __tablename__ = 'eventi'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     locale_id = db.Column(db.Integer, db.ForeignKey('locali.id'), nullable=False)
     nome_evento = db.Column(db.String(50), nullable=False)
+    immagine = db.Column(db.String(50))  # Nuovo campo per il nome dell'immagine
 
     # Relazione con la tabella 'repliche'
     rel_repliche = db.relationship('Replica', back_populates='rel_evento')
