@@ -92,7 +92,7 @@ function loadPrenotazioni() {
     .catch(error => {
         console.error('Error:', error);
         // Mostra un messaggio di errore se la modifica fallisce
-        alert('Si è verificato un errore durante la modifica della prenotazione.');
+        alert('Si è verificato un errore.');
     });
 }
 
@@ -124,7 +124,7 @@ function cancellaPrenotazione(prenotazioneId) {
         .catch(error => {
             console.error('Error:', error);
             // Mostra un messaggio di errore se la cancellazione fallisce
-            alert('Si è verificato un errore durante la cancellazione della prenotazione.');
+            alert('Si è verificato un errore');
         });
     }
 }

@@ -1,0 +1,17 @@
+body {
+    background-image: url("https://www.economiadelmare.org/wp-content/uploads/2023/11/Costa-Serena.jpg");
+    background-repeat: no-repeat;
+   
+  }
+
+  .contenitore {
+    border-style: solid;
+    border-width: medium;
+  }
+  
+
+  .footer{
+
+    position: fixed;
+    bottom: 0px;
+  }

@@ -51,7 +51,7 @@ def login():
         if user and user.password == password:
             session['user_id'] = user.id
             session['user_name'] = f"{user.nome} {user.cognome}"
-            flash(f'Benvenuto, {session["user_name"]}! Login effettuato con successo.', 'success')
+            flash(f'Benvenuto, {session["user_name"]}!', 'warning')
             return redirect(url_for('index'))
         else:
             flash('Login fallito. Controlla email e password.', 'danger')
