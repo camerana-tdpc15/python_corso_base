@@ -2,16 +2,19 @@ body {
     background-color: beige;
 }
 
-.bg-gas-primary {
-    background-color: #846a6a;
-}
-.text-gas-primary {
-    color: #d2d3dd;
-}
-.bg-gas-secondary {
-    background-color: #846a6a;
+#bg-gas-primary {
+    background-color: rgb(230, 230, 230);
 }
 
-.text-gas-secondary {
+#text-gas-primary {
     color: #d2d3dd;
 }
+
+#bg-gas-secondary {
+    background-color: rgb(111, 162, 255) !important;
+}
+
+.vocimenu {
+    font-size: 20px;
+}
+

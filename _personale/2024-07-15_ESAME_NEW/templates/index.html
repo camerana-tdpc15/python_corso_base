@@ -19,7 +19,7 @@
     {% for evento in eventi %}
     <div class="col">
         <div class="card h-100 rounded-4 shadow">
-            <div class="card-header">
+            <div id="bg-gas-primary" class="card-header">
                 <h4 class="card-title">{{ evento.nome_evento }}</h4>
                 <!-- <p class="text-end"><small>(cod. lotto: ${evento.id})</small><p> -->
             </div>
@@ -36,7 +36,7 @@
                             - Data: {{ replica.data_ora.strftime('%d-%m-%Y') }}
                             - Ora:  {{ replica.data_ora.strftime('%H:%M') }}
                         {% if replica.annullato %}
-                            (Annullato)
+                        &nbsp;&nbsp;&nbsp;(Annullato)
                         {% else %}
                             <br> - Posti disponibili: {{ replica.posti_disponibili }}
                         {% endif %}

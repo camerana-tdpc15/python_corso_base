@@ -16,7 +16,7 @@ fetch("/api/locali?order=asc")
             rowLocali.innerHTML += `
                 <div class="col-lg-3 my-2">
                     <div class="card h-100 card h-100 rounded-4 shadow">
-                        <div class="card-header">
+                        <div id="bg-gas-primary" class="card-header">
                             <h4 class="card-title">${locale.nome_locale}</h4>
                             <p class="text-end"><small>(codice: ${locale.id})</small><p>
                         </div>

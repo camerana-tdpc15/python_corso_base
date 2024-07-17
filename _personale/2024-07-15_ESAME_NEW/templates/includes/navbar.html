@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<nav id="bg-gas-secondary" class="navbar navbar-expand-lg navbar-light bg-primary">
     <div class="container-fluid">
 
         <!-- Area logo/brand -->
@@ -17,23 +17,23 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 {% if 'user_id' in session %}
-                <li class="nav-item">
+                <li class="nav-item vocimenu">
                     <a class="nav-link" href="{{ url_for('index') }}">Eventi</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item vocimenu">
                     <a class="nav-link" href="{{ url_for('prenotazioni') }}">Prenotazioni</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item vocimenu">
                     <a class="nav-link" href="{{ url_for('locali') }}">Locali</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item vocimenu">
                     <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
                 </li>
                 {% else %}
-                <li class="nav-item">
+                <li class="nav-item vocimenu">
                     <a class="nav-link" href="{{ url_for('login') }}">Login</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item vocimenu">
                     <a class="nav-link" href="{{ url_for('signup') }}">Sign Up</a>
                 </li>
                 {% endif %}
