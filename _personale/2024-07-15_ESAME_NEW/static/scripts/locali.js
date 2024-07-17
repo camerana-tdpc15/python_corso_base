@@ -18,7 +18,7 @@ fetch("/api/locali?order=asc")
                     <div class="card h-100">
                         <div class="card-header">
                             <h4 class="card-title">${locale.nome_locale}</h4>
-                            <p class="text-end"><small>(cod. lotto: ${locale.id})</small><p>
+                            <p class="text-end"><small>(codice: ${locale.id})</small><p>
                         </div>
                         <div class="card-body">
                             <p>Nome locale: <b>${locale.nome_locale}</b></p>

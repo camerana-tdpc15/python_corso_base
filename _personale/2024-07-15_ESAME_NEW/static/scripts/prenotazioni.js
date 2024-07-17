@@ -27,7 +27,7 @@ function loadPrenotazioni() {
                             <div class="card h-100">
                                 <div class="card-header">
                                     <h4 class="card-title">${evento.evento}</h4>
-                                    <p class="text-end"><small>(cod. lotto: ${evento.id})</small><p>
+                                    <p class="text-end"><small>(codice: ${evento.id})</small><p>
                                 </div>
                                 <div class="card-body d-flex flex-column">
                                     <p>Evento: <b>${evento.evento}</b></p>
