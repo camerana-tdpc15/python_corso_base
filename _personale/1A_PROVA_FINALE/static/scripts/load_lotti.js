@@ -31,7 +31,7 @@ function onLoad() {
                         <h4 class="card-title">
                             ${replica.evento.nome_evento}
                         </h4>
-                        <div class="text-end"><small>(cod. lotto ${replica.id})</small></div>
+                        <div class="text-end"><small>(cod. replica ${replica.id})</small></div>
                     </div>
                     <div class="card-body d-flex flex-column">
                         <p class="card-text">

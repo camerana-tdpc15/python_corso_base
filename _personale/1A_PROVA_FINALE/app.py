@@ -68,7 +68,7 @@ def get_dati_eventi():
     eventi = Evento.query.all()
     dati_eventi = []
     for evento in eventi:  # Model objects
-        dati_eventi.append()
+        #dati_eventi.append()
         dati_eventi.append(evento.to_dict())
 
     

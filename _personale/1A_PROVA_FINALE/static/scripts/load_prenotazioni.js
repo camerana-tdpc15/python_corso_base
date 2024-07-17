@@ -33,6 +33,21 @@ function onLoad() {
                         <h4 class="card-title">
                             ${prenot.replica.evento.nome_evento}
                         </h4>
+                           <div class="text-end"><small>(cod. replica ${prenot.id})</small></div>
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <p class="card-text">
+                            <small>Data Evento:</small> <b>${prenot.replica.data_ora}</b>
+                        </p>
+                        <p class="card-text">
+                            <small>Locale Evento:</small> <b>${prenot.replica.evento.locale.nome_locale}</b>
+                        </p>
+                        <p class="card-text">
+                            <small>Posti in sala:</small> <b>${prenot.replica.evento.locale.posti}</b>
+                        </p>   
+                        <p class="card-text">
+                            <small>Posti disponibili:</small> <b>${prenot.get_posti_disponibili}</b>
+                        </p>
                     
                             ${renderModifica}
                         </div>

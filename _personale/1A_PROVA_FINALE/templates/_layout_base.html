@@ -11,6 +11,7 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
 </head>
 
 <body class="d-flex flex-column h-100">
@@ -32,7 +33,7 @@
                 <div class="collapse navbar-collapse" id="collapsibleNavbar">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('home') }}">Lotti disponibili</a>
+                            <a class="nav-link" href="{{ url_for('home') }}">Eventi disponibili</a>
                         </li>
                         {% if session.user_id %}
                             <li class="nav-item">
@@ -75,10 +76,10 @@
 
     <footer class="bg-dark text-white text-center py-3 mt-auto">
         <div class="container">
-            <p>&copy; 2024 BioSquadra GAS. Alcuni diritti riservati.</p>
+            <p>&copy; 2024 BIT-BOAT. La Boat con i bit.</p>
             <p>
-                via Roma 100, Qualche Città, 12345, XY<br>
-                Phone: (+39) 123.4567.890 | Email: info@biosquadra.it
+                Là, da qualche parte, in mezzo al mar<br>
+                Phone: (+39) 123.4567.890 | Email: finchelabarcava@bitboat.it
             </p>
         </div>
     </footer>
