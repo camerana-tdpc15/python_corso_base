@@ -24,7 +24,7 @@ app.config['SECRET_KEY'] = 'mysecretkey'
 db.init_app(app)
 
 # Configurazione di Flask-Limiter per limitare il numero di richieste
-limiter = Limiter(get_remote_address, app=app, default_limits=["200 per day", "50 per hour"])
+limiter = Limiter(get_remote_address, app=app, default_limits=["200 per day", "100 per hour"])
 
 # Funzione per convalidare la password
 def is_password_strong(password):
@@ -33,13 +33,6 @@ def is_password_strong(password):
             re.search("[A-Z]", password) and
             re.search("[0-9]", password) and
             re.search("[!@#$%^&*(),.?\":{}|<>]", password))
-
-# Configurazione per l'upload dei file
-UPLOAD_FOLDER = 'static/imgs'
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
-
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # Limite di 16 MB per l'upload
 
 # Listener per l'evento before_request per caricare l'utente loggato
 @app.before_request
@@ -73,6 +66,7 @@ def get_eventi_con_repliche():
     for evento in eventi:
         evento_dict = evento.to_dict()
         evento_dict['luogo'] = evento.rel_locale.luogo
+        evento_dict['nome_locale'] = evento.rel_locale.nome_locale
         repliche_data = []
         for replica in evento.rel_repliche:
             replica_dict = replica.to_dict()
@@ -90,7 +84,7 @@ def get_eventi_con_repliche():
 def mostra_replica(id_replica):
     replica = db.session.get(Replica, id_replica)
     if not replica:
-        return 'Replica non trovato!', 404
+        return 'Replica non trovata!', 404
 
     prenot_utente = Prenotazione.query.filter_by(
         utente_id=session['utente_id'],
@@ -102,63 +96,12 @@ def mostra_replica(id_replica):
     else:
         return render_template('replica.html', replica=replica, utente=g.user)
 
-# Route per il login
-@app.route('/login', methods=['GET', 'POST'])
-@limiter.limit("10 per minute")
-def login():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        utente = Utente.query.filter_by(email=email).first()
-        if utente and check_password_hash(utente.password, password):
-            session['utente_id'] = utente.id
-            flash('Login riuscito!', 'success')
-            return redirect(url_for('home'))
-        else:
-            flash('Credenziali non valide!', 'danger')
-            return redirect(url_for('login'))
-    return render_template('login.html')
-
-# Route per la registrazione
-@app.route('/registrazione', methods=['GET', 'POST'])
-@limiter.limit("5 per minute")
-def registrazione():
-    if request.method == 'POST':
-        if not is_password_strong(request.form['password']):
-            flash('La password non soddisfa i requisiti di sicurezza.', 'danger')
-            return redirect(url_for('registrazione'))
-
-        if Utente.query.filter_by(email=request.form['email']).first():
-            flash('Email già registrata. Utilizza un\'altra email.', 'danger')
-            return render_template('registrazione.html')
-
-        hashed_password = generate_password_hash(request.form['password'])
-        nuovo_utente = Utente(
-            cognome=request.form['cognome'],
-            nome=request.form['nome'],
-            telefono=request.form['telefono'],
-            email=request.form['email'],
-            password=hashed_password
-        )
-        db.session.add(nuovo_utente)
-        db.session.commit()
-        flash('Registrazione effettuata con successo. Puoi effettuare il login.', 'success')
-        return redirect(url_for('login'))
-    return render_template('registrazione.html')
-
-# Route per il logout
-@app.route('/logout')
-@login_required
-def logout():
-    session.pop('utente_id', None)
-    flash('Logout effettuato con successo!', 'success')
-    return redirect(url_for('home'))
-
 # Route per prenotare una replica
 @app.route('/prenota/<int:replica_id>', methods=['POST'])
 @login_required
 def prenota_replica(replica_id):
     data = request.json
+    # posti prenotati
     quantita = data.get('quantita', 1)
     replica = Replica.query.get_or_404(replica_id)
 
@@ -211,6 +154,67 @@ def cancella_prenotazione(prenotazione_id):
 @login_required
 def mostra_prenotazioni():
     return render_template('prenotazioni.html')
+
+@app.route('/api/replica/<int:replica_id>/data_formattata', methods=['GET'])
+def get_data_formattata(replica_id):
+    replica = Replica.query.get_or_404(replica_id)
+    return jsonify({'data_formattata': replica.get_date()})
+
+# Route per l'autenticazione
+# Route per il login
+@app.route('/login', methods=['GET', 'POST'])
+@limiter.limit("10 per minute")
+def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        utente = Utente.query.filter_by(email=email).first()
+        if utente:
+            if check_password_hash(utente.password, password):
+                session['utente_id'] = utente.id
+                flash('Login effettuato!', 'success')
+                return redirect(url_for('home'))
+            else:
+                flash('Password errata!', 'danger')
+        else:
+            flash('Email non trovata!', 'danger')
+        return redirect(url_for('login'))
+    return render_template('login.html')
+
+@app.route('/registrazione', methods=['GET', 'POST'])
+@limiter.limit("5 per minute")
+def registrazione():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        if not is_password_strong(password):
+            flash('La password non soddisfa i requisiti di sicurezza.', 'danger')
+            return redirect(url_for('registrazione'))
+        
+        if Utente.query.filter_by(email=email).first():
+            flash('Email già registrata. Utilizza un\'altra email.', 'danger')
+            return render_template('registrazione.html')
+    
+        nuovo_utente = Utente(
+            cognome=request.form['cognome'],
+            nome=request.form['nome'],
+            telefono=request.form['telefono'],
+            email=email,
+            password=password
+        )
+        db.session.add(nuovo_utente)
+        db.session.commit()
+        flash('Registrazione effettuata con successo. Puoi effettuare il login.', 'success')
+        return redirect(url_for('login'))
+    return render_template('registrazione.html')
+
+# Route per il logout
+@app.route('/logout')
+@login_required
+def logout():
+    session.pop('utente_id', None)
+    flash('Logout effettuato con successo!', 'success')
+    return redirect(url_for('home'))
 
 # Inizializzazione dell'app e del database
 if __name__ == '__main__':

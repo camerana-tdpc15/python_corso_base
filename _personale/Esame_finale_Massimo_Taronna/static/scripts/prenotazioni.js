@@ -4,17 +4,21 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(prenotazioni => {
             const container = document.getElementById('prenotazioni-container');
             prenotazioni.forEach(prenotazione => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${prenotazione.rel_replica.rel_evento.nome_evento}</td>
-                    <td>${prenotazione.rel_replica.data_ora}</td>
-                    <td><input type="number" value="${prenotazione.quantita}" min="1" id="quantita-${prenotazione.id}"></td>
-                    <td>
-                        <button class="btn btn-primary" onclick="modificaPrenotazione(${prenotazione.id})">Modifica numero posti</button>
-                        <button class="btn btn-danger" onclick="cancellaPrenotazione(${prenotazione.id})">Cancella</button>
-                    </td>
-                `;
-                container.appendChild(row);
+                fetch(`/api/replica/${prenotazione.replica_id}/data_formattata`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${prenotazione.rel_replica.rel_evento.nome_evento}</td>
+                            <td>${data.data_formattata}</td>
+                            <td><input type="number" value="${prenotazione.quantita}" min="1" id="quantita-${prenotazione.id}"></td>
+                            <td>
+                                <button class="btn btn-primary" onclick="modificaPrenotazione(${prenotazione.id})">Modifica numero posti</button>
+                                <button class="btn btn-danger" onclick="cancellaPrenotazione(${prenotazione.id})">Elimina</button>
+                            </td>
+                        `;
+                        container.appendChild(row);
+                    });
             });
         });
 });
