@@ -16,7 +16,7 @@ class Locale(db.Model, SerializerMixin):
     luogo = db.Column(db.String(100), nullable=False)  # Luogo
     posti = db.Column(db.Integer, nullable=False)  # Numero di posti
 
-    # Relazione con Evento
+    # Relationships
     rel_eventi = db.relationship('Evento', back_populates='rel_locale', lazy=True)
 
     serialize_rules = ('-rel_eventi.rel_locale',)
@@ -28,7 +28,7 @@ class Evento(db.Model, SerializerMixin):
     locale_id = db.Column(db.Integer, db.ForeignKey('locali.id'), nullable=False)  # Chiave esterna per Locale
     nome_evento = db.Column(db.String(50), nullable=False)  # Nome dell'evento
 
-    # Relazioni
+    # Relationships
     rel_locale = db.relationship('Locale', back_populates='rel_eventi', lazy=True)
     rel_repliche = db.relationship('Replica', back_populates='rel_evento', lazy=True)
 
@@ -42,7 +42,7 @@ class Replica(db.Model, SerializerMixin):
     data_ora = db.Column(db.DateTime, nullable=False)  # Data e ora della replica
     annullato = db.Column(db.Boolean, default=False)  # Stato di annullamento
 
-    # Relazioni
+    # Relationships
     rel_evento = db.relationship('Evento', back_populates='rel_repliche', lazy=True)
     rel_prenotazioni = db.relationship('Prenotazione', back_populates='rel_replica', lazy=True)
 
@@ -58,7 +58,7 @@ class Utente(db.Model, SerializerMixin):
     email = db.Column(db.String(100), nullable=False, unique=True)  # Email
     password = db.Column(db.String(30), nullable=False) # Password
 
-    # Relazioni
+    # Relationships
     rel_prenotazioni = db.relationship('Prenotazione', back_populates='rel_utente', lazy=True)
 
     serialize_rules = ('-rel_prenotazioni.rel_utente',)
@@ -71,13 +71,13 @@ class Prenotazione(db.Model, SerializerMixin):
     replica_id = db.Column(db.Integer, db.ForeignKey('repliche.id'), nullable=False)  # Chiave esterna per Replica
     quantita = db.Column(db.Integer, nullable=False)  # Quantità di prenotazioni
 
-    # Relazioni
+    # Relationships
     rel_utente = db.relationship('Utente', back_populates='rel_prenotazioni', lazy=True)
     rel_replica = db.relationship('Replica', back_populates='rel_prenotazioni', lazy=True)
 
     serialize_rules = ('-rel_utente.rel_prenotazioni', '-rel_replica.rel_prenotazioni')
 
-# Funzione per convertire una stringa datetime in un oggetto datetime
+# Funzione per convertire una stringa  in un oggetto datetime
 def converti_datetime(dt_string):
     day, month, year, time = dt_string.split('-')
     hour, minute, second = time.split(':')
@@ -115,5 +115,4 @@ def init_db(app):
             db.session.commit()
 
 if __name__ == '__main__':
-    # Inizializza il database
     init_db()
