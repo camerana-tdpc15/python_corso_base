@@ -3,12 +3,13 @@
 {% block title %}Le Mie Prenotazioni{% endblock %}
 
 {% block content %}
-<h1 class="mb-4 text-light mt-5">Le Mie Prenotazioni</h1>
+<h1 class="mb-4 text-light mt-5 text-center">Le Mie Prenotazioni</h1>
 <div class="container-fluid" id="prenotazioni-container">
     <!-- Le prenotazioni si caricano -->
 </div>
-
-<a href="{{ url_for('index') }}" class="btn btn-outline-warning mt-3">Torna ai eventi</a>
+<div class="text-center">
+    <a href="{{ url_for('index') }}" class="btn btn-outline-warning mt-3 text-center">Torna agli eventi</a>
+</div>
 {% endblock %}
 
 {% block extra_js %}

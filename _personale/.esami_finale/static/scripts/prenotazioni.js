@@ -1,5 +1,3 @@
-console.log('OK')
-
 
 
 // Aggiunge un ascoltatore  per l'evento 'DOMContentLoaded' che carica le prenotazioni una volta che il DOM è completamente caricato

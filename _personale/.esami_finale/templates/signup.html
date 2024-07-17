@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Registrate!{% endblock %}
+
+{% block content %}
+
+<div class="text-center">
+    <h2 class="text-light">Sign Up</h2>
+</div>
+
+
+<div>
+    <form method="POST" action="/signup">
+        <label for="cognome" class="form-label text-light">Cognome:</label>
+        <input type="text" id="cognome" class="form-control " name="cognome" required><br>
+        <label for="nome" class="form-label text-light">Nome:</label>
+        <input type="text" class="form-control" id="nome" name="nome" required><br>
+        <label for="telefono" class="form-label text-light">Telefono:</label>
+        <input type="text" class="form-control" id="telefono" name="telefono" required><br>
+        <label for="email" class="form-label text-light">Email:</label>
+        <input type="email" class="form-control " id="email" name="email" required><br>
+        <label for="password" class="form-label text-light">Password:</label>
+        <input type="password" class="form-control" id="password" name="password" required><br>
+        <div class="text-center">
+            <button class="btn btn-warning text-light" type="submit">Registrate</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

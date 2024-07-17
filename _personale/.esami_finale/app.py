@@ -2,6 +2,7 @@ from flask import Flask, render_template, jsonify, request, redirect, url_for, f
 from models import db, init_db, Evento, Replica, Locale, Utente, Prenotazione
 from settings import DATABASE_PATH
 from functools import wraps
+# abbiamo importato "func" perche ci permete di creare funzioni dentro di la query di sql
 from sqlalchemy import func
 
 app = Flask(__name__)
@@ -26,6 +27,9 @@ def index():
     for evento in eventi:
         repliche_data = []
         for replica in evento.rel_repliche:
+            #Utilizo nella query alla fine .scalar() or 0 
+            #perche mi permette di ottenere un risultato o nessuno, consente risultati null
+            #non blocca il programa 
             posti_prenotati = db.session.query(func.sum(Prenotazione.quantita)).filter_by(replica_id=replica.id).scalar() or 0
             posti_disponibili = evento.rel_locale.posti - posti_prenotati
             repliche_data.append({
@@ -41,6 +45,29 @@ def index():
             'repliche': repliche_data
         })
     return render_template('index.html', eventi=eventi_data)
+
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        cognome = request.form.get('cognome')
+        nome = request.form.get('nome')
+        telefono = request.form.get('telefono')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        if not cognome or not nome or not telefono or not email or not password:
+            flash('Tutti i campi sono obbligatori!')
+            return redirect(url_for('signup'))
+        if Utente.query.filter_by(email=email).first():
+            flash("Il nickname o l'username sono già in uso!")
+            return redirect(url_for('signup'))
+        new_user = Utente(cognome=cognome, nome=nome,telefono=telefono,email=email, password=password)
+        db.session.add(new_user)
+        db.session.commit()
+        flash('Registrazione effettuata con successo!')
+        return redirect(url_for('login'))
+    return render_template('signup.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
