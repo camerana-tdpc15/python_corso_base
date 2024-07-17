@@ -19,8 +19,6 @@ function loadPrenotazioni() {
                 console.log(prenotazioni);
                 for (evento of prenotazioni) {
                    
-        
-
 
                     container.innerHTML += `
                         <div class="col-lg-4 my-2">
@@ -40,8 +38,6 @@ function loadPrenotazioni() {
                                     <button onclick="modificaPrenotazione(${evento.id})" class="btn btn-sm btn-primary">Modifica</button>
                                     <button onclick="cancellaPrenotazione(${evento.id})" class="btn btn-sm btn-danger">Cancella</button>
                                 `}</b></p>
-                                   
-        
                                 </div>
                             </div>
                         <div>

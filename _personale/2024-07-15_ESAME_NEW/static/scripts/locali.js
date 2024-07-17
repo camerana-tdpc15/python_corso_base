@@ -24,10 +24,6 @@ fetch("/api/locali?order=asc")
                             <p>Nome locale: <b>${locale.nome_locale}</b></p>
                             <p>Luogo: <b>${locale.luogo}</b></p>
                             <p>Posti: <b>${locale.posti}</b></p>
-                            
-                            
-
-                           
                         </div>
                     </div>
                 <div>
