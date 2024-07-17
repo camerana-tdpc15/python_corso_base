@@ -1,0 +1,47 @@
+[
+    {
+        "id": 1,
+        "cognome": "Cassini",
+        "nome": "Antonio",
+        "telefono": "3351122333",
+        "email": "casi.anto@mail.com",
+        "password": "Cassini77!",
+        "ruolo": "utente"
+    },
+    {
+        "id": 2,
+        "cognome": "Benedetti",
+        "nome": "Bianca",
+        "telefono": "3384455666",
+        "email": "b.bianca@usrmail.it",
+        "password": "benBianca44."        ,
+        "ruolo": "utente"
+    },
+    {
+        "id": 3,
+        "cognome": "Siciliano",
+        "nome": "Elena",
+        "telefono": "3389988555",
+        "email": "sic89@tel.com",
+        "password": "sicEl55!",
+        "ruolo": "utente"
+    },
+    {
+        "id": 4,
+        "cognome": "Fornari",
+        "nome": "Enrico",
+        "telefono": "3335566223",
+        "email": "for.enrico@mail.com",
+        "password": "Enrico99.",
+        "ruolo": "utente"
+    },
+    {
+        "id": 5,
+        "cognome": "Admin",
+        "nome": "Admin",
+        "telefono": "7577528285",
+        "email": "admin@admin.com",
+        "password": "Ciotola<1",
+        "ruolo": "admin"
+    }
+]

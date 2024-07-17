@@ -22,6 +22,7 @@ class Utente(db.Model, SerializerMixin):
     telefono = db.Column(db.String(20))
     email = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(128), nullable=False)
+    ruolo = db.Column(db.String(20), nullable=False)
 
     # Relazione con la tabella 'prenotazioni'
     rel_prenotazioni = db.relationship('Prenotazione', back_populates='rel_utente')

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Luoghi delle Attività{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-0">
+    <div id="luoghiCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <!-- Prima slide attiva con immagine della Music Lounge -->
+            <div class="carousel-item active">
+                <img src="{{ url_for('static', filename='imgs/lounge_3.jpg') }}" class="d-block w-100" alt="Music Lounge">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Music Lounge</h5>
+                    <p>Goditi la musica dal vivo e rilassati nel nostro elegante Music Lounge.</p>
+                </div>
+            </div>
+            <!-- Seconda slide con immagine del Teatro -->
+            <div class="carousel-item">
+                <img src="{{ url_for('static', filename='imgs/sala_concerto.jpg') }}" class="d-block w-100" alt="Teatro">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Teatro</h5>
+                    <p>Assisti a spettacoli straordinari nel nostro teatro all'avanguardia.</p>
+                </div>
+            </div>
+            <!-- Terza slide con immagine della Piscina -->
+            <div class="carousel-item">
+                <img src="{{ url_for('static', filename='imgs/piscina.jpg') }}" class="d-block w-100" alt="Piscina">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Piscina</h5>
+                    <p>Rilassati e goditi il sole a bordo della nostra splendida piscina.</p>
+                </div>
+            </div>
+        </div>
+        <!-- Controllo per la slide precedente -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#luoghiCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <!-- Controllo per la slide successiva -->
+        <button class="carousel-control-next" type="button" data-bs-target="#luoghiCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+</div>
+{% endblock %}

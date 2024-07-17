@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "locale_id": 1,
+        "nome_evento": "Concerto di Chopin",
+        "immagine": "concerto.jpg"
+    },
+    {
+        "id": 2,
+        "locale_id": 1,
+        "nome_evento": "Beethoven sul mare",
+        "immagine": "concerto.jpg"
+    },
+    {
+        "id": 3,
+        "locale_id": 2,
+        "nome_evento": "Il ventaglio - Goldoni",
+        "immagine": "teatro.jpg"
+    },
+    {
+        "id": 4,
+        "locale_id": 4,
+        "nome_evento": "Pool Brunch Party",
+        "immagine": "party.jpg"
+    }
+]

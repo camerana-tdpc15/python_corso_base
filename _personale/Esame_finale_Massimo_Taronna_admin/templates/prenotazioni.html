@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Le mie prenotazioni{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Le mie prenotazioni</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Evento</th>
+                <th>Ora e data</th>
+                <th>Numero posti</th>
+                <th>Azioni</th>
+            </tr>
+        </thead>
+        <tbody id="prenotazioni-container">
+            <!-- Le prenotazioni saranno popolati dinamicamente qui -->
+        </tbody>
+    </table>
+</div>
+
+<script src="{{ url_for('static', filename='scripts/prenotazioni.js') }}"></script>
+{% endblock %}

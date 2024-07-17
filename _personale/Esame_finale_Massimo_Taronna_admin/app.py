@@ -1,10 +1,11 @@
-import os
 import re
 import locale
 from functools import wraps
 from flask import Flask, flash, g, render_template, jsonify, request, session, redirect, url_for
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from flask_admin import Admin, AdminIndexView
+from flask_admin.contrib.sqla import ModelView
 from werkzeug.security import check_password_hash
 from settings import DATABASE_PATH
 from models import db, init_db, Utente, Prenotazione, Replica, Evento, Locale
@@ -31,6 +32,32 @@ def is_password_strong(password):
             re.search("[A-Z]", password) and
             re.search("[0-9]", password) and
             re.search("[!@#$%^&*(),.?\":{}|<>]", password))
+
+# Configurazione Flask-Admin
+class MyAdminIndexView(AdminIndexView):
+    def is_accessible(self):
+        return session.get('logged_in') and session.get('role') == 'admin'
+
+    def inaccessible_callback(self, name, **kwargs):
+        return redirect(url_for('login'))
+
+admin = Admin(app, name='Admin Panel', template_mode='bootstrap5', index_view=MyAdminIndexView())
+
+app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
+
+class AdminModelView(ModelView):
+    def is_accessible(self):
+        print("Checking access:", session.get('logged_in'), session.get('role'))
+        return session.get('logged_in') and session.get('role') == 'admin'
+
+    def inaccessible_callback(self, name, **kwargs):
+        print("Inaccessible callback called")
+        return redirect(url_for('login'))
+
+admin.add_view(AdminModelView(Locale, db.session))
+admin.add_view(AdminModelView(Evento, db.session))
+admin.add_view(AdminModelView(Replica, db.session))
+admin.add_view(AdminModelView(Utente, db.session))
 
 # Carica l'utente loggato prima di ogni richiesta
 @app.before_request
@@ -150,7 +177,6 @@ def get_data_formattata(replica_id):
     replica = Replica.query.get_or_404(replica_id)
     return jsonify({'data_formattata': replica.get_date()})
 
-# Route per l'autenticazione
 # Route per il login
 @app.route('/login', methods=['GET', 'POST'])
 @limiter.limit("10 per minute")
@@ -162,8 +188,13 @@ def login():
         if utente:
             if check_password_hash(utente.password, password):
                 session['utente_id'] = utente.id
+                session['role'] = utente.ruolo
+                session['logged_in'] = True  # Aggiungi questa riga
                 flash('Login effettuato!', 'success')
-                return redirect(url_for('home'))
+                if utente.ruolo == 'admin':
+                    return redirect(url_for('admin.index'))
+                else:
+                    return redirect(url_for('home'))
             else:
                 flash('Password errata!', 'danger')
         else:
@@ -204,7 +235,8 @@ def registrazione():
 @app.route('/logout')
 @login_required
 def logout():
-    session.pop('utente_id', None)
+    session.clear()  # Questo rimuoverà tutti i dati della sessione, inclusi quelli di Flask-Admin
+    # session.pop('utente_id', None)
     flash('Logout effettuato con successo!', 'success')
     return redirect(url_for('home'))
 

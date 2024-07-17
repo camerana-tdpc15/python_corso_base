@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% if g.user %}
+        <h2 class="mb-3">Ciao {{ g.user.nome }}, ecco i prossimi eventi:</h2>
+    {% else %}
+        <h2 class="mb-3">Benvenuti, ecco i prossimi eventi</h2>
+    {% endif %}
+
+    <div id="eventi-container" class="row g-3">
+        <!-- Gli eventi saranno popolati dinamicamente qui -->
+    </div>
+</div>
+
+<!-- Modal per la prenotazione -->
+<div class="modal fade" id="prenotaModal" tabindex="-1" aria-labelledby="prenotaModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="prenotaModalLabel">Prenota</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="prenotaForm">
+          <div class="mb-3">
+            <label for="replicaSelect" class="form-label">Seleziona una replica</label>
+            <select class="form-select" id="replicaSelect" required>
+              <!-- Opzioni saranno popolate dinamicamente -->
+            </select>
+          </div>
+          <div class="mb-4">
+            <label for="quantitaInput" class="form-label">Quantità</label>
+            <input type="number" class="form-control" id="quantitaInput" min="1" value="1" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Conferma Prenotazione</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='scripts/eventi.js') }}"></script>
+{% endblock %}
