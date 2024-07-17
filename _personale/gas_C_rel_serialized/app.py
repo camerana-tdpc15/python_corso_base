@@ -242,6 +242,24 @@ def login():
 
     return render_template('login.html')
 
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        nickname = request.form.get('email')
+        password = request.form.get('password')
+        if not nickname or not password:
+            flash('Tutti i campi sono obbligatori!')
+            return redirect(url_for('signup'))
+        if Utente.query.filter_by(username=username).first() or Utente.query.filter_by(nickname=nickname).first():
+            flash("Il nickname o l'username sono già in uso!")
+            return redirect(url_for('signup'))
+        new_user = Utente(nickname=nickname, username=username, password=password)
+        db.session.add(new_user)
+        db.session.commit()
+        flash('Registrazione effettuata con successo!')
+        return redirect(url_for('login'))
+    return render_template('signup.html')
+
 
 @app.route('/logout')
 def logout():
