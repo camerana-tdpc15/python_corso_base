@@ -1,11 +1,17 @@
+// Ascolta l'evento 'DOMContentLoaded' per eseguire il codice quando il DOM è completamente caricato
 document.addEventListener('DOMContentLoaded', function () {
+    // Effettua una richiesta GET all'endpoint '/api/prenotazioni'
     fetch('/api/prenotazioni')
-        .then(response => response.json())
+        .then(response => response.json())  // Converte la risposta in formato JSON
         .then(data => {
+            // Seleziona il container dove inserire le prenotazioni
             const container = document.getElementById('prenotazioni-container');
+            // Itera su ogni prenotazione ricevuta dal server
             data.forEach(prenotazione => {
+                // Crea un nuovo elemento <div> per la card della prenotazione
                 const card = document.createElement('div');
-                card.className = 'col-md-4';
+                card.className = 'col-md-4';  // Imposta la classe CSS per la card
+                // Imposta il contenuto HTML della card
                 card.innerHTML = `
                     <div class="card mb-4 shadow-sm">
                         <div class="card-body">
@@ -22,8 +28,10 @@ document.addEventListener('DOMContentLoaded', function () {
                         </div>
                     </div>
                 `;
+                // Aggiunge la card al container
                 container.appendChild(card);
             });
         })
+        // Gestisce eventuali errori durante la richiesta
         .catch(error => console.error('Error:', error));
 });

@@ -53,3 +53,8 @@ main {
     background-color: red;
     border-color: red;
 }
+
+#footer_css{
+    position: absolute;
+    bottom: 0;
+}
