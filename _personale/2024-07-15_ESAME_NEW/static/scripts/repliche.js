@@ -30,7 +30,8 @@ function createReplicaCard(replica) {
         <div class="col-md-4 mb-3">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">${replica.data_ora}</h5>
+                    <h5 class="card-title">Data: ${replica.data}</h5>
+                    <h5 class="card-title">Ora: ${replica.ora}</h5>
                     <p class="card-text">Posti disponibili: ${replica.posti_disponibili}</p>
                     ${replica.annullato 
                         ? '<p class="text-danger">Questa replica è stata annullata.</p>'

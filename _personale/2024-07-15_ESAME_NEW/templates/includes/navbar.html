@@ -4,7 +4,7 @@
         <!-- Area logo/brand -->
         <a class="navbar-brand" href="{{ url_for('index') }}">
             <img src="/static/imgs/Camerana.png" alt="Logo" width="145" height="35" class="d-inline-block align-text-top">
-            Nave Eventi
+            <!-- Nave Eventi -->
         </a>
         
         <!-- Hamburger menu per responsive su mobile -->
@@ -17,6 +17,9 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 {% if 'user_id' in session %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('index') }}">Eventi</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('prenotazioni') }}">Prenotazioni</a>
                 </li>

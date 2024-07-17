@@ -33,7 +33,7 @@ function loadPrenotazioni() {
                                     <p>Evento: <b>${evento.evento}</b></p>
                                     <p>Locale: <b>${evento.locale}</b></p>
                                     <p>Luogo: <b>${evento.luogo}</b></p>
-                                    <p>Data e ora: <b>${evento.data_ora}</b></p>
+                                    <p>Data: <b>${evento.data}</b>&nbsp;&nbsp;&nbsp;&nbsp;Ora: <b>${evento.ora}</b></p>
                                     <p>Q.tà Disp: <b><input type="number" min="1" value="${evento.quantita}" id="quantita-${evento.id}" ${evento.annullato ? 'disabled' : ''}></b></p>
                                     <p>Stato: <b>${evento.annullato ? '<span class="text-danger">Annullato</span>' : '<span class="text-success">Confermato</span>'}</b></p>
                                     <p>Azione: <b>${evento.annullato ? '' : `

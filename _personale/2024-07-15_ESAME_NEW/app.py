@@ -98,7 +98,8 @@ def get_repliche(evento_id):
         posti_disponibili = evento.rel_locale.posti - posti_prenotati
         repliche.append({
             'id': replica.id,
-            'data_ora': replica.data_ora.strftime('%d-%m-%Y %H:%M'),
+            'data': replica.data_ora.strftime('%d-%m-%Y'),
+            'ora': replica.data_ora.strftime('%H:%M'),
             'annullato': replica.annullato,
             'posti_disponibili': posti_disponibili
         })
@@ -154,7 +155,8 @@ def api_prenotazioni():
                 'id': p.id,
                 'evento': p.rel_replica.rel_evento.nome_evento,
                 'locale': p.rel_replica.rel_evento.rel_locale.nome_locale,
-                'data_ora': p.rel_replica.data_ora.strftime('%d-%m-%Y %H:%M'),
+                'data': p.rel_replica.data_ora.strftime('%d-%m-%Y'),
+                'ora': p.rel_replica.data_ora.strftime('%H:%M'),
                 'quantita': p.quantita,
                 'annullato': p.rel_replica.annullato,
                 'replica_id': p.replica_id,

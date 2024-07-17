@@ -9,9 +9,9 @@
 
 <!-- Controlla se l'utente è loggato e mostra un messaggio di benvenuto o invita a loggarsi -->
 {% if session.get('user_id') %}
-    <p class="text-success">Benvenuto, {{ session.get('user_name') }}!</p>
+    <h6 class="text-success">Benvenuto, {{ session.get('user_name') }}!</h6>
 {% else %}
-    <p class="text-warning">Non sei loggato. <a href="{{ url_for('login') }}">Accedi</a> per prenotare.</p>
+    <h6 class="text-danger">Per prenotare devi fare il &nbsp;&nbsp;<a href="{{ url_for('login') }}">LOGIN</a></h6>
 {% endif %}
 
 <!-- Sezione che mostra gli eventi in una griglia -->
