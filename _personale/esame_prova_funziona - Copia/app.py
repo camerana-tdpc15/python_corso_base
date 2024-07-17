@@ -1,7 +1,7 @@
 from functools import wraps
 from flask import Flask, render_template, jsonify, request, redirect, url_for, session, flash
 from sqlalchemy import func
-from models import Utente, Replica, Prenotazione, Evento, Locale, db, init_db
+from models import Utente, Replica, Prenotazione, Evento, db, init_db
 from settings import DATABASE_PATH
 
 app = Flask(__name__)
@@ -12,7 +12,7 @@ app.config.update(
     
 )
 
-db.init_app(app)  # Inizializza l'istanza di SQLAlchemy con l'app Flask
+db.init_app(app)  
 
 
 # creo funzione per controllo del utente loggato
@@ -25,8 +25,8 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-# Mostra la pagina che deve elencare i lotti disponibili
 
+# Mostra la pagina INDEX.HTML
 @app.route('/')
 def index():
     eventi = Evento.query.all()
@@ -40,8 +40,7 @@ def index():
                 'id': replica.id,
                 'data_ora': replica.data_ora,
                 'annullato': replica.annullato,
-                'posti_disponibili': posti_disponibili
-                
+                'posti_disponibili': posti_disponibili                
             })
         eventi_data.append({
             'id': evento.id,
@@ -52,6 +51,7 @@ def index():
         })
     return render_template('index.html', eventi=eventi_data)
 
+# Esegue la pagina login.HTML
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -68,7 +68,7 @@ def login():
 
     return render_template('login.html')
 
-
+# Esegue la pagina LOGOUT.HTML
 @app.route('/logout')
 # chiamo funzione controllo login
 @login_required
@@ -78,7 +78,7 @@ def logout():
     return redirect(url_for('login'))
 
 
-
+# Esegue la pagina SIGNUP.HTML
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     if request.method == "POST":
@@ -104,7 +104,7 @@ def signup():
         return redirect(url_for("login"))
     return render_template("signup.html")
 
-
+# Esegue la pagina REPLICHE.HTML visualizzando le repliche con varie info
 @app.route('/api/repliche/<int:evento_id>')
 def get_repliche(evento_id):
     # cerca un evento nel database con l'ID specificato
@@ -131,13 +131,13 @@ def get_repliche(evento_id):
         'repliche': repliche
     })
 
-# mostra le repliche di un evento specifico    
+# Esegue la pagina REPLICHE.HTML    
 @app.route('/repliche/<int:evento_id>')
 @login_required
 def repliche(evento_id):
     return render_template('repliche.html', evento_id=evento_id)
 
-# prenotazione REPLICA
+# Esegue la PRENOTAZIONE
 @app.route('/prenota', methods=['POST'])
 # controllo login
 @login_required
@@ -162,7 +162,7 @@ def prenota():
     
     return jsonify({'message': 'Prenotazione effettuata con successo!'}), 201
 
-# prenotazione EVENTO
+# compila la prenotazione EVENTO
 @app.route('/api/prenotazioni', methods=['GET', 'POST'])
 @login_required
 def api_prenotazioni():

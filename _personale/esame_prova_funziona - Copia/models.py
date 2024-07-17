@@ -11,6 +11,7 @@ locale.setlocale(locale.LC_TIME, 'it_IT')
 
 db = SQLAlchemy()
 
+# Prenotazione
 class Prenotazione(db.Model, SerializerMixin):
     __tablename__ = 'prenotazioni'
     id = db.mapped_column(db.Integer(), primary_key=True, autoincrement=True)
@@ -24,7 +25,7 @@ class Prenotazione(db.Model, SerializerMixin):
     serialize_rules = ('-rel_utente.rel_prenotazioni', '-rel_replica.rel_prenotazioni')
 
 
-
+# Utente
 class Utente(db.Model, SerializerMixin):
     __tablename__ = 'utenti'
     id = db.mapped_column(db.Integer(), primary_key=True)
@@ -39,7 +40,7 @@ class Utente(db.Model, SerializerMixin):
     serialize_rules = ('-rel_prenotazioni.rel_utente', '-password')
 
 
-
+# Replica
 class Replica(db.Model, SerializerMixin):
     __tablename__ = 'repliche'
     id = db.mapped_column(db.Integer(), primary_key=True)
@@ -54,7 +55,7 @@ class Replica(db.Model, SerializerMixin):
 
 
 
-
+# Evento
 class Evento(db.Model, SerializerMixin):
     __tablename__ = 'eventi'
     id = db.mapped_column(db.Integer(), primary_key=True)
@@ -69,7 +70,7 @@ class Evento(db.Model, SerializerMixin):
 
 
     
-
+# Locale
 class Locale(db.Model, SerializerMixin):
     __tablename__ = 'locali'
     id = db.mapped_column(db.Integer(), primary_key=True)
@@ -91,9 +92,8 @@ def converti_datetime(dt_string):
 
 
 def init_db():
-    #db.init_app(app)
-    #with app.app_context():
-        # Crea le tabelle solo se non esistono già
+    
+    # Crea le tabelle solo se non esistono già
     db.create_all()
 
     # Popolo le tabelle con i dati se non esiste un record in Utente
