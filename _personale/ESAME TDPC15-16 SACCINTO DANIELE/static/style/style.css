@@ -2,6 +2,9 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 nav ul {
@@ -33,4 +36,20 @@ button {
 
 button:hover {
     background-color: #0056b3;
+}
+
+
+.footer-fixed {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+main {
+    flex: 1;
+}
+
+.btn-danger[disabled] {
+    background-color: red;
+    border-color: red;
 }
