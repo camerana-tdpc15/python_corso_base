@@ -24,7 +24,7 @@ function loadPrenotazioni() {
 
                     container.innerHTML += `
                         <div class="col-lg-4 my-2">
-                            <div class="card h-100">
+                            <div class="card h-100 rounded-4 shadow">
                                 <div class="card-header">
                                     <h4 class="card-title">${evento.evento}</h4>
                                     <p class="text-end"><small>(codice: ${evento.id})</small><p>

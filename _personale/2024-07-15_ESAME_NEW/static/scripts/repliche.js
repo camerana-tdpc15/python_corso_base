@@ -28,7 +28,7 @@ function loadRepliche(eventoId) {
 function createReplicaCard(replica) {
     return `
         <div class="col-md-4 mb-3">
-            <div class="card">
+            <div class="card h-100 rounded-4 shadow">
                 <div class="card-body">
                     <h5 class="card-title">Data: ${replica.data}</h5>
                     <h5 class="card-title">Ora: ${replica.ora}</h5>
