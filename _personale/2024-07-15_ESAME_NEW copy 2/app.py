@@ -233,52 +233,6 @@ def prenotazioni():
         pass
     return render_template('prenotazioni.html')
 
-@app.route('/api/eventi', methods=['GET'])
-def get_evento():
-
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-    else:
-        pass
-
-    # Leggo i parametri passati in query string
-    order = request.args.get('order', 'asc')
-
-    if order == 'asc':
-        eventi = Evento.query.order_by(Evento.nome_evento).all()
-    elif order == 'desc':
-        eventi = Evento.query.order_by(Evento.nome_evento.desc()).all()
-    else:
-        return 'Parametro order non valido. Utilizzare "asc" o "desc".'
-
-    evento_data = []
-    for evento in eventi:
-        dict_evento = evento.to_dict()
-        evento_data.append(dict_evento)
-
-    return jsonify(evento_data)
-
-
-@app.route('/api/utenti', methods=['GET'])
-def get_utenti():
-
-    # Leggo i parametri passati in query string
-    order = request.args.get('order', 'asc')
-
-    if order == 'asc':
-        utente = User.query.order_by(User.nome).all()
-    elif order == 'desc':
-        utente = User.query.order_by(User.nome.desc()).all()
-    else:
-        return 'Parametro order non valido. Utilizzare "asc" o "desc".'
-
-    user_data = []
-    for user in utente:
-        dict_user = user.to_dict()
-        user_data.append(dict_user)
-
-    return jsonify(user_data)
-
 if __name__ == '__main__':
     with app.app_context():
         init_db()

@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
-{% block title %}Le Mie Prenotazioni{% endblock %}
+{% block title %}Lista locali{% endblock %}
 
 {% block content %}
-<h1 class="mb-4">Le Mie Prenotazioni</h1>
-<div class="row" id="prenotazioni-container">
+<h1 class="mb-4">Lista Locali</h1>
+<div class="row" id="row-locali">
     <!-- Le prenotazioni verranno caricate qui dinamicamente -->
 </div>
 
@@ -12,5 +12,7 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="{{ url_for('static', filename='scripts/prenotazioni.js') }}"></script>
+<script src="{{ url_for('static', filename='scripts/locali.js') }}"></script>
 {% endblock %}
+
+
