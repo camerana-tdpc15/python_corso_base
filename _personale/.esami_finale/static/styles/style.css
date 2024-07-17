@@ -8,7 +8,17 @@ body {
     border-style: solid;
     border-width: 2px;
     border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 1);
+    
+  
+  }
+
+  .contenitoreS {
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 1);
+    
   
   }
   
@@ -31,4 +41,7 @@ body {
 
 .cardprenot{
   border-radius: 10%;
+}
+.custom-checkbox .custom-control-label::before {
+  color: yellow;
 }
