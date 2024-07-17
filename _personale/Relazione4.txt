@@ -1,0 +1,98 @@
+Introduzione: 
+L'obiettivo di questo progetto è sviluppare una web application per la prenotazione di eventi su una nave da crociera. La web app permetterà agli utenti di accedere alla piattaforma con le loro credenziali, visualizzare la lista degli eventi disponibili, prenotare posti per gli eventi, e consultare le loro prenotazioni. L'applicazione è progettata per essere utilizzata su dispositivi mobili e tablet, garantendo una navigazione responsive e intuitiva.
+
+Analisi dei requisiti funzionali: 
+Accesso Utente
+Login tramite email e password
+Validazione delle credenziali utente
+Gestione Eventi: Visualizzazione degli eventi disponibili con il numero di posti rimanenti. Eventi identificati per data, ora e luogo. Possibilità di prenotare posti per un evento specifico. Visualizzazione degli eventi e posti già prenotati.
+Gestione Prenotazioni: Controllo della disponibilità dei posti durante la prenotazione. Modifica del numero di posti prenotati. Gestione delle cancellazioni degli eventi a causa di condizioni meteorologiche avverse.
+
+Analisi dei requisiti non funzionali: 
+Responsive Design: Utilizzo di librerie e framework per garantire la compatibilità con dispositivi mobili e tablet. Adattabilità dell'interfaccia utente alle diverse dimensioni dello schermo.
+Sicurezza: Protezione dei dati degli utenti attraverso pratiche di sicurezza standard. Gestione sicura delle sessioni utente.
+
+Progettazione:
+Architettura del Sistema
+Front-End:
+Utilizzo di HTML, CSS e JavaScript per la creazione dell'interfaccia utente.
+Framework come Bootstrap, CSS per garantire il responsive design.
+JavaScript per la gestione delle interazioni utente e chiamate API.
+Back-End:
+Implementazione di un framework come Flask
+API RESTful per la gestione delle operazioni CRUD (Create, Read, Update, Delete) relative agli eventi e alle prenotazioni.
+Autenticazione e autorizzazione degli utenti tramite 
+Database:
+Utilizzo di un database relazionale come SQLAlchemy.
+Tabelle principali:
+ Utenti
+Eventi
+Prenotazioni
+Locali
+Repliche
+Relazioni tra le tabelle per gestire eventi, repliche e prenotazioni.
+Struttura delle Tabelle:
+UTENTI:
+id (PK)
+cognome
+nome
+telefono
+email
+password
+EVENTI:
+id (PK)
+id_locale (FK)
+nome_evento
+LOCALI:
+id (PK)
+nome_locale
+luogo
+posti
+REPLICHE:
+id (PK)
+id_evento (FK)
+data
+ora
+annullato (boolean)
+PRENOTAZIONI:
+id (PK)
+id_utente (FK)
+id_replica (FK)
+quantita
+ 
+
+La progettazione della web application segue un approccio modulare, garantendo che ogni componente possa essere sviluppato, testato e manutenuto indipendentemente. La separazione dei compiti tra front-end e back-end permette una maggiore flessibilità nello sviluppo e nella scalabilità del sistema.
+
+Sviluppo
+metodologie e le procedure usate nella progettazione dell'applicazione e del suo database
+Utilizzo di Flask e SQLAlchemy: Flask è utilizzato come framework per lo sviluppo web, mentre SQLAlchemy gestisce l'interazione con il database SQL. SQLAlchemy offre un'astrazione dell'API database, facilitando le operazioni di query e gestione dei dati 
+Pattern MVC (Model-View-Controller): Il codice è organizzato seguendo il pattern MVC, dove le classi del modello (come Utente, Replica, Evento, Locale) definiscono la struttura e le relazioni dei dati nel database. Le funzioni definite nelle routes (app.route) agiscono da controller, gestendo la logica di business e interagendo con i modelli e le views (template HTML) 
+Sicurezza e Gestione delle Sessioni: Viene utilizzato il modulo Flask-Login per gestire l'autenticazione degli utenti e le sessioni, come evidenziato dalla funzione login_required che verifica se l'utente è loggato prima di concedere l'accesso a determinate pagine.
+Interfaccia API JSON: Vengono definite delle routes che restituiscono dati in formato JSON (ad esempio /api/repliche/<int:evento_id> e /api/prenotazioni), utilizzate per integrare funzionalità che permettendo interazioni dinamiche e asincrone con l'applicazione.
+
+tecnologie e strategie utilizzate per sviluppare l'interfaccia grafica
+Flask: Framework web leggero per Python utilizzato per gestire le richieste HTTP e generare le risposte dinamiche
+Jinja2: Motore di template per Python integrato con Flask, utilizzato per generare i file HTML dinamicamente, inclusi i dati recuperati dal backend
+HTML e CSS: Utilizzati per la struttura e lo stile delle pagine web, rendendo l'interfaccia utente responsive e piacevole
+JavaScript: Utilizzato per aggiungere interattività alle pagine web, come validazione dei form e chiamate AJAX per interazioni asincrone con il backend
+Bootstrap: Framework CSS utilizzato per facilitare lo sviluppo di interfacce utente moderne e responsive
+SQLAlchemy: Libreria Python utilizzata per la gestione e l'interfacciamento con il database SQLite per l'archiviazione dei dati dell'applicazione
+
+difficoltà incontrate durante la realizzazione del progetto
+Le maggiori difficoltà le ho riscontrate nell'accertarmi che le relazioni tra le tabelle del database fossero correttamente definite e gestite tramite SQLAlchemy per evitare errori di query o problemi di performance.
+
+principali funzionalità che offre l'applicazione
+Questa applicazione Flask gestisce un sistema di prenotazioni per eventi, offrendo diverse funzionalità principali:
+Login e Logout: Gestisce l'autenticazione degli utenti con sessioni e una chiave segreta per la sicurezza
+Registrazione Utenti: Permette agli utenti di registrarsi inserendo i loro dati personali, verificando l'unicità delle informazioni e salvando i nuovi utenti nel database 
+Visualizzazione Eventi: Mostra una lista di eventi disponibili, inclusi i dettagli come il nome, il luogo e le repliche disponibili per ogni evento
+Prenotazioni di Eventi: Gli utenti possono prenotare posti per le repliche degli eventi, con controllo dei posti disponibili e gestione delle prenotazioni 
+API per Prenotazioni: Fornisce API per gestire prenotazioni tramite operazioni CRUD (Creazione, Lettura, Aggiornamento, Cancellazione), consentendo agli sviluppatori di interagire con il sistema da altre applicazioni o servizi
+Questa applicazione dimostra l'uso di Flask per creare una web app robusta e interattiva per la gestione di eventi e prenotazioni, sfruttando le migliori pratiche di sviluppo web moderno.
+
+
+
+Conclusioni  
+Da un punto di vista del Backend  utilizzando questo tipo di struttura garantiamo che l'applicazione sia scalabile, sicura e efficiente, supportando un'esperienza utente fluida e interattiva.
+Sul lato Frontend utilizzando tali tecnologie e strategie consentiamo di sviluppare un'interfaccia utente dinamica, intuitiva e scalabile per la web app, garantendo una buona esperienza utente e una gestione efficiente dei dati.
+
