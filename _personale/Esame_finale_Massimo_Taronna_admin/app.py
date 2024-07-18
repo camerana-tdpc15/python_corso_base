@@ -35,6 +35,7 @@ def is_password_strong(password):
 
 # Configurazione Flask-Admin
 class AdminModelView(ModelView):
+    can_delete = False          # impedisco la cancellazione nel database
     def is_accessible(self):
         print("Checking access:", session.get('logged_in'), session.get('role'))
         return session.get('logged_in') and session.get('role') == 'admin'
