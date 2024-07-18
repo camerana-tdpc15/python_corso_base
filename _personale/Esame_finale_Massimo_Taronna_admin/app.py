@@ -4,7 +4,7 @@ from functools import wraps
 from flask import Flask, flash, g, render_template, jsonify, request, session, redirect, url_for
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-from flask_admin import Admin, AdminIndexView
+from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from werkzeug.security import check_password_hash
 from settings import DATABASE_PATH
@@ -34,17 +34,6 @@ def is_password_strong(password):
             re.search("[!@#$%^&*(),.?\":{}|<>]", password))
 
 # Configurazione Flask-Admin
-class MyAdminIndexView(AdminIndexView):
-    def is_accessible(self):
-        return session.get('logged_in') and session.get('role') == 'admin'
-
-    def inaccessible_callback(self, name, **kwargs):
-        return redirect(url_for('login'))
-
-admin = Admin(app, name='Admin Panel', template_mode='bootstrap5', index_view=MyAdminIndexView())
-
-app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
-
 class AdminModelView(ModelView):
     def is_accessible(self):
         print("Checking access:", session.get('logged_in'), session.get('role'))
@@ -54,6 +43,7 @@ class AdminModelView(ModelView):
         print("Inaccessible callback called")
         return redirect(url_for('login'))
 
+admin = Admin(app, name='Admin Panel', template_mode='bootstrap4')
 admin.add_view(AdminModelView(Locale, db.session))
 admin.add_view(AdminModelView(Evento, db.session))
 admin.add_view(AdminModelView(Replica, db.session))
@@ -235,8 +225,7 @@ def registrazione():
 @app.route('/logout')
 @login_required
 def logout():
-    session.clear()  # Questo rimuoverà tutti i dati della sessione, inclusi quelli di Flask-Admin
-    # session.pop('utente_id', None)
+    session.pop('utente_id', None)
     flash('Logout effettuato con successo!', 'success')
     return redirect(url_for('home'))
 
