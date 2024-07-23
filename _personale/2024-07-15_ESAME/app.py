@@ -24,25 +24,25 @@ def mostra_prenotazioni():
 
 
 # Restituisce i dati dei lotti disponibili in formato JSON
-@app.route('/api/eventi', methods=['GET'])
-def get_lotti():
+@app.route('/api/repliche', methods=['GET'])
+def get_repliche():
 
     # Leggo i parametri passati in query string
     order = request.args.get('order', 'asc')
 
     if order == 'asc':
-        eventi = Evento.query.order_by(Evento.nome_evento).all()  # -> list es. [<Lotto 1>, <Lotto 2>, ...]
+        repliche = Replica.query.order_by(Replica.data_ora).all()  # -> list es. [<Lotto 1>, <Lotto 2>, ...]
     elif order == 'desc':
-        eventi = Evento.query.order_by(Evento.nome_evento.desc()).all()
+        repliche = Replica.query.order_by(Replica.data_ora.desc()).all()
     else:
         return 'Parametro order non valido. Utilizzare "asc" o "desc".'
 
-    eventi_data = []
-    for evento in eventi:
-        dict_lotto = evento.to_dict()
-        eventi_data.append(dict_lotto)
+    repliche_data = []
+    for replica in repliche:
+        dict_replica = replica.to_dict()
+        repliche_data.append(dict_replica)
 
-    return jsonify(eventi_data)
+    return jsonify(repliche_data)
 
 
 @app.route("/signup", methods=["GET", "POST"])

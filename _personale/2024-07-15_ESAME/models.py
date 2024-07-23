@@ -32,10 +32,9 @@ class Replica(db.Model, SerializerMixin):
     rel_prenotazioni = db.relationship('Prenotazione', back_populates='rel_replica')
 
     serialize_rules = ('-rel_evento.rel_repliche',
-                       '-rel_prenotazioni.rel_replica',
-                       'get_date',
-                       'get_prezzo_str',
-                       'get_qta_disponibile')
+                       '-rel_prenotazioni.rel_replica')
+    
+    
 
 class Prenotazione(db.Model, SerializerMixin):
     __tablename__ = 'prenotazioni'
@@ -56,6 +55,8 @@ class Prenotazione(db.Model, SerializerMixin):
     __table_args__ = (
         db.UniqueConstraint('replica_id', 'utente_id', name='replica_utente_unique'),
     )
+
+  
     
 
 class Locale(db.Model, SerializerMixin):
