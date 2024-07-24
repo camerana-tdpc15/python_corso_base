@@ -4,7 +4,7 @@ const rowLotti = document.querySelector('#row-eventi');
 
 // Fa fetch di un file JSON e lo stampa in console
 // (abbiamo aggiunto un esempio di query string per modificare l'ordinamento)
-fetch("/api/repliche")
+fetch("/api/repliche?order=asc")
     // ......... QUI FLASK STA LAVORANDO PER PREPARARCI LA RISPOSTA
     // ......... E ALLA FINE CE LA INVIA
     .then(response => response.json())
@@ -28,6 +28,8 @@ fetch("/api/repliche")
             //     displayButton = `<a class="btn btn-primary w-100" href="/lotto/${replica.id}">Prenota</a>`;
             // }
 
+            
+
             rowLotti.innerHTML += `
                 <div class="col-lg-3 my-2">
                     <div class="card h-100">
@@ -36,11 +38,12 @@ fetch("/api/repliche")
                             <p class="text-end"><small>(cod. evento: ${replica.id})</small><p>
                         </div>
                         <div class="card-body d-flex flex-column">
-                            <p>Produttore: <b>${replica}</b></p>
-                            <p>Data consegna: <b>${replica}</b></p>
-                            <p>Q.tà TOT: <b>${replica} ${replica}</b></p>
-                            <p>Q.tà Disp: <b>${replica} ${replica}</b></p>
-                            <p>Prezzo: <b>${replica}</b></p>
+                            <p>Locale: <b>${replica.rel_evento.rel_locale.nome_locale}</b></p>
+                            <p>Luogo: <b>${replica.rel_evento.rel_locale.luogo}</b></p>
+                            <p>Data e ora: <b>${replica.data_ora}</b></p>
+                            <p>Posti totali: <b>${replica.rel_evento.rel_locale.posti}</b></p>
+                            <p>Posti prenotati: <b>${replica.rel_prenotazioni.quantita}</b></p>
+                            
 
                             <div class="mt-auto">
                                 
