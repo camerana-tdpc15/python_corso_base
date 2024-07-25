@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventi</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <div id="event-cards" class="row row-cols-1 row-cols-md-3 g-4">
+            <!-- Le card verranno inserite qui dinamicamente -->
+        </div>
+    </div>
+
+    <script>
+        // URL dell'endpoint API che fornisce i dati JSON
+        const apiUrl = '../templates/data.json';
+
+        // Funzione per recuperare i dati JSON dall'API
+        async function fetchData() {
+            try {
+                const response = await fetch(apiUrl);
+
+                if (!response.ok) {
+                    throw new Error('Errore nel recupero dei dati');
+                }
+
+                const jsonData = await response.json();
+                displayEvents(jsonData);
+            } catch (error) {
+                console.error('Errore:', error);
+            }
+        }
+
+        // Funzione per visualizzare i dati in card Bootstrap
+        function displayEvents(events) {
+            const eventCards = document.getElementById('event-cards');
+            eventCards.innerHTML = ''; // Pulisce il contenitore
+
+            events.forEach(event => {
+                // Calcolare il totale delle quantità di prenotazioni
+                const totalPrenotazioni = event.rel_prenotazioni.reduce((total, prenotazione) => total + prenotazione.quantita, 0);
+
+                const card = document.createElement('div');
+                card.classList.add('col');
+
+                card.innerHTML = `
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">${event.rel_evento.nome_evento}</h5>
+                            <p class="card-text">
+                                <strong>Data e Ora:</strong> ${event.data_ora}<br>
+                                <strong>Luogo:</strong> ${event.rel_evento.rel_locale.luogo}<br>
+                                <strong>Locale:</strong> ${event.rel_evento.rel_locale.nome_locale}<br>
+                                <strong>Posti:</strong> ${event.rel_evento.rel_locale.posti}<br>
+                                <strong>Prenotazioni:</strong> ${totalPrenotazioni}<br>
+                                <strong>Stato:</strong> ${event.annullato ? 'Annullato' : 'Confermato'}
+                            </p>
+                        </div>
+                    </div>
+                `;
+
+                eventCards.appendChild(card);
+            });
+        }
+
+        // Chiamata della funzione per recuperare e visualizzare i dati
+        fetchData();
+    </script>
+
+    <!-- Bootstrap JS and dependencies (optional) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

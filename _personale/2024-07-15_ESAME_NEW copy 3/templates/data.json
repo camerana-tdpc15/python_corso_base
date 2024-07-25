@@ -1,0 +1,164 @@
+[
+    {
+        "annullato": false,
+        "data_ora": "2024-07-27 20:30:00",
+        "evento_id": 1,
+        "id": 1,
+        "rel_evento": {
+            "id": 1,
+            "locale_id": 1,
+            "nome_evento": "Concerto di Chopin",
+            "rel_locale": {
+                "id": 1,
+                "luogo": "Ponte3-Piano2",
+                "nome_locale": "Music Lounge",
+                "posti": 150
+            }
+        },
+        "rel_prenotazioni": []
+    },
+    {
+        "annullato": true,
+        "data_ora": "2024-07-27 21:00:00",
+        "evento_id": 4,
+        "id": 6,
+        "rel_evento": {
+            "id": 4,
+            "locale_id": 4,
+            "nome_evento": "Pool Brunch Party",
+            "rel_locale": {
+                "id": 4,
+                "luogo": "Ponte5-Piano9",
+                "nome_locale": "Piscina",
+                "posti": 150
+            }
+        },
+        "rel_prenotazioni": []
+    },
+    {
+        "annullato": false,
+        "data_ora": "2024-07-28 20:30:00",
+        "evento_id": 1,
+        "id": 2,
+        "rel_evento": {
+            "id": 1,
+            "locale_id": 1,
+            "nome_evento": "Concerto di Chopin",
+            "rel_locale": {
+                "id": 1,
+                "luogo": "Ponte3-Piano2",
+                "nome_locale": "Music Lounge",
+                "posti": 150
+            }
+        },
+        "rel_prenotazioni": [
+            {
+                "id": 3,
+                "quantita": 2,
+                "rel_utente": {
+                    "cognome": "Cassini",
+                    "email": "casi.anto@mail.com",
+                    "id": 1,
+                    "nome": "Antonio",
+                    "telefono": "3351122333"
+                },
+                "replica_id": 2,
+                "utente_id": 1
+            },
+            {
+                "id": 2,
+                "quantita": 5,
+                "rel_utente": {
+                    "cognome": "Benedetti",
+                    "email": "b.bianca@usrmail.it",
+                    "id": 2,
+                    "nome": "Bianca",
+                    "telefono": "3384455666"
+                },
+                "replica_id": 2,
+                "utente_id": 2
+            }
+        ]
+    },
+    {
+        "annullato": false,
+        "data_ora": "2024-07-29 20:30:00",
+        "evento_id": 1,
+        "id": 3,
+        "rel_evento": {
+            "id": 1,
+            "locale_id": 1,
+            "nome_evento": "Concerto di Chopin",
+            "rel_locale": {
+                "id": 1,
+                "luogo": "Ponte3-Piano2",
+                "nome_locale": "Music Lounge",
+                "posti": 150
+            }
+        },
+        "rel_prenotazioni": []
+    },
+    {
+        "annullato": false,
+        "data_ora": "2024-07-30 21:00:00",
+        "evento_id": 3,
+        "id": 5,
+        "rel_evento": {
+            "id": 3,
+            "locale_id": 2,
+            "nome_evento": "Il ventaglio - Goldoni",
+            "rel_locale": {
+                "id": 2,
+                "luogo": "Ponte8-Piano3",
+                "nome_locale": "Teatro",
+                "posti": 350
+            }
+        },
+        "rel_prenotazioni": []
+    },
+    {
+        "annullato": false,
+        "data_ora": "2024-08-01 20:30:00",
+        "evento_id": 2,
+        "id": 4,
+        "rel_evento": {
+            "id": 2,
+            "locale_id": 1,
+            "nome_evento": "Beethoven sul mare",
+            "rel_locale": {
+                "id": 1,
+                "luogo": "Ponte3-Piano2",
+                "nome_locale": "Music Lounge",
+                "posti": 150
+            }
+        },
+        "rel_prenotazioni": [
+            {
+                "id": 1,
+                "quantita": 2,
+                "rel_utente": {
+                    "cognome": "Cassini",
+                    "email": "casi.anto@mail.com",
+                    "id": 1,
+                    "nome": "Antonio",
+                    "telefono": "3351122333"
+                },
+                "replica_id": 4,
+                "utente_id": 1
+            },
+            {
+                "id": 4,
+                "quantita": 2,
+                "rel_utente": {
+                    "cognome": "Fornari",
+                    "email": "for.enrico@mail.com",
+                    "id": 4,
+                    "nome": "Enrico",
+                    "telefono": "3335566223"
+                },
+                "replica_id": 4,
+                "utente_id": 4
+            }
+        ]
+    }
+]
